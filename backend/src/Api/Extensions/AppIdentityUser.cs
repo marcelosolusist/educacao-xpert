@@ -25,5 +25,12 @@ namespace Api.Extensions
 
             return claim ?? string.Empty;
         }
+
+        public bool IsAdmin(string? idIdentityUser)
+        {
+            if (string.IsNullOrEmpty(idIdentityUser) || !IsAutenticated()) return false;
+
+            return httpContextAccessor.HttpContext.User.IsInRole("Admin");
+        }
     }
 }

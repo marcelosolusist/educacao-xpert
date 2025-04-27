@@ -29,7 +29,7 @@ namespace Api.Configurations
 
         private static async Task InserirDadosIniciais(AppDbContext context)
         {
-            if (context.Users.Any() || context.Set<Aluno>().Any()) return;
+            if (context.Users.Any() || context.Set<Aluno>().Any() || context.Roles.Any()) return;
            
             var userIdentity = new IdentityUser()
             {
@@ -52,6 +52,22 @@ namespace Api.Configurations
             await context.Users.AddAsync(userIdentity);
 
             await context.Set<Aluno>().AddAsync(aluno);
+
+            var idRoleAdmin = "1";
+
+            await context.Roles.AddAsync(new IdentityRole
+            {
+                Id = idRoleAdmin,
+                Name = "Admin",
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "8d779be7-1d07-4bd5-accd-c7579503fbbd"
+            });
+
+            await context.UserRoles.AddAsync(new IdentityUserRole<string>
+            {
+                RoleId = idRoleAdmin,
+                UserId = userIdentity.Id.ToString(),
+            });
 
             await context.SaveChangesAsync();
         }
