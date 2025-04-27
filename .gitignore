@@ -1,0 +1,8 @@
+/backend/src/Api/DevXpert.db-wal
+/backend/src/Api/DevXpert.db
+/backend/src/Api/DevXpert.db-shm
+.vs/
+*.db-wal
+*.db
+*.db-shm
+.vscode
