@@ -7,5 +7,7 @@
         bool IsAutenticated();
 
         bool IsOwner(string? idIdentityUser);
+
+        bool IsAdmin(string? idIdentityUser);
     }
 }

@@ -16,5 +16,11 @@
         public List<Aula> Aulas;
         public List<Matricula> Matriculas;
         public List<Aluno> Alunos;
+        public int ObterProximaOrdemDeAula()
+        {
+            var ultimaOrdem = 0;
+            if (Aulas.Count > 0) ultimaOrdem = Aulas.Max(aula => aula.Ordem);
+            return ultimaOrdem++;
+        }
     }
 }
