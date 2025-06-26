@@ -1,0 +1,109 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{8621D9F9-AF41-44B0-8054-C8712315FCAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{0AC8A5D0-E6EE-4011-9C61-0925D2DD1716}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6566D7EE-2213-4E59-A591-70B94DEEAB9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GestaoConteudos", "GestaoConteudos", "{D5A6EF0B-ABA8-44C9-B443-8938FBF25815}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GestaoAlunos", "GestaoAlunos", "{4CAB25DA-AF13-45E1-8F7A-4A14247E9AE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PagamentoFaturamento", "PagamentoFaturamento", "{AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.Core", "src\EducacaoXpert.Core\EducacaoXpert.Core.csproj", "{5A27C3C0-EC61-4085-A795-196C0F800E45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Data", "src\EducacaoXpert.GestaoAlunos.Data\EducacaoXpert.GestaoAlunos.Data.csproj", "{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Application", "src\EducacaoXpert.GestaoAlunos.Application\EducacaoXpert.GestaoAlunos.Application.csproj", "{A25545D5-3192-4BE5-95A1-C4CEBA49770C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Domain", "src\EducacaoXpert.GestaoAlunos.Domain\EducacaoXpert.GestaoAlunos.Domain.csproj", "{64D3FE44-C219-4C38-82FE-7A2EE08093BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Application", "src\EducacaoXpert.GestaoConteudos.Application\EducacaoXpert.GestaoConteudos.Application.csproj", "{769EC09C-B8C5-4276-B11C-648CC59CD973}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Data", "src\EducacaoXpert.GestaoConteudos.Data\EducacaoXpert.GestaoConteudos.Data.csproj", "{F16514D7-3E6C-4368-A691-4048BC511A3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Domain", "src\EducacaoXpert.GestaoConteudos.Domain\EducacaoXpert.GestaoConteudos.Domain.csproj", "{77824F48-F0AA-47AE-BBB4-00502013071F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Anticorruption", "src\EducacaoXpert.PagamentoFaturamento.Anticorruption\EducacaoXpert.PagamentoFaturamento.Anticorruption.csproj", "{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Domain", "src\EducacaoXpert.PagamentoFaturamento.Domain\EducacaoXpert.PagamentoFaturamento.Domain.csproj", "{150134F8-2C41-43F6-B233-979B8343305B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Data", "src\EducacaoXpert.PagamentoFaturamento.Data\EducacaoXpert.PagamentoFaturamento.Data.csproj", "{E0530387-6E5D-4B04-A140-C46B7D267DF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A27C3C0-EC61-4085-A795-196C0F800E45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A27C3C0-EC61-4085-A795-196C0F800E45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A27C3C0-EC61-4085-A795-196C0F800E45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A27C3C0-EC61-4085-A795-196C0F800E45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A25545D5-3192-4BE5-95A1-C4CEBA49770C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A25545D5-3192-4BE5-95A1-C4CEBA49770C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A25545D5-3192-4BE5-95A1-C4CEBA49770C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A25545D5-3192-4BE5-95A1-C4CEBA49770C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64D3FE44-C219-4C38-82FE-7A2EE08093BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D3FE44-C219-4C38-82FE-7A2EE08093BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D3FE44-C219-4C38-82FE-7A2EE08093BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D3FE44-C219-4C38-82FE-7A2EE08093BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769EC09C-B8C5-4276-B11C-648CC59CD973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769EC09C-B8C5-4276-B11C-648CC59CD973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769EC09C-B8C5-4276-B11C-648CC59CD973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769EC09C-B8C5-4276-B11C-648CC59CD973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F16514D7-3E6C-4368-A691-4048BC511A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F16514D7-3E6C-4368-A691-4048BC511A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F16514D7-3E6C-4368-A691-4048BC511A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F16514D7-3E6C-4368-A691-4048BC511A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77824F48-F0AA-47AE-BBB4-00502013071F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77824F48-F0AA-47AE-BBB4-00502013071F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77824F48-F0AA-47AE-BBB4-00502013071F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77824F48-F0AA-47AE-BBB4-00502013071F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150134F8-2C41-43F6-B233-979B8343305B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150134F8-2C41-43F6-B233-979B8343305B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150134F8-2C41-43F6-B233-979B8343305B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150134F8-2C41-43F6-B233-979B8343305B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6566D7EE-2213-4E59-A591-70B94DEEAB9C} = {8621D9F9-AF41-44B0-8054-C8712315FCAF}
+		{D5A6EF0B-ABA8-44C9-B443-8938FBF25815} = {8621D9F9-AF41-44B0-8054-C8712315FCAF}
+		{4CAB25DA-AF13-45E1-8F7A-4A14247E9AE4} = {8621D9F9-AF41-44B0-8054-C8712315FCAF}
+		{AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA} = {8621D9F9-AF41-44B0-8054-C8712315FCAF}
+		{5A27C3C0-EC61-4085-A795-196C0F800E45} = {6566D7EE-2213-4E59-A591-70B94DEEAB9C}
+		{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE} = {4CAB25DA-AF13-45E1-8F7A-4A14247E9AE4}
+		{A25545D5-3192-4BE5-95A1-C4CEBA49770C} = {4CAB25DA-AF13-45E1-8F7A-4A14247E9AE4}
+		{64D3FE44-C219-4C38-82FE-7A2EE08093BB} = {4CAB25DA-AF13-45E1-8F7A-4A14247E9AE4}
+		{769EC09C-B8C5-4276-B11C-648CC59CD973} = {D5A6EF0B-ABA8-44C9-B443-8938FBF25815}
+		{F16514D7-3E6C-4368-A691-4048BC511A3D} = {D5A6EF0B-ABA8-44C9-B443-8938FBF25815}
+		{77824F48-F0AA-47AE-BBB4-00502013071F} = {D5A6EF0B-ABA8-44C9-B443-8938FBF25815}
+		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
+		{150134F8-2C41-43F6-B233-979B8343305B} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
+		{E0530387-6E5D-4B04-A140-C46B7D267DF1} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B557137F-0012-4AF2-915D-2148FBEFC4EC}
+	EndGlobalSection
+EndGlobal
