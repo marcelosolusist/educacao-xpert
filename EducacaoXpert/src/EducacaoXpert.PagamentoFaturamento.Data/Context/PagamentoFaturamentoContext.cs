@@ -1,16 +1,14 @@
 ﻿using EducacaoXpert.Core.Data;
 using EducacaoXpert.Core.DomainObjects;
 using EducacaoXpert.Core.Messages;
-using EducacaoXpert.GestaoConteudos.Data.Extension;
+using EducacaoXpert.PagamentoFaturamento.Data.Extension;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Linq.Expressions;
 
-namespace EducacaoXpert.GestaoConteudos.Data.Context;
+namespace EducacaoXpert.PagamentoFaturamento.Data.Context;
 
-public class GestaoConteudosContext(DbContextOptions<GestaoConteudosContext> options,
-                                    IMediator mediator) : DbContext(options), IUnitOfWork
+public class PagamentoFaturamentoContext(DbContextOptions<PagamentoFaturamentoContext> options, IMediator mediator) : DbContext(options), IUnitOfWork
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -19,21 +17,7 @@ public class GestaoConteudosContext(DbContextOptions<GestaoConteudosContext> opt
                          .Where(p => p.ClrType == typeof(string))))
             property.SetColumnType("varchar(200)");
 
-        builder.ApplyConfigurationsFromAssembly(typeof(GestaoConteudosContext).Assembly);
-
-        foreach (var entityType in builder.Model.GetEntityTypes())
-        {
-            if (typeof(Entity).IsAssignableFrom(entityType.ClrType) &&
-                !entityType.ClrType.IsAbstract && entityType.BaseType == null)
-            {
-                var parameter = Expression.Parameter(entityType.ClrType, "e");
-                var property = Expression.Property(parameter, nameof(Entity.DataExclusao));
-                var condition = Expression.Equal(property, Expression.Constant(null));
-                var lambda = Expression.Lambda(condition, parameter);
-
-                builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
-            }
-        }
+        builder.ApplyConfigurationsFromAssembly(typeof(PagamentoFaturamentoContext).Assembly);
 
         foreach (var relationShip in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
@@ -44,7 +28,6 @@ public class GestaoConteudosContext(DbContextOptions<GestaoConteudosContext> opt
 
         base.OnModelCreating(builder);
     }
-
     public async Task<bool> Commit()
     {
         var sucesso = await SaveChangesAsync() > 0;
@@ -54,7 +37,6 @@ public class GestaoConteudosContext(DbContextOptions<GestaoConteudosContext> opt
 
         return sucesso;
     }
-
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         foreach (var entityEntry in ChangeTracker.Entries<Entity>())
