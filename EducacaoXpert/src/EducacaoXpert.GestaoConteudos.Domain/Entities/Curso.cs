@@ -1,10 +1,5 @@
-﻿using EducacaoXpert.Core.DomainObjects.Interfaces;
-using EducacaoXpert.Core.DomainObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EducacaoXpert.Core.DomainObjects;
+using EducacaoXpert.Core.DomainObjects.Interfaces;
 
 namespace EducacaoXpert.GestaoConteudos.Domain.Entities;
 
@@ -13,14 +8,14 @@ public class Curso : Entity, IAggregateRoot
     public string Nome { get; private set; }
     public string ConteudoProgramatico { get; private set; }
     public Guid UsuarioCriacaoId { get; private set; }
-    public decimal Preco { get; private set; }
+    public int Preco { get; private set; } //O Preço é em centavos
 
     private readonly List<Aula> _aulas;
     public IReadOnlyCollection<Aula> Aulas => _aulas;
 
     // Ef Constructor
     protected Curso() { }
-    public Curso(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, decimal preco)
+    public Curso(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, int preco)
     {
         Nome = nome;
         ConteudoProgramatico = conteudoProgramatico;
@@ -52,7 +47,7 @@ public class Curso : Entity, IAggregateRoot
             throw new DomainException("O conteúdo programático é obrigatório.");
         ConteudoProgramatico = conteudoProgramatico;
     }
-    public void AtualizarPreco(decimal preco)
+    public void AtualizarPreco(int preco)
     {
         if (preco <= 0)
             throw new DomainException("O preço do curso deve ser maior que zero.");

@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 
-public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, decimal total) : Command
+public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, int total) : Command
 {
     public Guid CursoId { get; set; } = cursoId;
     public Guid AlunoId { get; set; } = alunoId;
-    public decimal Total { get; set; } = total;
+    public int Total { get; set; } = total;
     public string NomeCartao { get; set; } = nomeCartao;
     public string NumeroCartao { get; set; } = numeroCartao;
     public string ExpiracaoCartao { get; set; } = expiracaoCartao;

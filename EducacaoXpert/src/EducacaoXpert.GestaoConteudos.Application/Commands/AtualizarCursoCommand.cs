@@ -8,9 +8,9 @@ public class AtualizarCursoCommand : Command
     public Guid CursoId { get; set; }
     public string Nome { get; set; }
     public string ConteudoProgramatico { get; set; }
-    public decimal Preco { get; set; }
+    public int Preco { get; set; }
 
-    public AtualizarCursoCommand(Guid cursoId, string nome, string conteudoProgramatico, decimal preco)
+    public AtualizarCursoCommand(Guid cursoId, string nome, string conteudoProgramatico, int preco)
     {
         AggregateId = cursoId;
         CursoId = cursoId;

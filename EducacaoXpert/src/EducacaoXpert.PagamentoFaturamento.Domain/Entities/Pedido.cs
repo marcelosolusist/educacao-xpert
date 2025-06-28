@@ -4,5 +4,5 @@ public class Pedido
 {
     public Guid CursoId { get; set; }
     public Guid AlunoId { get; set; }
-    public decimal Valor { get; set; }
+    public int Valor { get; set; } //O valor é em centavos
 }

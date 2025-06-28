@@ -18,7 +18,7 @@ public class PayPalGateway : IPayPalGateway
             .Select(s => s[new Random().Next(s.Length)]).ToArray());
     }
 
-    public Transacao CommitTransaction(string cardHashKey, string orderId, decimal amount)
+    public Transacao CommitTransaction(string cardHashKey, string orderId, int amount)
     {
         var sucesso = true;
         return new Transacao

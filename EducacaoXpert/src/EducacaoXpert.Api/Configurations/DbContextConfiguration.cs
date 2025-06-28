@@ -1,4 +1,5 @@
-﻿using EducacaoXpert.GestaoAlunos.Data.Context;
+﻿using EducacaoXpert.Api.Context;
+using EducacaoXpert.GestaoAlunos.Data.Context;
 using EducacaoXpert.GestaoConteudos.Data.Context;
 using EducacaoXpert.PagamentoFaturamento.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public static class DbContextConfiguration
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }, ServiceLifetime.Transient);
-            builder.Services.AddDbContext<ApplicationContext>(opt =>
+            builder.Services.AddDbContext<ApiContext>(opt =>
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -38,7 +39,7 @@ public static class DbContextConfiguration
             {
                 opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             }, ServiceLifetime.Transient);
-            builder.Services.AddDbContext<ApplicationContext>(opt =>
+            builder.Services.AddDbContext<ApiContext>(opt =>
             {
                 opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });

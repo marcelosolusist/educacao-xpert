@@ -19,6 +19,7 @@ using EducacaoXpert.PagamentoFaturamento.Domain.Services;
 using MediatR;
 using EducacaoXpert.GestaoAlunos.Application.Services;
 using EducacaoXpert.PagamentoFaturamento.Data.Context;
+using EducacaoXpert.Api.Extensions;
 
 namespace EducacaoXpert.Api.Configurations;
 

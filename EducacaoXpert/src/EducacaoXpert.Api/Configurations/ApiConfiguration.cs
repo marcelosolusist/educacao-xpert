@@ -1,4 +1,5 @@
-﻿using EducacaoXpert.PagamentoFaturamento.Anticorruption.Config;
+﻿using EducacaoXpert.Api.Context;
+using EducacaoXpert.PagamentoFaturamento.Anticorruption.Config;
 using Microsoft.AspNetCore.Identity;
 
 namespace EducacaoXpert.Api.Configurations;
@@ -9,7 +10,7 @@ public static class ApiConfiguration
     {
         builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationContext>()
+            .AddEntityFrameworkStores<ApiContext>()
             .AddDefaultTokenProviders();
 
         builder.Services.Configure<PagamentoSettings>(builder.Configuration.GetSection("Pagamentos"));

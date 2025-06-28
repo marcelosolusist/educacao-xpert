@@ -7,7 +7,7 @@ public class Pagamento : Entity, IAggregateRoot
 {
     public Guid CursoId { get; set; }
     public Guid AlunoId { get; set; }
-    public decimal Valor { get; set; }
+    public int Valor { get; set; } //O valor é em centavos
 
     public string NomeCartao { get; set; }
     public string NumeroCartao { get; set; }

@@ -1,10 +1,10 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Core.DomainObjects.DTO;
+using EducacaoXpert.Api.DTO;
 using EducacaoXpert.Core.DomainObjects.Enums;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
-using EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
+using EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +73,7 @@ public class AulasController(INotificationHandler<DomainNotification> notificaco
             return;
         }
 
-        if (matricula?.Status != EStatusMatricula.Ativa && matricula?.Status != EStatusMatricula.Concluida)
+        if (matricula?.Status != StatusMatricula.Ativa && matricula?.Status != StatusMatricula.Concluida)
         {
             NotificarErro("Matricula", "Matrícula não está ativa.");
         }

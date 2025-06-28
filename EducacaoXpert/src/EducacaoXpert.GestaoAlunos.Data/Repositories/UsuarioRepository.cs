@@ -1,6 +1,6 @@
 ﻿using EducacaoXpert.Core.Data;
-using EducacaoXpert.Core.DomainObjects;
 using EducacaoXpert.GestaoAlunos.Data.Context;
+using EducacaoXpert.GestaoAlunos.Domain.Entities;
 using EducacaoXpert.GestaoAlunos.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

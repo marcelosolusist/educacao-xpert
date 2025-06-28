@@ -1,4 +1,5 @@
-﻿using EducacaoXpert.PagamentoFaturamento.Anticorruption.Interfaces;
+﻿using EducacaoXpert.PagamentoFaturamento.Anticorruption.Config;
+using EducacaoXpert.PagamentoFaturamento.Anticorruption.Interfaces;
 using EducacaoXpert.PagamentoFaturamento.Domain.Entities;
 using EducacaoXpert.PagamentoFaturamento.Domain.Interfaces;
 using Microsoft.Extensions.Options;

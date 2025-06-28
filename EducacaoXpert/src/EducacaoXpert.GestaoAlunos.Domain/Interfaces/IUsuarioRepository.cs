@@ -1,5 +1,5 @@
 ﻿using EducacaoXpert.Core.Data;
-using EducacaoXpert.Core.DomainObjects;
+using EducacaoXpert.GestaoAlunos.Domain.Entities;
 
 namespace EducacaoXpert.GestaoAlunos.Domain.Interfaces;
 

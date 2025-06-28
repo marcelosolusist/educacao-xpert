@@ -1,5 +1,5 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Core.DomainObjects.DTO;
+using EducacaoXpert.Api.DTO;
 using EducacaoXpert.Core.DomainObjects.Enums;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
@@ -121,9 +121,9 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
         var matricula = await alunoQueries.ObterMatricula(curso.Id, UsuarioId);
 
-        if (matricula is not { Status: EStatusMatricula.AguardandoPagamento })
+        if (matricula is not { Status: StatusMatricula.EmPagamento })
         {
-            NotificarErro("Matricula", "A matrícula deve estar com status 'Aguardando Pagamento' para realizar o pagamento.");
+            NotificarErro("Matricula", "A matrícula deve estar com status 'Em Pagamento' para realizar o pagamento.");
         }
     }
 

@@ -1,8 +1,10 @@
-﻿using EducacaoXpert.GestaoAlunos.Data.Context;
+﻿using EducacaoXpert.Api.Context;
+using EducacaoXpert.GestaoAlunos.Data.Context;
 using EducacaoXpert.GestaoAlunos.Domain.Entities;
 using EducacaoXpert.GestaoAlunos.Domain.Interfaces;
 using EducacaoXpert.GestaoConteudos.Data.Context;
 using EducacaoXpert.GestaoConteudos.Domain.Entities;
+using EducacaoXpert.PagamentoFaturamento.Data.Context;
 using EducacaoXpert.PagamentoFaturamento.Domain.Entities;
 using EducacaoXpert.PagamentoFaturamento.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +30,8 @@ public static class DbMigrationHelpers
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var contextGestaoConteudos = scope.ServiceProvider.GetRequiredService<GestaoConteudosContext>();
         var contextGestaoAlunos = scope.ServiceProvider.GetRequiredService<GestaoAlunosContext>();
-        var contextIdentity = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-        var contextPagamentos = scope.ServiceProvider.GetRequiredService<PagamentoContext>();
+        var contextIdentity = scope.ServiceProvider.GetRequiredService<ApiContext>();
+        var contextPagamentoFaturamento = scope.ServiceProvider.GetRequiredService<PagamentoFaturamentoContext>();
         var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
         var certificadoService = scope.ServiceProvider.GetRequiredService<ICertificadoPdfService>();
 
@@ -38,15 +40,15 @@ public static class DbMigrationHelpers
             await contextGestaoAlunos.Database.EnsureDeletedAsync();
             await contextGestaoConteudos.Database.EnsureDeletedAsync();
             await contextIdentity.Database.EnsureDeletedAsync();
-            await contextPagamentos.Database.EnsureDeletedAsync();
+            await contextPagamentoFaturamento.Database.EnsureDeletedAsync();
 
             await contextGestaoConteudos.Database.MigrateAsync();
             await contextGestaoAlunos.Database.MigrateAsync();
             await contextIdentity.Database.MigrateAsync();
-            await contextPagamentos.Database.MigrateAsync();
+            await contextPagamentoFaturamento.Database.MigrateAsync();
 
             await SeedUsersAndRoles(scope.ServiceProvider);
-            await SeedDataInitial(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentos, certificadoService);
+            await SeedDataInitial(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
         }
     }
 
@@ -98,8 +100,8 @@ public static class DbMigrationHelpers
     private static async Task SeedDataInitial(
          GestaoAlunosContext dbAlunosContext,
          GestaoConteudosContext dbConteudosContext,
-         ApplicationContext dbApplicationContext,
-         PagamentoContext dbPagamentoContext,
+         ApiContext dbApiContext,
+         PagamentoFaturamentoContext dbPagamentoFaturamentoContext,
          ICertificadoPdfService pdfService)
     {
         if (dbAlunosContext.Set<Aluno>().Any() || dbAlunosContext.Set<Matricula>().Any() || dbAlunosContext.Set<Usuario>().Any())
@@ -107,9 +109,9 @@ public static class DbMigrationHelpers
         if (dbConteudosContext.Set<Curso>().Any() || dbConteudosContext.Set<Aula>().Any())
             return;
 
-        var user = await dbApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == "aluno@teste.com");
-        var user2 = await dbApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == "aluno2@teste.com");
-        var userAdmin = await dbApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == "admin@teste.com");
+        var user = await dbApiContext.Users.FirstOrDefaultAsync(x => x.Email == "aluno@teste.com");
+        var user2 = await dbApiContext.Users.FirstOrDefaultAsync(x => x.Email == "aluno2@teste.com");
+        var userAdmin = await dbApiContext.Users.FirstOrDefaultAsync(x => x.Email == "admin@teste.com");
 
         var admin = new Usuario(Guid.Parse(userAdmin.Id));
         var aluno = new Aluno(Guid.Parse(user.Id), "fulano");
@@ -181,7 +183,7 @@ public static class DbMigrationHelpers
         {
             PagamentoId = pagamento.Id,
             MatriculaId = matriculaAtiva.Id,
-            StatusTransacao = StatusTransacao.Pago,
+            StatusTransacao = StatusTransacao.Autorizado,
             Pagamento = pagamento,
             Total = pagamento.Valor,
         };
@@ -196,11 +198,11 @@ public static class DbMigrationHelpers
         await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoAula1, progressoAula2, progressoAula3, progressoAulaAtiva1]);
         await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCursoConcluido);
 
-        await dbPagamentoContext.Set<Pagamento>().AddAsync(pagamento);
-        await dbPagamentoContext.Set<Transacao>().AddAsync(transacao);
+        await dbPagamentoFaturamentoContext.Set<Pagamento>().AddAsync(pagamento);
+        await dbPagamentoFaturamentoContext.Set<Transacao>().AddAsync(transacao);
 
         await dbAlunosContext.SaveChangesAsync();
         await dbConteudosContext.SaveChangesAsync();
-        await dbPagamentoContext.SaveChangesAsync();
+        await dbPagamentoFaturamentoContext.SaveChangesAsync();
     }
 }

@@ -1,0 +1,6 @@
+--Criar migrations
+add-migration GA_Inicial -context GestaoAlunosContext
+add-migration GC_Inicial -context GestaoConteudosContext
+add-migration PF_Inicial -context PagamentoFaturamentoContext
+add-migration Api_Inicial -context ApiContext
+
