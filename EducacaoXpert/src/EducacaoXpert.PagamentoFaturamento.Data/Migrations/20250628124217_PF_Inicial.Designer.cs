@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
 {
     [DbContext(typeof(PagamentoFaturamentoContext))]
-    [Migration("20250628094208_PF_Inicial")]
+    [Migration("20250628124217_PF_Inicial")]
     partial class PF_Inicial
     {
         /// <inheritdoc />
@@ -32,10 +32,6 @@ namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
                     b.Property<Guid>("CursoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CvvCartao")
-                        .IsRequired()
-                        .HasColumnType("varchar(4)");
-
                     b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("TEXT");
 
@@ -45,15 +41,11 @@ namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
                     b.Property<DateTime?>("DataExclusao")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ExpiracaoCartao")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
-
                     b.Property<string>("NomeCartao")
                         .IsRequired()
                         .HasColumnType("varchar(250)");
 
-                    b.Property<string>("NumeroCartao")
+                    b.Property<string>("NumeroCartaoMascarado")
                         .IsRequired()
                         .HasColumnType("varchar(16)");
 

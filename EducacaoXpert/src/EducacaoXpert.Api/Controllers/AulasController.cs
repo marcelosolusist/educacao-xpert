@@ -1,10 +1,10 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Api.DTO;
+using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Core.DomainObjects.Enums;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
-using EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
+using EducacaoXpert.GestaoAlunos.Application.Queries.DTO;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +23,7 @@ public class AulasController(INotificationHandler<DomainNotification> notificaco
 
     [Authorize(Roles = "ADMIN")]
     [HttpPost("adicionar-aula")]
-    public async Task<IActionResult> Adicionar([FromBody] AulaDto aulaDto, Guid cursoId)
+    public async Task<IActionResult> Adicionar([FromBody] AulaViewModel aulaDto, Guid cursoId)
     {
         var command = new AdicionarAulaCommand(aulaDto.Nome, aulaDto.Conteudo, cursoId,
                                                aulaDto.NomeMaterial, aulaDto.TipoMaterial);
@@ -65,7 +65,7 @@ public class AulasController(INotificationHandler<DomainNotification> notificaco
         return RespostaPadrao(HttpStatusCode.Created);
     }
 
-    private void ValidarMatricula(MatriculaViewModel? matricula)
+    private void ValidarMatricula(MatriculaDto? matricula)
     {
         if (matricula is null)
         {

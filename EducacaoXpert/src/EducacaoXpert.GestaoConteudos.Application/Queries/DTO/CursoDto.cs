@@ -1,10 +1,10 @@
-﻿namespace EducacaoXpert.GestaoConteudos.Application.Queries.ViewModels;
+﻿namespace EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 
-public class CursoViewModel
+public class CursoDto
 {
     public Guid Id { get; set; } = Guid.Empty;
     public string Nome { get; set; } = string.Empty;
     public string ConteudoProgramatico { get; set; } = string.Empty;
     public int Preco { get; set; }
-    public IEnumerable<AulaViewModel> Aulas { get; set; } = new List<AulaViewModel>();
+    public IEnumerable<AulaDto> Aulas { get; set; } = new List<AulaDto>();
 }

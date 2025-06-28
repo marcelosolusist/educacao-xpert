@@ -1,25 +1,25 @@
 ﻿using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
-using EducacaoXpert.GestaoConteudos.Application.Queries.ViewModels;
+using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 
 namespace EducacaoXpert.GestaoConteudos.Application.Queries;
 
 public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
 {
-    public async Task<CursoViewModel?> ObterPorId(Guid cursoId)
+    public async Task<CursoDto?> ObterPorId(Guid cursoId)
     {
         var curso = await cursoRepository.ObterPorId(cursoId);
 
         if (curso is null)
             return null;
 
-        return new CursoViewModel
+        return new CursoDto
         {
             Id = curso.Id,
             Nome = curso.Nome,
             ConteudoProgramatico = curso.ConteudoProgramatico,
             Preco = curso.Preco,
-            Aulas = curso.Aulas?.Select(a => new AulaViewModel
+            Aulas = curso.Aulas?.Select(a => new AulaDto
             {
                 Id = a.Id,
                 Nome = a.Nome,
@@ -28,17 +28,17 @@ public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
         };
     }
 
-    public async Task<IEnumerable<CursoViewModel>> ObterTodos()
+    public async Task<IEnumerable<CursoDto>> ObterTodos()
     {
         var cursos = await cursoRepository.ObterTodos();
 
-        return cursos.Select(c => new CursoViewModel
+        return cursos.Select(c => new CursoDto
         {
             Id = c.Id,
             Nome = c.Nome,
             ConteudoProgramatico = c.ConteudoProgramatico,
             Preco = c.Preco,
-            Aulas = c.Aulas?.Select(a => new AulaViewModel
+            Aulas = c.Aulas?.Select(a => new AulaDto
             {
                 Id = a.Id,
                 Nome = a.Nome,

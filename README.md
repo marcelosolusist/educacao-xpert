@@ -72,10 +72,14 @@ A estrutura do projeto é organizada da seguinte forma:
    - `dotnet run`
    - Acesse a documentação da API em: http://localhost:5224/swagger/ 
    
-4. **Usuário de teste:**
-   - Na carga inicial é criado um usuário para testes. Caso queira utilizá-lo use os seguintes dados:
-   - Usuário: alunoadm@teste.com
-   - Senha: Teste@123
+4. **Usuários de teste:**
+   - Na carga inicial são criados dois usuários para testes. Caso queira utilizá-los use os seguintes dados:
+   Perfil Aluno:
+	- Usuário: usuario@aluno.com
+	- Senha: Teste@123
+   Perfil Admin:
+	- Usuário: usuario@admin.com
+	- Senha: Teste@123
    
 5. **Registrar novo usuário ou usar o usuário de teste para acessar o sistema:**
    - Para acessar o sistema use o usuário de teste ou crie um novo usuário usando a opção Registrar.

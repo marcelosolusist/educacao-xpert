@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EducacaoXpert.Api.DTO;
+namespace EducacaoXpert.Api.ViewModels;
 
-public class LoginUserDto
+public class LoginUserViewModel
 {
     [Required(ErrorMessage = "Campo {0} é obrigatório.")]
     [EmailAddress(ErrorMessage = "Campo {0} está em formato inválido.")]

@@ -1,8 +1,8 @@
 ﻿using EducacaoXpert.Core.DomainObjects.Enums;
 
-namespace EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
+namespace EducacaoXpert.GestaoAlunos.Application.Queries.DTO;
 
-public class MatriculaViewModel
+public class MatriculaDto
 {
     public Guid Id { get; set; }
     public Guid AlunoId { get; set; }

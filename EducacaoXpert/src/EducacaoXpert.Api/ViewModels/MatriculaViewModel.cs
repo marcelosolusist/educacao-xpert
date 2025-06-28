@@ -1,6 +1,6 @@
-﻿namespace EducacaoXpert.Api.DTO;
+﻿namespace EducacaoXpert.Api.ViewModels;
 
-public class MatriculaDto
+public class MatriculaViewModel
 {
     public Guid CursoId { get; set; }
     public Guid AlunoId { get; set; }

@@ -20,9 +20,7 @@ namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
                     AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Valor = table.Column<int>(type: "INTEGER", nullable: false),
                     NomeCartao = table.Column<string>(type: "varchar(250)", nullable: false),
-                    NumeroCartao = table.Column<string>(type: "varchar(16)", nullable: false),
-                    ExpiracaoCartao = table.Column<string>(type: "varchar(10)", nullable: false),
-                    CvvCartao = table.Column<string>(type: "varchar(4)", nullable: false),
+                    NumeroCartaoMascarado = table.Column<string>(type: "varchar(16)", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)

@@ -1,5 +1,5 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Api.DTO;
+using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Api.Jwt;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
@@ -17,7 +17,7 @@ using System.Text;
 namespace EducacaoXpert.Api.Controllers;
 
 [Route("api/conta")]
-public class AutenticationController(INotificationHandler<DomainNotification> notificacoes,
+public class AutenticacaoController(INotificationHandler<DomainNotification> notificacoes,
                                 IMediator mediator,
                                 SignInManager<IdentityUser> signInManager,
                                 UserManager<IdentityUser> userManager,
@@ -28,7 +28,7 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     [HttpPost("registrar/aluno")]
-    public async Task<ActionResult> RegistrarAluno(RegisterUserDto registerUser)
+    public async Task<ActionResult> RegistrarAluno(RegisterUserViewModel registerUser)
     {
         if (!ModelState.IsValid)
         {
@@ -56,7 +56,7 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
         return RespostaPadrao(HttpStatusCode.Created, token);
     }
     [HttpPost("registrar/admin")]
-    public async Task<ActionResult> RegistrarAdmin(RegisterUserDto registerUser)
+    public async Task<ActionResult> RegistrarAdmin(RegisterUserViewModel registerUser)
     {
         if (!ModelState.IsValid)
         {
@@ -85,7 +85,7 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(LoginUserDto loginUser)
+    public async Task<ActionResult> Login(LoginUserViewModel loginUser)
     {
         if (!ModelState.IsValid)
         {
@@ -110,7 +110,7 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
         NotificarErro("Identity", "Usuário ou Senha incorretos");
         return RespostaPadrao();
     }
-    private async Task<(IdentityUser User, IdentityResult Result)> RegistrarUsuario(RegisterUserDto registerUser, string role)
+    private async Task<(IdentityUser User, IdentityResult Result)> RegistrarUsuario(RegisterUserViewModel registerUser, string role)
     {
         var userIdentity = new IdentityUser
         {
@@ -129,7 +129,7 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
         return (userIdentity, result);
     }
 
-    private async Task<LoginResponseDto> GerarToken(string email)
+    private async Task<LoginResponseViewModel> GerarToken(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
         var roles = await userManager.GetRolesAsync(user);
@@ -182,18 +182,18 @@ public class AutenticationController(INotificationHandler<DomainNotification> no
         return tokenHandler.WriteToken(token);
     }
 
-    private LoginResponseDto ObterRespostaToken(IdentityUser user, IList<Claim> claims, string encodedToken)
+    private LoginResponseViewModel ObterRespostaToken(IdentityUser user, IList<Claim> claims, string encodedToken)
     {
-        var response = new LoginResponseDto
+        var response = new LoginResponseViewModel
         {
             AccessToken = encodedToken,
             ExpiresIn = TimeSpan.FromHours(_jwtSettings.ExpiracaoHoras).TotalSeconds,
-            UserToken = new UserTokenDto
+            UserToken = new UserTokenViewModel
             {
                 Id = user.Id,
                 Email = user.Email,
                 Nome = user.UserName,
-                Claims = claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value })
+                Claims = claims.Select(c => new ClaimViewModel { Type = c.Type, Value = c.Value })
             }
         };
 

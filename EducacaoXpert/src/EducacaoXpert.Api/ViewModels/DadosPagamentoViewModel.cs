@@ -1,6 +1,6 @@
-﻿namespace EducacaoXpert.Api.DTO;
+﻿namespace EducacaoXpert.Api.ViewModels;
 
-public class DadosPagamento
+public class DadosPagamentoViewModel
 {
     public string NomeCartao { get; set; }
     public string NumeroCartao { get; set; }

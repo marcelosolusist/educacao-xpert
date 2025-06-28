@@ -1,4 +1,5 @@
-﻿using EducacaoXpert.PagamentoFaturamento.Anticorruption.Config;
+﻿using EducacaoXpert.Core.DomainObjects.DTO;
+using EducacaoXpert.PagamentoFaturamento.Anticorruption.Config;
 using EducacaoXpert.PagamentoFaturamento.Anticorruption.Interfaces;
 using EducacaoXpert.PagamentoFaturamento.Domain.Entities;
 using EducacaoXpert.PagamentoFaturamento.Domain.Interfaces;
@@ -10,7 +11,7 @@ public class PagamentoCartaoCreditoFacade(IPayPalGateway payPalGateway,
     IOptions<PagamentoSettings> options) : IPagamentoCartaoCreditoFacade
 {
     private readonly PagamentoSettings _settings = options.Value;
-    public Transacao RealizarPagamento(Pedido pedido, Pagamento pagamento)
+    public Transacao RealizarPagamento(Pedido pedido, PagamentoCurso pagamento)
     {
         var apiKey = _settings.ApiKey;
         var encriptionKey = _settings.EncriptionKey;
@@ -20,7 +21,7 @@ public class PagamentoCartaoCreditoFacade(IPayPalGateway payPalGateway,
 
         var transacao = payPalGateway.CommitTransaction(cardHashKey, pedido.CursoId.ToString(), pagamento.Valor);
 
-        transacao.PagamentoId = pagamento.Id;
+        transacao.PagamentoId = (Guid)pagamento.PagamentoId;
 
         return transacao;
     }

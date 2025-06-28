@@ -10,9 +10,6 @@ public class Pagamento : Entity, IAggregateRoot
     public int Valor { get; set; } //O valor é em centavos
 
     public string NomeCartao { get; set; }
-    public string NumeroCartao { get; set; }
-    public string ExpiracaoCartao { get; set; }
-    public string CvvCartao { get; set; }
-
+    public string NumeroCartaoMascarado { get; set; }
     public Transacao Transacao { get; set; }
 }

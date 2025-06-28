@@ -18,21 +18,21 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
         {
             CursoId = pagamentoCurso.CursoId,
             AlunoId = pagamentoCurso.AlunoId,
-            Valor = pagamentoCurso.Total,
+            Valor = pagamentoCurso.Valor,
         };
 
         var pagamento = new Pagamento
         {
-            Valor = pagamentoCurso.Total,
+            Valor = pagamentoCurso.Valor,
             NomeCartao = pagamentoCurso.NomeCartao,
-            NumeroCartao = pagamentoCurso.NumeroCartao,
-            ExpiracaoCartao = pagamentoCurso.ExpiracaoCartao,
-            CvvCartao = pagamentoCurso.CvvCartao,
+            NumeroCartaoMascarado = await MascararNumeroCartao(pagamentoCurso.NumeroCartao),
             AlunoId = pagamentoCurso.AlunoId,
             CursoId = pagamentoCurso.CursoId
         };
 
-        var transacao = pagamentoCartaoCreditoFacade.RealizarPagamento(pedido, pagamento);
+        pagamentoCurso.PagamentoId = pagamento.Id;
+
+        var transacao = pagamentoCartaoCreditoFacade.RealizarPagamento(pedido, pagamentoCurso);
 
         if (transacao.StatusTransacao == StatusTransacao.Autorizado)
         {
@@ -47,5 +47,10 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
 
         await mediator.Publish(new DomainNotification("pagamento", "A operadora recusou o pagamento"));
         return false;
+    }
+
+    private async Task<string> MascararNumeroCartao(string numeroCartao)
+    {
+        return numeroCartao[..4]+"********"+numeroCartao[4..];
     }
 }

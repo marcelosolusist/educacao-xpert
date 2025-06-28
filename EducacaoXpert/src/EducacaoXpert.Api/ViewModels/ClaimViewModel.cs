@@ -1,6 +1,6 @@
-﻿namespace EducacaoXpert.Api.DTO;
+﻿namespace EducacaoXpert.Api.ViewModels;
 
-public class ClaimDto
+public class ClaimViewModel
 {
     public string Type { get; set; }
     public string Value { get; set; }

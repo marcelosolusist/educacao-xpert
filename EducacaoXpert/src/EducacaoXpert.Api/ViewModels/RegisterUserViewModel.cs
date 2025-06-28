@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EducacaoXpert.Api.DTO;
+namespace EducacaoXpert.Api.ViewModels;
 
-public class RegisterUserDto
+public class RegisterUserViewModel
 {
     [Required(ErrorMessage = "Campo {0} é obrigatório.")]
     public string? Nome { get; set; }

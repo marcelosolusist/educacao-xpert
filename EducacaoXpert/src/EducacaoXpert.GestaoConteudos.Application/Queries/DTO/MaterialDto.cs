@@ -1,6 +1,6 @@
-﻿namespace EducacaoXpert.GestaoConteudos.Application.Queries.ViewModels;
+﻿namespace EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 
-public class MaterialViewModel
+public class MaterialDto
 {
     public Guid Id { get; set; }
     public string Nome { get; set; } = string.Empty;

@@ -1,9 +1,9 @@
-﻿using EducacaoXpert.GestaoConteudos.Application.Queries.ViewModels;
+﻿using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 
 namespace EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
 
 public interface ICursoQueries
 {
-    Task<CursoViewModel?> ObterPorId(Guid cursoId);
-    Task<IEnumerable<CursoViewModel>> ObterTodos();
+    Task<CursoDto?> ObterPorId(Guid cursoId);
+    Task<IEnumerable<CursoDto>> ObterTodos();
 }

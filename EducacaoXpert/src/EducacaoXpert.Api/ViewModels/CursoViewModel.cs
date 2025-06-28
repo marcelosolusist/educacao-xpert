@@ -1,6 +1,6 @@
-﻿namespace EducacaoXpert.Api.DTO;
+﻿namespace EducacaoXpert.Api.ViewModels;
 
-public class CursoDto
+public class CursoViewModel
 {
     public Guid Id { get; set; }
     public string Nome { get; set; }

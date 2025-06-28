@@ -1,5 +1,5 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Api.DTO;
+using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Core.DomainObjects.Enums;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
@@ -7,7 +7,7 @@ using EducacaoXpert.GestaoAlunos.Application.Commands;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
 using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
-using EducacaoXpert.GestaoConteudos.Application.Queries.ViewModels;
+using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 using EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 using MediatR;
@@ -45,7 +45,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
 
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromBody] CursoDto curso)
+    public async Task<IActionResult> Adicionar([FromBody] CursoViewModel curso)
     {
         var command = new AdicionarCursoCommand(curso.Nome, curso.Conteudo, UsuarioId, curso.Preco);
         await _mediator.Send(command);
@@ -55,7 +55,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
 
     [Authorize(Roles = "ADMIN")]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Atualizar(Guid id, [FromBody] CursoDto curso)
+    public async Task<IActionResult> Atualizar(Guid id, [FromBody] CursoViewModel curso)
     {
         if (id != curso.Id)
         {
@@ -87,7 +87,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
 
     [Authorize(Roles = "ALUNO")]
     [HttpPost("{cursoId:guid}/realizar-pagamento")]
-    public async Task<IActionResult> RealizarPagamento(Guid cursoId, [FromBody] DadosPagamento dadosPagamento)
+    public async Task<IActionResult> RealizarPagamento(Guid cursoId, [FromBody] DadosPagamentoViewModel dadosPagamento)
     {
         var curso = await cursoQueries.ObterPorId(cursoId);
 
@@ -112,7 +112,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
-    private async Task ValidarCursoMatricula(CursoViewModel? curso)
+    private async Task ValidarCursoMatricula(CursoDto? curso)
     {
         if (curso is null)
         {
@@ -127,7 +127,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
     }
 
-    private async Task ValidarConclusaoCurso(CursoViewModel? curso)
+    private async Task ValidarConclusaoCurso(CursoDto? curso)
     {
         if (curso is null)
         {
