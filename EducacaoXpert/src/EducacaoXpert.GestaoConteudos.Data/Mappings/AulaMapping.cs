@@ -14,5 +14,9 @@ public class AulaMapping : IEntityTypeConfiguration<Aula>
         // 1 : N - Aula : Materiais
         builder.HasMany(a => a.Materiais)
             .WithOne(a => a.Aula);
+
+        // 1 : N - Aula : Materiais
+        builder.HasMany(a => a.Materiais)
+            .WithOne(a => a.Aula);
     }
 }

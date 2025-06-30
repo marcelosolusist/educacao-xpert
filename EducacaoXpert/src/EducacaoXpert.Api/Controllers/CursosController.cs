@@ -23,6 +23,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
                             IAppIdentityUser identityUser,
                             IAlunoQueries alunoQueries,
                             ICursoRepository cursoRepository,
+                            IProgressoCursoRepository progressoCursoRepository,
                             ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
 {
     private readonly IMediator _mediator = mediator;
@@ -48,6 +49,18 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<IActionResult> Adicionar([FromBody] CursoViewModel curso)
     {
         var command = new AdicionarCursoCommand(curso.Nome, curso.Conteudo, UsuarioId, curso.Preco);
+        await _mediator.Send(command);
+
+        return RespostaPadrao(HttpStatusCode.Created);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpPost("{id:guid}/aulas")]
+    public async Task<IActionResult> AdicionarAula([FromBody] AulaViewModel aulaDto, Guid cursoId)
+    {
+        var command = new AdicionarAulaCommand(aulaDto.Nome, aulaDto.Conteudo, cursoId,
+                                               aulaDto.NomeMaterial, aulaDto.TipoMaterial);
+
         await _mediator.Send(command);
 
         return RespostaPadrao(HttpStatusCode.Created);
@@ -134,7 +147,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             NotificarErro("Curso", "Curso não encontrado.");
             return;
         }
-        var progressoCurso = await cursoRepository.ObterProgressoCurso(curso.Id, UsuarioId);
+        var progressoCurso = await progressoCursoRepository.Obter(curso.Id, UsuarioId);
 
         if (progressoCurso is null || !progressoCurso.CursoConcluido)
         {

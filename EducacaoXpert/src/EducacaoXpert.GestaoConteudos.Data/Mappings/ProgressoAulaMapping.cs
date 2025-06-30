@@ -11,16 +11,10 @@ public class ProgressoAulaMapping : IEntityTypeConfiguration<ProgressoAula>
         builder.ToTable("ProgressoAulas");
         builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.AlunoId)
-            .IsRequired();
-
         builder.Property(p => p.AulaId)
             .IsRequired();
 
         builder.Property(p => p.Status)
             .HasConversion<short>();
-
-        builder.HasIndex(p => new { p.AulaId, p.AlunoId })
-            .IsUnique(); ;
     }
 }

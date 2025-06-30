@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducacaoXpert.GestaoConteudos.Data.Migrations
 {
     [DbContext(typeof(GestaoConteudosContext))]
-    [Migration("20250628124203_GC_Inicial")]
+    [Migration("20250630064239_GC_Inicial")]
     partial class GC_Inicial
     {
         /// <inheritdoc />
@@ -126,9 +126,6 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("AlunoId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("AulaId")
                         .HasColumnType("TEXT");
 
@@ -141,13 +138,17 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Property<DateTime?>("DataExclusao")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ProgressoCursoId")
+                        .HasColumnType("TEXT");
+
                     b.Property<short>("Status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AulaId", "AlunoId")
-                        .IsUnique();
+                    b.HasIndex("AulaId");
+
+                    b.HasIndex("ProgressoCursoId");
 
                     b.ToTable("ProgressoAulas", (string)null);
                 });
@@ -161,7 +162,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Property<Guid>("AlunoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AulasConcluidas")
+                    b.Property<int>("AulasAssistidas")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("CursoId")
@@ -210,14 +211,38 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Navigation("Aula");
                 });
 
+            modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.ProgressoAula", b =>
+                {
+                    b.HasOne("EducacaoXpert.GestaoConteudos.Domain.Entities.Aula", "Aula")
+                        .WithMany("ProgressoAulas")
+                        .HasForeignKey("AulaId")
+                        .IsRequired();
+
+                    b.HasOne("EducacaoXpert.GestaoConteudos.Domain.Entities.ProgressoCurso", "ProgressoCurso")
+                        .WithMany("ProgressoAulas")
+                        .HasForeignKey("ProgressoCursoId")
+                        .IsRequired();
+
+                    b.Navigation("Aula");
+
+                    b.Navigation("ProgressoCurso");
+                });
+
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.Aula", b =>
                 {
                     b.Navigation("Materiais");
+
+                    b.Navigation("ProgressoAulas");
                 });
 
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.Curso", b =>
                 {
                     b.Navigation("Aulas");
+                });
+
+            modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.ProgressoCurso", b =>
+                {
+                    b.Navigation("ProgressoAulas");
                 });
 #pragma warning restore 612, 618
         }

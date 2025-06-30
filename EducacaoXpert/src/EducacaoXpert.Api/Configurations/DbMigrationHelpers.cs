@@ -118,15 +118,15 @@ public static class DbMigrationHelpers
         matricula.Ativar();
         matricula.Concluir();
 
-        var progressoBoasVindas = new ProgressoAula(aluno.Id, aulaBoasVindas.Id);
-        progressoBoasVindas.ConcluirAula();
-        var progressoComoFazerOCurso = new ProgressoAula(aluno.Id, aulaComoFazerOCurso.Id);
-        progressoComoFazerOCurso.ConcluirAula();
-        var progressoMaoNaMassa = new ProgressoAula(aluno.Id, aulaMaoNaMassa.Id);
-        progressoMaoNaMassa.ConcluirAula();
+        //var progressoBoasVindas = new ProgressoAula(aluno.Id, aulaBoasVindas.Id);
+        //progressoBoasVindas.ConcluirAula();
+        //var progressoComoFazerOCurso = new ProgressoAula(aluno.Id, aulaComoFazerOCurso.Id);
+        //progressoComoFazerOCurso.ConcluirAula();
+        //var progressoMaoNaMassa = new ProgressoAula(aluno.Id, aulaMaoNaMassa.Id);
+        //progressoMaoNaMassa.ConcluirAula();
 
-        var progressoCursoConcluido = new ProgressoCurso(curso.Id, aluno.Id, curso.Aulas.Count);
-        progressoCursoConcluido.IncrementarProgresso();
+        //var progressoCursoConcluido = new ProgressoCurso(curso.Id, aluno.Id, curso.Aulas.Count);
+        //progressoCursoConcluido.IncrementarProgresso();
 
         // Certificado para o aluno
         var certificado = new Certificado(aluno.Nome, curso.Nome, matricula.Id, aluno.Id, matricula.DataConclusao);
@@ -158,8 +158,8 @@ public static class DbMigrationHelpers
 
         await dbConteudosContext.Set<Curso>().AddRangeAsync([curso]);
         await dbConteudosContext.Set<Aula>().AddRangeAsync([aulaBoasVindas, aulaComoFazerOCurso, aulaMaoNaMassa]);
-        await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoBoasVindas, progressoComoFazerOCurso, progressoMaoNaMassa]);
-        await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCursoConcluido);
+        //await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoBoasVindas, progressoComoFazerOCurso, progressoMaoNaMassa]);
+        //await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCursoConcluido);
 
         await dbPagamentoFaturamentoContext.Set<Pagamento>().AddAsync(pagamento);
         await dbPagamentoFaturamentoContext.Set<Transacao>().AddAsync(transacao);

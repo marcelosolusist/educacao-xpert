@@ -2,7 +2,6 @@
 
 public enum StatusProgressoAula
 {
-    Pendente = 0,
-    Iniciada = 1,
-    Assistida = 2,
+    Iniciada = 0,
+    Assistida = 1,
 }

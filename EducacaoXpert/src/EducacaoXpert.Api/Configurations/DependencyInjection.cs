@@ -39,8 +39,8 @@ public static class DependencyInjection
 
         // Gestão de Conteúdos
         builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+        builder.Services.AddScoped<IProgressoCursoRepository, ProgressoCursoRepository>();
         builder.Services.AddScoped<ICursoQueries, CursoQueries>();
-        builder.Services.AddScoped<IAulaRepository, AulaRepository>();
         builder.Services.AddScoped<GestaoConteudosContext>();
 
         // Mediator

@@ -30,23 +30,6 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProgressoAulas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AulaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Status = table.Column<short>(type: "INTEGER", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProgressoAulas", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProgressoCursos",
                 columns: table => new
                 {
@@ -54,7 +37,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
-                    AulasConcluidas = table.Column<int>(type: "INTEGER", nullable: false),
+                    AulasAssistidas = table.Column<int>(type: "INTEGER", nullable: false),
                     PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -109,6 +92,33 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProgressoAulas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProgressoCursoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AulaId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Status = table.Column<short>(type: "INTEGER", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgressoAulas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProgressoAulas_Aulas_AulaId",
+                        column: x => x.AulaId,
+                        principalTable: "Aulas",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProgressoAulas_ProgressoCursos_ProgressoCursoId",
+                        column: x => x.ProgressoCursoId,
+                        principalTable: "ProgressoCursos",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Aulas_CursoId",
                 table: "Aulas",
@@ -120,10 +130,14 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 column: "AulaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProgressoAulas_AulaId_AlunoId",
+                name: "IX_ProgressoAulas_AulaId",
                 table: "ProgressoAulas",
-                columns: new[] { "AulaId", "AlunoId" },
-                unique: true);
+                column: "AulaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProgressoAulas_ProgressoCursoId",
+                table: "ProgressoAulas",
+                column: "ProgressoCursoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProgressoCursos_CursoId_AlunoId",
@@ -142,10 +156,10 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "ProgressoAulas");
 
             migrationBuilder.DropTable(
-                name: "ProgressoCursos");
+                name: "Aulas");
 
             migrationBuilder.DropTable(
-                name: "Aulas");
+                name: "ProgressoCursos");
 
             migrationBuilder.DropTable(
                 name: "Cursos");

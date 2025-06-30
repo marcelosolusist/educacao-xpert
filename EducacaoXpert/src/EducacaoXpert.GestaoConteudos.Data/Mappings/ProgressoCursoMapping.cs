@@ -23,5 +23,9 @@ public class ProgressoCursoMapping : IEntityTypeConfiguration<ProgressoCurso>
 
         builder.HasIndex(p => new { p.CursoId, p.AlunoId })
             .IsUnique();
+
+        // 1 : N - ProgressoCurso : ProgressoAulas
+        builder.HasMany(p => p.ProgressoAulas)
+            .WithOne(p => p.ProgressoCurso);
     }
 }

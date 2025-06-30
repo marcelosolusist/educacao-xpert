@@ -5,26 +5,31 @@ namespace EducacaoXpert.GestaoConteudos.Domain.Entities;
 
 public class ProgressoAula : Entity
 {
-    public Guid AlunoId { get; private set; }
+    public Guid ProgressoCursoId { get; private set; }
     public Guid AulaId { get; private set; }
     public StatusProgressoAula Status { get; private set; }
 
+    // EF Rel.
+    public ProgressoCurso ProgressoCurso { get; set; }
+    public Aula Aula { get; set; }
+
     protected ProgressoAula() { }
 
-    public ProgressoAula(Guid alunoId, Guid aulaId)
+    public ProgressoAula(Guid aulaId)
     {
-        AlunoId = alunoId;
-        AulaId = aulaId;
-        Status = StatusProgressoAula.Pendente;
         Validar();
+        AulaId = aulaId;
+        Status = StatusProgressoAula.Iniciada;
     }
-    public void EmAndamento() => Status = StatusProgressoAula.Iniciada;
-    public void ConcluirAula() => Status = StatusProgressoAula.Assistida;
+    internal void AtualizarAulaAssistida() => Status = StatusProgressoAula.Assistida;
 
-    public void Validar()
+    internal void AssociarProgressoCurso(Guid progressoCursoId)
     {
-        if (AlunoId == Guid.Empty)
-            throw new DomainException("O ID do aluno não pode ser vazio.");
+        ProgressoCursoId = progressoCursoId;
+    }
+
+    internal void Validar()
+    {
         if (AulaId == Guid.Empty)
             throw new DomainException("O ID da aula não pode ser vazio.");
     }

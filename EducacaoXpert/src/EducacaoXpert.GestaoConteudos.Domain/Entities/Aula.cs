@@ -12,6 +12,9 @@ public class Aula : Entity, IAggregateRoot
     private readonly List<Material> _materiais = [];
     public IReadOnlyCollection<Material> Materiais => _materiais;
 
+    private readonly List<ProgressoAula> _progressoAulas = [];
+    public IReadOnlyCollection<ProgressoAula> ProgressoAulas => _progressoAulas;
+
     // EF relationship
     public Curso? Curso { get; private set; }
 
@@ -23,6 +26,8 @@ public class Aula : Entity, IAggregateRoot
         Nome = nome;
         Conteudo = conteudo;
         Validar();
+        _materiais = new List<Material>();
+        _progressoAulas = new List<ProgressoAula>();
     }
 
     public void AssociarCurso(Guid cursoId)

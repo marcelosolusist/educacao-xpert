@@ -27,7 +27,7 @@ public class AutenticacaoController(INotificationHandler<DomainNotification> not
     private readonly IMediator _mediator = mediator;
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
-    [HttpPost("registrar/aluno")]
+    [HttpPost("registrar-aluno")]
     public async Task<ActionResult> RegistrarAluno(RegisterUserViewModel registerUser)
     {
         if (!ModelState.IsValid)
@@ -55,7 +55,7 @@ public class AutenticacaoController(INotificationHandler<DomainNotification> not
         var token = await GerarToken(registerUser.Email!);
         return RespostaPadrao(HttpStatusCode.Created, token);
     }
-    [HttpPost("registrar/admin")]
+    [HttpPost("registrar-admin")]
     public async Task<ActionResult> RegistrarAdmin(RegisterUserViewModel registerUser)
     {
         if (!ModelState.IsValid)
