@@ -36,7 +36,7 @@ public class Certificado : Entity
         Descricao = $"Certificamos que o(a) aluno(a) {NomeAluno} concluiu o curso {NomeCurso} com sucesso no dia {DataConclusao:dd/MM/yyyy}.";
     }
 
-    public void AdicionarArquivo(byte[] arquivoPdf)
+    public void IncluirArquivo(byte[] arquivoPdf)
     {
         if (arquivoPdf == null || arquivoPdf.Length == 0)
             throw new DomainException("Arquivo do certificado inválido.");

@@ -3,14 +3,14 @@ using FluentValidation;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Commands;
 
-public class AdicionarCertificadoCommand : Command
+public class IncluirCertificadoCommand : Command
 {
     public Guid AlunoId { get; set; }
     public Guid MatriculaId { get; set; }
     public Guid CursoId { get; set; }
     public string NomeCurso { get; set; }
 
-    public AdicionarCertificadoCommand(Guid alunoId, Guid matriculaId, Guid cursoId, string nomeCurso)
+    public IncluirCertificadoCommand(Guid alunoId, Guid matriculaId, Guid cursoId, string nomeCurso)
     {
         AggregateId = alunoId;
         AlunoId = alunoId;
@@ -24,7 +24,7 @@ public class AdicionarCertificadoCommand : Command
         return ValidationResult.IsValid;
     }
 }
-public class GerarCertificadoCommandValidator : AbstractValidator<AdicionarCertificadoCommand>
+public class GerarCertificadoCommandValidator : AbstractValidator<IncluirCertificadoCommand>
 {
     public static string AlunoIdErro => "O campo AlunoId é obrigatório.";
     public static string MatriculaIdErro => "O campo MatriculaId é obrigatório.";

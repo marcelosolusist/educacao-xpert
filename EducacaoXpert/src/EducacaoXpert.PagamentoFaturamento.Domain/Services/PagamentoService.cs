@@ -9,8 +9,8 @@ using MediatR;
 namespace EducacaoXpert.PagamentoFaturamento.Domain.Services;
 
 public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCreditoFacade,
-                              IPagamentoRepository pagamentoRepository,
-                              IMediator mediator) : IPagamentoService
+                                IPagamentoRepository pagamentoRepository,
+                                IMediator mediator) : IPagamentoService
 {
     public async Task<bool> RealizarPagamentoCurso(PagamentoCurso pagamentoCurso)
     {
@@ -36,10 +36,10 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
 
         if (transacao.StatusTransacao == StatusTransacao.Autorizado)
         {
-            pagamento.AdicionarEvento(new CursoPagamentoRealizadoEvent(pagamento.CursoId, pagamento.AlunoId));
+            pagamento.IncluirEvento(new CursoPagamentoRealizadoEvent(pagamento.CursoId, pagamento.AlunoId));
 
-            pagamentoRepository.Adicionar(pagamento);
-            pagamentoRepository.AdicionarTransacao(transacao);
+            pagamentoRepository.Incluir(pagamento);
+            pagamentoRepository.IncluirTransacao(transacao);
 
             await pagamentoRepository.UnitOfWork.Commit();
             return true;

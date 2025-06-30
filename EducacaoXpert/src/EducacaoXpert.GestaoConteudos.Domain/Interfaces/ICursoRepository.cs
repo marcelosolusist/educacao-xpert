@@ -7,11 +7,13 @@ public interface ICursoRepository : IRepository<Curso>
 {
     Task<Curso?> ObterPorId(Guid cursoId);
     Task<Curso?> ObterCursoComAulas(Guid cursoId);
-    Task<IEnumerable<Curso>> ObterTodos();
+    Task<IEnumerable<Curso>> ListarTodos();
     Task<Aula?> ObterAulaPorId(Guid aulaId);
-    void Adicionar(Curso curso);
-    void Atualizar(Curso curso);
+    Task<IEnumerable<Aula>> ListarTodasAulasPorCursoId(Guid cursoId);
+    void Incluir(Curso curso);
+    void Editar(Curso curso);
     void Remover(Curso curso);
-    void AdicionarAula(Aula aula);
-    void AtualizarAula(Aula aula);
+    void IncluirAula(Aula aula);
+    void EditarAula(Aula aula);
+    void RemoverAula(Aula aula);
 }

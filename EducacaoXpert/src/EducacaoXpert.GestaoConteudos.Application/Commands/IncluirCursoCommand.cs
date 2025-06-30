@@ -3,41 +3,41 @@ using FluentValidation;
 
 namespace EducacaoXpert.GestaoConteudos.Application.Commands;
 
-public class AdicionarCursoCommand : Command
+public class IncluirCursoCommand : Command
 {
     public string Nome { get; set; }
-    public string ConteudoProgramatico { get; set; }
+    public string Conteudo { get; set; }
     public Guid UsuarioCriacaoId { get; set; }
     public int Preco { get; set; }
 
-    public AdicionarCursoCommand(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, int preco)
+    public IncluirCursoCommand(string nome, string conteudo, Guid usuarioCriacaoId, int preco)
     {
         AggregateId = usuarioCriacaoId;
         Nome = nome;
-        ConteudoProgramatico = conteudoProgramatico;
+        Conteudo = conteudo;
         UsuarioCriacaoId = usuarioCriacaoId;
         Preco = preco;
     }
 
     public override bool EhValido()
     {
-        ValidationResult = new AdicionarCursoCommandValidation().Validate(this);
+        ValidationResult = new IncluirCursoCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
 
-public class AdicionarCursoCommandValidation : AbstractValidator<AdicionarCursoCommand>
+public class IncluirCursoCommandValidation : AbstractValidator<IncluirCursoCommand>
 {
     public static string NomeErro => "O nome do curso não pode ser vazio.";
-    public static string ConteudoProgramaticoErro => "O conteúdo programático não pode ser vazio.";
+    public static string ConteudoErro => "O conteúdo não pode ser vazio.";
     public static string UsuarioCriacaoIdErro => "O ID do usuário de criação não pode ser vazio.";
     public static string PrecoErro => "O preço do curso deve ser maior que zero.";
 
-    public AdicionarCursoCommandValidation()
+    public IncluirCursoCommandValidation()
     {
         RuleFor(c => c.Nome).NotEmpty().WithMessage(NomeErro);
 
-        RuleFor(c => c.ConteudoProgramatico).NotEmpty().WithMessage(ConteudoProgramaticoErro);
+        RuleFor(c => c.Conteudo).NotEmpty().WithMessage(ConteudoErro);
 
         RuleFor(c => c.UsuarioCriacaoId).NotEmpty().WithMessage(UsuarioCriacaoIdErro);
 

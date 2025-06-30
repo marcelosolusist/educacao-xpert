@@ -17,7 +17,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    ConteudoProgramatico = table.Column<string>(type: "TEXT", nullable: false),
+                    Conteudo = table.Column<string>(type: "TEXT", nullable: false),
                     UsuarioCriacaoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Preco = table.Column<int>(type: "INTEGER", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -59,7 +59,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
                     TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
-                    AulasAssistidas = table.Column<int>(type: "INTEGER", nullable: false),
+                    AulasFinalizadas = table.Column<int>(type: "INTEGER", nullable: false),
                     PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),

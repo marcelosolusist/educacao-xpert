@@ -10,16 +10,15 @@ public class PagamentoRepository(PagamentoFaturamentoContext context) : IPagamen
 {
     private readonly DbSet<Pagamento> _dbSet = context.Set<Pagamento>();
     public IUnitOfWork UnitOfWork => context;
-    public void Adicionar(Pagamento pagamento)
+
+    public void Incluir(Pagamento pagamento)
     {
         _dbSet.Add(pagamento);
     }
-
-    public void AdicionarTransacao(Transacao transacao)
+    public void IncluirTransacao(Transacao transacao)
     {
         context.Set<Transacao>().Add(transacao);
     }
-
     public void Dispose()
     {
         context.Dispose();

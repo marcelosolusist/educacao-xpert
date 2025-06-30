@@ -10,11 +10,11 @@ public class UsuarioRepository(GestaoAlunosContext dbContext) : IUsuarioReposito
 {
     private readonly DbSet<Usuario> _dbSet = dbContext.Set<Usuario>();
     public IUnitOfWork UnitOfWork => dbContext;
-    public void Adicionar(Usuario usuario)
+
+    public void Incluir(Usuario usuario)
     {
         _dbSet.Add(usuario);
     }
-
     public void Dispose()
     {
         dbContext.Dispose();

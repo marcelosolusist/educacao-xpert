@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Commands;
 
-public class AdicionarAdminCommand : Command
+public class IncluirAdminCommand : Command
 {
     public string UsuarioId { get; set; }
 
-    public AdicionarAdminCommand(string usuarioId)
+    public IncluirAdminCommand(string usuarioId)
     {
         if (Guid.TryParse(usuarioId, out var parsedGuid))
         {
@@ -19,14 +19,14 @@ public class AdicionarAdminCommand : Command
 
     public override bool EhValido()
     {
-        ValidationResult = new AdicionarAdminCommandValidation().Validate(this);
+        ValidationResult = new IncluirAdminCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
-public class AdicionarAdminCommandValidation : AbstractValidator<AdicionarAdminCommand>
+public class IncluirAdminCommandValidation : AbstractValidator<IncluirAdminCommand>
 {
     public static string IdErro => "O campo UsuarioId deve ser informado";
-    public AdicionarAdminCommandValidation()
+    public IncluirAdminCommandValidation()
     {
         RuleFor(c => c.UsuarioId)
             .NotEmpty()

@@ -9,7 +9,7 @@ public class ProgressoCurso : Entity, IAggregateRoot
     public Guid CursoId { get; private set; }
     public Guid AlunoId { get; private set; }
     public int TotalAulas { get; private set; }
-    public int AulasAssistidas { get; private set; }
+    public int AulasFinalizadas { get; private set; }
     public int PercentualConcluido { get; private set; }
     public bool CursoConcluido => PercentualConcluido == 100;
 
@@ -26,12 +26,12 @@ public class ProgressoCurso : Entity, IAggregateRoot
         CursoId = cursoId;
         AlunoId = alunoId;
         TotalAulas = totalAulas;
-        AulasAssistidas = 0;
+        AulasFinalizadas = 0;
         PercentualConcluido = 0;
         _progressoAulas = new List<ProgressoAula>();
     }
 
-    public void AdicionarProgressoAula(ProgressoAula progressoAula)
+    public void IncluirProgressoAula(ProgressoAula progressoAula)
     {
         if (ProgressoAulaExistente(progressoAula))
             throw new DomainException("Progresso de aula já associada ao progresso do curso."); 
@@ -44,8 +44,8 @@ public class ProgressoCurso : Entity, IAggregateRoot
         var aulaMarcar = _progressoAulas.FirstOrDefault(p => p.Id == progressoAula.Id);
         if (aulaMarcar is null)
             throw new DomainException("Progresso de aula não existe.");
-        aulaMarcar.AtualizarAulaAssistida();
-        AtualizarAulasAssistidas();
+        aulaMarcar.FinalizarAula();
+        EditarAulasFinalizadas();
     }
 
     private bool ProgressoAulaExistente(ProgressoAula progressoAula)
@@ -53,14 +53,14 @@ public class ProgressoCurso : Entity, IAggregateRoot
         return _progressoAulas.Any(p => p.AulaId == progressoAula.AulaId);
     }
 
-    private void AtualizarAulasAssistidas()
+    private void EditarAulasFinalizadas()
     {
-        AulasAssistidas = _progressoAulas.Count(p => p.Status == StatusProgressoAula.Assistida);
-        AtualizarPercentualConcluido();
+        AulasFinalizadas = _progressoAulas.Count(p => p.Status == StatusProgressoAula.Finalizada);
+        EditarPercentualConcluido();
     }
 
-    private void AtualizarPercentualConcluido()
+    private void EditarPercentualConcluido()
     {
-        PercentualConcluido = TotalAulas == 0 ? 0 : Convert.ToInt32(Convert.ToDecimal(AulasAssistidas / TotalAulas) * 100);
+        PercentualConcluido = TotalAulas == 0 ? 0 : Convert.ToInt32(Convert.ToDecimal(AulasFinalizadas / TotalAulas) * 100);
     }
 }

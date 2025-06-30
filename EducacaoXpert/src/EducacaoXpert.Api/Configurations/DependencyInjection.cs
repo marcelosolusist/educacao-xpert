@@ -44,8 +44,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<GestaoConteudosContext>();
 
         // Mediator
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AdicionarAlunoCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AdicionarAulaCommand>());
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirAlunoCommand>());
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirAulaCommand>());
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<PagamentoService>());
 
         // Pagamentos

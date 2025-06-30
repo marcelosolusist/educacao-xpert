@@ -6,8 +6,8 @@ using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Commands;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
-using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
 using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
+using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
 using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 using EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 using MediatR;
@@ -19,19 +19,19 @@ namespace EducacaoXpert.Api.Controllers;
 
 [Route("api/cursos")]
 public class CursosController(INotificationHandler<DomainNotification> notificacoes,
-                            IMediator mediator,
-                            IAppIdentityUser identityUser,
-                            IAlunoQueries alunoQueries,
-                            IProgressoCursoRepository progressoCursoRepository,
-                            ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
+                                IMediator mediator,
+                                IAppIdentityUser identityUser,
+                                IAlunoQueries alunoQueries,
+                                IProgressoCursoRepository progressoCursoRepository,
+                                ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
 {
     private readonly IMediator _mediator = mediator;
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CursoViewModel>>> ObterTodos()
+    public async Task<ActionResult<IEnumerable<CursoViewModel>>> ListarTodos()
     {
-        var cursos = await cursoQueries.ObterTodos();
+        var cursos = await cursoQueries.ListarTodos();
         return RespostaPadrao(HttpStatusCode.OK, cursos);
     }
 
@@ -45,39 +45,130 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
 
     [Authorize(Roles = "ADMIN")]
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromBody] CursoViewModel curso)
+    public async Task<IActionResult> Incluir([FromBody] CursoViewModel curso)
     {
-        var command = new AdicionarCursoCommand(curso.Nome, curso.Conteudo, UsuarioId, curso.Preco);
+        var command = new IncluirCursoCommand(curso.Nome, curso.Conteudo, UsuarioId, curso.Preco);
         await _mediator.Send(command);
-
-        return RespostaPadrao(HttpStatusCode.Created);
-    }
-
-    [Authorize(Roles = "ADMIN")]
-    [HttpPost("{id:guid}/aulas")]
-    public async Task<IActionResult> AdicionarAula([FromBody] AulaViewModel aulaDto, Guid cursoId)
-    {
-        var command = new AdicionarAulaCommand(aulaDto.Nome, aulaDto.Conteudo, cursoId,
-                                               aulaDto.NomeMaterial, aulaDto.TipoMaterial);
-
-        await _mediator.Send(command);
-
         return RespostaPadrao(HttpStatusCode.Created);
     }
 
     [Authorize(Roles = "ADMIN")]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Atualizar(Guid id, [FromBody] CursoViewModel curso)
+    public async Task<IActionResult> Editar(Guid id, [FromBody] CursoViewModel curso)
     {
         if (id != curso.Id)
         {
             NotificarErro("Curso", "O ID do curso não pode ser diferente do ID informado na URL.");
             return RespostaPadrao();
         }
-        var command = new AtualizarCursoCommand(curso.Id, curso.Nome, curso.Conteudo, curso.Preco);
-
+        var command = new EditarCursoCommand(curso.Id, curso.Nome, curso.Conteudo, curso.Preco);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.NoContent);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Excluir(Guid id)
+    {
+        var command = new ExcluirCursoCommand(id);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.NoContent);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpGet("{id:guid}/aulas")]
+    public async Task<ActionResult<IEnumerable<CursoViewModel>>> ListarTodasAulasPorCursoId(Guid id)
+    {
+        var aulas = await cursoQueries.ListarTodasAulasPorCursoId(id);
+        var aulasResumidas = new List<AulaResumidaViewModel>();
+        foreach (var aula in aulas)
+        {
+            aulasResumidas.Add(new AulaResumidaViewModel()
+            {
+                Id = aula.Id,
+                Nome = aula.Nome,
+                Conteudo = aula.Conteudo,
+            });
+        }
+        return RespostaPadrao(HttpStatusCode.OK, aulasResumidas);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpPost("{id:guid}/aulas")]
+    public async Task<IActionResult> IncluirAula([FromBody] AulaViewModel aulaDto, Guid cursoId)
+    {
+        var command = new IncluirAulaCommand(aulaDto.Nome, aulaDto.Conteudo, cursoId,
+                                               aulaDto.NomeMaterial, aulaDto.TipoMaterial);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.Created);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpPut("{id:guid}/aulas/{idAula:guid}")]
+    public async Task<IActionResult> EditarAula(Guid id, Guid idAula, [FromBody] AulaViewModel aula)
+    {
+        if (idAula != aula.Id)
+        {
+            NotificarErro("Aula", "O ID da aula não pode ser diferente do ID informado na URL.");
+            return RespostaPadrao();
+        }
+        var command = new EditarAulaCommand((Guid)aula.Id, aula.Nome, aula.Conteudo, id, aula.NomeMaterial, aula.TipoMaterial);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.NoContent);
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpDelete("{id:guid}/aulas/{idAula:guid}")]
+    public async Task<IActionResult> ExcluirAula(Guid id, Guid idAula)
+    {
+        var command = new ExcluirAulaCommand(idAula);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.NoContent);
+    }
+
+    [Authorize(Roles = "ALUNO")]
+    [HttpPost("{id:guid}/matricular")]
+    public async Task<IActionResult> Matricular(Guid id)
+    {
+        var curso = await cursoQueries.ObterPorId(id);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+        var command = new IncluirMatriculaCommand(UsuarioId, id);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.Created);
+    }
+
+    [Authorize(Roles = "ALUNO")]
+    [HttpPost("{id:guid}/pagar-matricula")]
+    public async Task<IActionResult> PagarMatricula(Guid id, [FromBody] DadosPagamentoViewModel dadosPagamento)
+    {
+        var curso = await cursoQueries.ObterPorId(id);
+        await ValidarCursoMatricula(curso);
+        if (!OperacaoValida()) return RespostaPadrao();
+        var command = new RealizarPagamentoCursoCommand(UsuarioId, id, dadosPagamento.CvvCartao, dadosPagamento.ExpiracaoCartao, dadosPagamento.NomeCartao, dadosPagamento.NumeroCartao, curso.Preco);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.Created);
+    }
+
+    [Authorize(Roles = "ALUNO")]
+    [HttpGet("{id:guid}/aulas/{idAula:guid}/iniciar")]
+    public async Task<IActionResult> IniciarAula(Guid id, Guid idAula)
+    {
+        //TODO: Iniciar a aula
+
+        return RespostaPadrao(HttpStatusCode.OK);
+    }
+
+    [Authorize(Roles = "ALUNO")]
+    [HttpPut("{id:guid}/aulas/{idAula:guid}/finalizar")]
+    public async Task<IActionResult> FinalizarAula(Guid id, Guid idAula)
+    {
+        //TODO: Finalizar a aula
+
+        return RespostaPadrao(HttpStatusCode.OK);
     }
 
     [Authorize(Roles = "ALUNO")]
@@ -85,43 +176,11 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<IActionResult> ConcluirCurso(Guid id)
     {
         var curso = await cursoQueries.ObterPorId(id);
-
         await ValidarConclusaoCurso(curso);
-
-        if (!OperacaoValida())
-            return RespostaPadrao();
-
+        if (!OperacaoValida()) return RespostaPadrao();
         var command = new ConcluirMatriculaCommand(UsuarioId, id, curso.Nome);
         await _mediator.Send(command);
-
         return RespostaPadrao(HttpStatusCode.Created);
-    }
-
-    [Authorize(Roles = "ALUNO")]
-    [HttpPost("{cursoId:guid}/realizar-pagamento")]
-    public async Task<IActionResult> RealizarPagamento(Guid cursoId, [FromBody] DadosPagamentoViewModel dadosPagamento)
-    {
-        var curso = await cursoQueries.ObterPorId(cursoId);
-
-        await ValidarCursoMatricula(curso);
-
-        if (!OperacaoValida())
-            return RespostaPadrao();
-
-        var command = new RealizarPagamentoCursoCommand(UsuarioId, cursoId, dadosPagamento.CvvCartao, dadosPagamento.ExpiracaoCartao, dadosPagamento.NomeCartao, dadosPagamento.NumeroCartao, curso.Preco);
-
-        await _mediator.Send(command);
-
-        return RespostaPadrao(HttpStatusCode.Created);
-    }
-
-    [Authorize(Roles = "ADMIN")]
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Deletar(Guid id)
-    {
-        var command = new DeletarCursoCommand(id);
-        await _mediator.Send(command);
-        return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
     private async Task ValidarCursoMatricula(CursoDto? curso)
@@ -132,7 +191,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             return;
         }
         var matricula = await alunoQueries.ObterMatricula(curso.Id, UsuarioId);
-
         if (matricula is not { Status: StatusMatricula.EmPagamento })
         {
             NotificarErro("Matricula", "A matrícula deve estar com status 'Em Pagamento' para realizar o pagamento.");
@@ -147,7 +205,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             return;
         }
         var progressoCurso = await progressoCursoRepository.Obter(curso.Id, UsuarioId);
-
         if (progressoCurso is null || !progressoCurso.CursoConcluido)
         {
             NotificarErro("Curso", "Todas as aulas deste curso precisam estar concluídas.");

@@ -110,9 +110,9 @@ public static class DbMigrationHelpers
         var aulaBoasVindas = new Aula("Boas Vindas", "Bem vindo ao curso de Clean Code");
         var aulaComoFazerOCurso = new Aula("Como fazer o curso", "Dicas de como aproveitar melhor o curso");
         var aulaMaoNaMassa = new Aula("Mão na massa", "Hora de colocar a mão na massa");
-        curso.AdicionarAula(aulaBoasVindas);
-        curso.AdicionarAula(aulaComoFazerOCurso);
-        curso.AdicionarAula(aulaMaoNaMassa);
+        curso.IncluirAula(aulaBoasVindas);
+        curso.IncluirAula(aulaComoFazerOCurso);
+        curso.IncluirAula(aulaMaoNaMassa);
 
         var matricula = new Matricula(aluno.Id, curso.Id);
         matricula.Ativar();
@@ -131,7 +131,7 @@ public static class DbMigrationHelpers
         // Certificado para o aluno
         var certificado = new Certificado(aluno.Nome, curso.Nome, matricula.Id, aluno.Id, matricula.DataConclusao);
         var pdf = pdfService.GerarPdf(certificado);
-        certificado.AdicionarArquivo(pdf);
+        certificado.IncluirArquivo(pdf);
 
         // Pagamento
         var pagamento = new Pagamento

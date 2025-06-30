@@ -3,12 +3,12 @@ using FluentValidation;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Commands;
 
-public class AdicionarMatriculaCommand : Command
+public class IncluirMatriculaCommand : Command
 {
     public Guid AlunoId { get; set; }
     public Guid CursoId { get; set; }
 
-    public AdicionarMatriculaCommand(Guid alunoId, Guid cursoId)
+    public IncluirMatriculaCommand(Guid alunoId, Guid cursoId)
     {
         AggregateId = alunoId;
         AlunoId = alunoId;
@@ -17,15 +17,15 @@ public class AdicionarMatriculaCommand : Command
 
     public override bool EhValido()
     {
-        ValidationResult = new AdicionarMatriculaCommandValidation().Validate(this);
+        ValidationResult = new IncluirMatriculaCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
-public class AdicionarMatriculaCommandValidation : AbstractValidator<AdicionarMatriculaCommand>
+public class IncluirMatriculaCommandValidation : AbstractValidator<IncluirMatriculaCommand>
 {
     public static string AlunoIdErro = "O campo AlunoId não pode ser vazio.";
     public static string CursoIdErro = "O campo CursoId não pode ser vazio.";
-    public AdicionarMatriculaCommandValidation()
+    public IncluirMatriculaCommandValidation()
     {
         RuleFor(c => c.AlunoId)
             .NotEqual(Guid.Empty)

@@ -3,12 +3,12 @@ using FluentValidation;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Commands;
 
-public class AdicionarAlunoCommand : Command
+public class IncluirAlunoCommand : Command
 {
     public string UsuarioId { get; set; }
     public string Nome { get; set; }
 
-    public AdicionarAlunoCommand(string usuarioId, string nome)
+    public IncluirAlunoCommand(string usuarioId, string nome)
     {
         if (Guid.TryParse(usuarioId, out var parsedGuid))
         {
@@ -20,16 +20,16 @@ public class AdicionarAlunoCommand : Command
 
     public override bool EhValido()
     {
-        ValidationResult = new AdicionarAlunoCommandValidation().Validate(this);
+        ValidationResult = new IncluirAlunoCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
-public class AdicionarAlunoCommandValidation : AbstractValidator<AdicionarAlunoCommand>
+public class IncluirAlunoCommandValidation : AbstractValidator<IncluirAlunoCommand>
 {
     public static string IdErro => "O campo UsuarioId deve ser informado";
     public static string NomeErro => "O campo Nome deve ser informado";
 
-    public AdicionarAlunoCommandValidation()
+    public IncluirAlunoCommandValidation()
     {
         RuleFor(c => c.UsuarioId)
             .NotEmpty()

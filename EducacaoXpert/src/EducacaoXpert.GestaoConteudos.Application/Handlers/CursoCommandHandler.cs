@@ -10,21 +10,21 @@ namespace EducacaoXpert.GestaoConteudos.Application.Handlers;
 public class CursoCommandHandler(ICursoRepository cursoRepository,
                                  IProgressoCursoRepository progressoCursoRepository,
                                  IMediator mediator) : CommandHandler,
-                                                    IRequestHandler<AdicionarCursoCommand, bool>,
-                                                    IRequestHandler<AtualizarCursoCommand, bool>,
-                                                    IRequestHandler<DeletarCursoCommand, bool>
+                                                    IRequestHandler<IncluirCursoCommand, bool>,
+                                                    IRequestHandler<EditarCursoCommand, bool>,
+                                                    IRequestHandler<ExcluirCursoCommand, bool>
 {
-    public async Task<bool> Handle(AdicionarCursoCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirCursoCommand command, CancellationToken cancellationToken)
     {
         if (!ValidarComando(command)) return false;
 
-        var curso = new Curso(command.Nome, command.ConteudoProgramatico, command.UsuarioCriacaoId, command.Preco);
-        cursoRepository.Adicionar(curso);
+        var curso = new Curso(command.Nome, command.Conteudo, command.UsuarioCriacaoId, command.Preco);
+        cursoRepository.Incluir(curso);
 
         return await cursoRepository.UnitOfWork.Commit();
     }
 
-    public async Task<bool> Handle(AtualizarCursoCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(EditarCursoCommand command, CancellationToken cancellationToken)
     {
         if (!ValidarComando(command))
             return false;
@@ -32,18 +32,18 @@ public class CursoCommandHandler(ICursoRepository cursoRepository,
         var curso = await cursoRepository.ObterPorId(command.CursoId);
         if (curso is null)
         {
-            await AdicionarNotificacao(command.MessageType, "Curso não encontrado.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Curso não encontrado.", cancellationToken);
             return false;
         }
 
-        curso.AtualizarNome(command.Nome);
-        curso.AtualizarConteudo(command.ConteudoProgramatico);
-        curso.AtualizarPreco(command.Preco);
+        curso.EditarNome(command.Nome);
+        curso.EditarConteudo(command.Conteudo);
+        curso.EditarPreco(command.Preco);
 
-        cursoRepository.Atualizar(curso);
+        cursoRepository.Editar(curso);
         return await cursoRepository.UnitOfWork.Commit();
     }
-    public async Task<bool> Handle(DeletarCursoCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(ExcluirCursoCommand command, CancellationToken cancellationToken)
     {
         if (!ValidarComando(command))
             return false;
@@ -51,13 +51,13 @@ public class CursoCommandHandler(ICursoRepository cursoRepository,
         var curso = await cursoRepository.ObterCursoComAulas(command.CursoId);
         if (curso is null)
         {
-            await AdicionarNotificacao(command.MessageType, "Curso não encontrado.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Curso não encontrado.", cancellationToken);
             return false;
         }
 
         if (curso.Aulas.Any())
         {
-            await AdicionarNotificacao(command.MessageType, "Curso não pode ser excluído pois possui aulas associadas.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Curso não pode ser excluído pois possui aulas associadas.", cancellationToken);
             return false;
         }
 
@@ -65,7 +65,7 @@ public class CursoCommandHandler(ICursoRepository cursoRepository,
         return await cursoRepository.UnitOfWork.Commit();
     }
 
-    protected override async Task AdicionarNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
+    protected override async Task IncluirNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {
         await mediator.Publish(new DomainNotification(messageType, descricao), cancellationToken);
     }

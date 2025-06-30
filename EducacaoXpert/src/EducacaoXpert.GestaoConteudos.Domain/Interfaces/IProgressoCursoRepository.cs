@@ -6,9 +6,9 @@ namespace EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 public interface IProgressoCursoRepository : IRepository<ProgressoCurso>
 {
     Task<ProgressoCurso?> Obter(Guid cursoId, Guid alunoId);
-    void Adicionar(ProgressoCurso progressoCurso);
-    void Atualizar(ProgressoCurso progressoCurso);
+    void Incluir(ProgressoCurso progressoCurso);
+    void Editar(ProgressoCurso progressoCurso);
     Task<ProgressoAula?> ObterProgressoAula(Guid aulaId, Guid alunoId);
-    void AdicionarProgressoAula(ProgressoAula progressoAula);
-    void AtualizarProgressoAula(ProgressoAula progressoAula);
+    void IncluirProgressoAula(ProgressoAula progressoAula);
+    void EditarProgressoAula(ProgressoAula progressoAula);
 }

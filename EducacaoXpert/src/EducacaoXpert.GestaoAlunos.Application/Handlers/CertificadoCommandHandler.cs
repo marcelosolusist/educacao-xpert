@@ -10,9 +10,9 @@ namespace EducacaoXpert.GestaoAlunos.Application.Handlers;
 public class CertificadoCommandHandler(ICertificadoPdfService certificadoPdfService,
                                         IMediator mediator,
                                        IAlunoRepository alunoRepository) : CommandHandler,
-                                        IRequestHandler<AdicionarCertificadoCommand, bool>
+                                        IRequestHandler<IncluirCertificadoCommand, bool>
 {
-    public async Task<bool> Handle(AdicionarCertificadoCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirCertificadoCommand request, CancellationToken cancellationToken)
     {
         if (!ValidarComando(request))
             return false;
@@ -20,19 +20,19 @@ public class CertificadoCommandHandler(ICertificadoPdfService certificadoPdfServ
         var aluno = await alunoRepository.ObterPorId(request.AlunoId);
         if (aluno is null)
         {
-            await AdicionarNotificacao(request.MessageType, "Aluno não encontrado.", cancellationToken);
+            await IncluirNotificacao(request.MessageType, "Aluno não encontrado.", cancellationToken);
             return false;
         }
         var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, request.AlunoId);
         if (matricula is null)
         {
-            await AdicionarNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
+            await IncluirNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
             return false;
         }
 
         if (!matricula.DataConclusao.HasValue)
         {
-            await AdicionarNotificacao(request.MessageType, "Matrícula não está concluída.", cancellationToken);
+            await IncluirNotificacao(request.MessageType, "Matrícula não está concluída.", cancellationToken);
             return false;
         }
 
@@ -42,18 +42,18 @@ public class CertificadoCommandHandler(ICertificadoPdfService certificadoPdfServ
 
         if (!pdf.Any())
         {
-            await AdicionarNotificacao(request.MessageType, "Erro ao gerar o PDF do certificado.", cancellationToken);
+            await IncluirNotificacao(request.MessageType, "Erro ao gerar o PDF do certificado.", cancellationToken);
             return false;
         }
 
-        certificado.AdicionarArquivo(pdf);
+        certificado.IncluirArquivo(pdf);
 
-        aluno.AdicionarCertificado(certificado);
-        alunoRepository.AdicionarCertificado(certificado);
+        aluno.IncluirCertificado(certificado);
+        alunoRepository.IncluirCertificado(certificado);
 
         return await alunoRepository.UnitOfWork.Commit();
     }
-    protected override async Task AdicionarNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
+    protected override async Task IncluirNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {
         await mediator.Publish(new DomainNotification(messageType, descricao), cancellationToken);
     }

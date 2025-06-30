@@ -21,7 +21,7 @@ public class ProgressoAula : Entity
         AulaId = aulaId;
         Status = StatusProgressoAula.Iniciada;
     }
-    internal void AtualizarAulaAssistida() => Status = StatusProgressoAula.Assistida;
+    internal void FinalizarAula() => Status = StatusProgressoAula.Finalizada;
 
     internal void AssociarProgressoCurso(Guid progressoCursoId)
     {

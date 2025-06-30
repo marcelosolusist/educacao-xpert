@@ -2,11 +2,11 @@
 
 public abstract class CommandHandler
 {
-    protected virtual Task AdicionarNotificacao(string type, string descricao, CancellationToken cancellationToken)
+    protected virtual Task IncluirNotificacao(string type, string descricao, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-    protected virtual void AdicionarNotificacao(string type, string descricao)
+    protected virtual void IncluirNotificacao(string type, string descricao)
     {
         throw new NotImplementedException();
     }
