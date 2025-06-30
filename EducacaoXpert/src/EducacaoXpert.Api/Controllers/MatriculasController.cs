@@ -22,10 +22,10 @@ public class MatriculasController(INotificationHandler<DomainNotification> notif
 {
     private readonly IMediator _mediator = mediator;
 
-    [HttpGet("pendentes-pagamento")]
-    public async Task<ActionResult<IEnumerable<MatriculaDto>>> ObterMatriculasPendentePagamento()
+    [HttpGet("em-pagamento")]
+    public async Task<ActionResult<IEnumerable<MatriculaDto>>> ObterMatriculasEmPagamento()
     {
-        var matriculas = await alunoQueries.ObterMatriculasPendentePagamento(UsuarioId);
+        var matriculas = await alunoQueries.ObterMatriculasEmPagamento(UsuarioId);
         return RespostaPadrao(HttpStatusCode.OK, matriculas);
     }
 

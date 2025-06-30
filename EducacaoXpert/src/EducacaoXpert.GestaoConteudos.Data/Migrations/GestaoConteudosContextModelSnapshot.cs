@@ -225,6 +225,16 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Navigation("ProgressoCurso");
                 });
 
+            modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.ProgressoCurso", b =>
+                {
+                    b.HasOne("EducacaoXpert.GestaoConteudos.Domain.Entities.Curso", "Curso")
+                        .WithMany("ProgressoCursos")
+                        .HasForeignKey("CursoId")
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+                });
+
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.Aula", b =>
                 {
                     b.Navigation("Materiais");
@@ -235,6 +245,8 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.Curso", b =>
                 {
                     b.Navigation("Aulas");
+
+                    b.Navigation("ProgressoCursos");
                 });
 
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.ProgressoCurso", b =>

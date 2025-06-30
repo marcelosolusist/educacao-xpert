@@ -30,25 +30,6 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProgressoCursos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
-                    AulasAssistidas = table.Column<int>(type: "INTEGER", nullable: false),
-                    PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProgressoCursos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Aulas",
                 columns: table => new
                 {
@@ -65,6 +46,30 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     table.PrimaryKey("PK_Aulas", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Aulas_Cursos_CursoId",
+                        column: x => x.CursoId,
+                        principalTable: "Cursos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProgressoCursos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
+                    AulasAssistidas = table.Column<int>(type: "INTEGER", nullable: false),
+                    PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgressoCursos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProgressoCursos_Cursos_CursoId",
                         column: x => x.CursoId,
                         principalTable: "Cursos",
                         principalColumn: "Id");

@@ -13,6 +13,9 @@ public class Curso : Entity, IAggregateRoot
     private readonly List<Aula> _aulas;
     public IReadOnlyCollection<Aula> Aulas => _aulas;
 
+    private readonly List<ProgressoCurso> _progressoCursos;
+    public IReadOnlyCollection<ProgressoCurso> ProgressoCursos => _progressoCursos;
+
     // Ef Constructor
     protected Curso() { }
     public Curso(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, int preco)

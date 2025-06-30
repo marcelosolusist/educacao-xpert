@@ -22,9 +22,9 @@ public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
         };
     }
 
-    public async Task<IEnumerable<MatriculaDto>> ObterMatriculasPendentePagamento(Guid alunoId)
+    public async Task<IEnumerable<MatriculaDto>> ObterMatriculasEmPagamento(Guid alunoId)
     {
-        var matriculas = await alunoRepository.ObterMatriculasPendentePagamento(alunoId);
+        var matriculas = await alunoRepository.ObterMatriculasEmPagamento(alunoId);
 
         return matriculas.Select(m => new MatriculaDto
         {

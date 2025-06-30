@@ -16,6 +16,9 @@ public class ProgressoCurso : Entity, IAggregateRoot
     private readonly List<ProgressoAula> _progressoAulas;
     public IReadOnlyCollection<ProgressoAula> ProgressoAulas => _progressoAulas;
 
+    // EF Rel.
+    public Curso Curso { get; set; }
+
     protected ProgressoCurso() { }
 
     public ProgressoCurso(Guid cursoId, Guid alunoId, int totalAulas)

@@ -22,7 +22,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
                             IMediator mediator,
                             IAppIdentityUser identityUser,
                             IAlunoQueries alunoQueries,
-                            ICursoRepository cursoRepository,
                             IProgressoCursoRepository progressoCursoRepository,
                             ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
 {
