@@ -29,7 +29,7 @@ public class UsuarioCommandHandler(IMediator mediator,
         if (!ValidarComando(request))
             return false;
 
-        var usuario = new Core.DomainObjects.Usuario(Guid.Parse(request.UsuarioId));
+        var usuario = new Usuario(Guid.Parse(request.UsuarioId));
 
         usuarioRepository.Adicionar(usuario);
         return await usuarioRepository.UnitOfWork.Commit();

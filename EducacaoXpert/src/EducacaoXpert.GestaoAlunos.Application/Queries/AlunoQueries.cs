@@ -1,18 +1,18 @@
-﻿using EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
+﻿using EducacaoXpert.GestaoAlunos.Application.Queries.DTO;
 using EducacaoXpert.GestaoAlunos.Domain.Interfaces;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Queries;
 
 public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
 {
-    public async Task<MatriculaViewModel?> ObterMatricula(Guid cursoId, Guid alunoId)
+    public async Task<MatriculaDto?> ObterMatricula(Guid cursoId, Guid alunoId)
     {
         var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(cursoId, alunoId);
 
         if (matricula is null)
             return null;
 
-        return new MatriculaViewModel
+        return new MatriculaDto
         {
             Id = matricula.Id,
             AlunoId = matricula.AlunoId,
@@ -22,11 +22,11 @@ public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
         };
     }
 
-    public async Task<IEnumerable<MatriculaViewModel>> ObterMatriculasPendentePagamento(Guid alunoId)
+    public async Task<IEnumerable<MatriculaDto>> ObterMatriculasEmPagamento(Guid alunoId)
     {
-        var matriculas = await alunoRepository.ObterMatriculasPendentePagamento(alunoId);
+        var matriculas = await alunoRepository.ObterMatriculasEmPagamento(alunoId);
 
-        return matriculas.Select(m => new MatriculaViewModel
+        return matriculas.Select(m => new MatriculaDto
         {
             Id = m.Id,
             AlunoId = m.AlunoId,
@@ -36,11 +36,11 @@ public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
         }).ToList();
     }
 
-    public async Task<CertificadoViewModel> ObterCertificado(Guid certificadoId, Guid alunoId)
+    public async Task<CertificadoDto> ObterCertificado(Guid certificadoId, Guid alunoId)
     {
         var certificado = await alunoRepository.ObterCertificadoPorId(certificadoId, alunoId);
 
-        return new CertificadoViewModel
+        return new CertificadoDto
         {
             Arquivo = certificado?.Arquivo ?? []
         };

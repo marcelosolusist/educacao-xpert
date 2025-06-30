@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 
-public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, decimal total) : Command
+public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, int valor) : Command
 {
     public Guid CursoId { get; set; } = cursoId;
     public Guid AlunoId { get; set; } = alunoId;
-    public decimal Total { get; set; } = total;
+    public int Valor { get; set; } = valor;
     public string NomeCartao { get; set; } = nomeCartao;
     public string NumeroCartao { get; set; } = numeroCartao;
     public string ExpiracaoCartao { get; set; } = expiracaoCartao;
@@ -27,7 +27,7 @@ public class RealizarPagamentoCursoCommandValidation : AbstractValidator<Realiza
     public static string ExpiracaoCartaoErro = "O campo Expiração do Cartão é obrigatório.";
     public static string NumeroCartaoErro = "O campo Número do Cartão é obrigatório.";
     public static string NomeCartaoErro = "O campo Nome do Cartão é obrigatório.";
-    public static string TotalErro = "O campo Total deve ser maior que zero.";
+    public static string ValorErro = "O campo Valor deve ser maior que zero.";
     public static string NumeroCartaoInvalidoErro = "O número do cartão de crédito é inválido.";
 
     public RealizarPagamentoCursoCommandValidation()
@@ -52,8 +52,8 @@ public class RealizarPagamentoCursoCommandValidation : AbstractValidator<Realiza
         RuleFor(x => x.CvvCartao)
             .NotEmpty()
             .WithMessage(CvvCartaoErro);
-        RuleFor(x => x.Total)
+        RuleFor(x => x.Valor)
             .GreaterThan(0)
-            .WithMessage(TotalErro);
+            .WithMessage(ValorErro);
     }
 }

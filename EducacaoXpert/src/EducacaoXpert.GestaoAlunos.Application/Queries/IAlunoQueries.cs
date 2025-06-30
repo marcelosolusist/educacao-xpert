@@ -1,10 +1,10 @@
-﻿using EducacaoXpert.GestaoAlunos.Application.Queries.ViewModels;
+﻿using EducacaoXpert.GestaoAlunos.Application.Queries.DTO;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Queries;
 
 public interface IAlunoQueries
 {
-    Task<MatriculaViewModel?> ObterMatricula(Guid cursoId, Guid alunoId);
-    Task<IEnumerable<MatriculaViewModel>> ObterMatriculasPendentePagamento(Guid alunoId);
-    Task<CertificadoViewModel> ObterCertificado(Guid certificadoId, Guid alunoId);
+    Task<MatriculaDto?> ObterMatricula(Guid cursoId, Guid alunoId);
+    Task<IEnumerable<MatriculaDto>> ObterMatriculasEmPagamento(Guid alunoId);
+    Task<CertificadoDto> ObterCertificado(Guid certificadoId, Guid alunoId);
 }

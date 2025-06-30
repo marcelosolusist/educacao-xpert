@@ -7,7 +7,7 @@ public class Transacao : Entity
 {
     public Guid MatriculaId { get; set; }
     public Guid PagamentoId { get; set; }
-    public decimal Total { get; set; }
+    public int Total { get; set; } //O valor é em centavos
     public StatusTransacao StatusTransacao { get; set; }
 
     public Pagamento Pagamento { get; set; }

@@ -10,10 +10,8 @@ namespace EducacaoXpert.GestaoConteudos.Application.Handlers;
 
 public class AulaCommandHandler(IMediator mediator,
                                 ICursoRepository cursoRepository,
-                                IAulaRepository aulaRepository) : CommandHandler,
-                                IRequestHandler<AdicionarAulaCommand, bool>,
-                                IRequestHandler<RealizarAulaCommand, bool>,
-                                IRequestHandler<ConcluirAulaCommand, bool>
+                                IProgressoCursoRepository progressoCursoRepository) : CommandHandler,
+                                IRequestHandler<AdicionarAulaCommand, bool>
 {
     public async Task<bool> Handle(AdicionarAulaCommand request, CancellationToken cancellationToken)
     {
@@ -34,68 +32,9 @@ public class AulaCommandHandler(IMediator mediator,
         if (request is { NomeMaterial: not null, TipoMaterial: not null })
             aula.AdicionarMaterial(new Material(request.NomeMaterial, request.TipoMaterial));
 
-        cursoRepository.Adicionar(aula);
+        cursoRepository.AdicionarAula(aula);
 
         return await cursoRepository.UnitOfWork.Commit();
-    }
-
-    public async Task<bool> Handle(RealizarAulaCommand request, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(request))
-            return false;
-
-        var aula = await cursoRepository.ObterAulaPorId(request.AulaId);
-
-        if (aula is null)
-        {
-            await AdicionarNotificacao(request.MessageType, "Aula não encontrada.", cancellationToken);
-            return false;
-        }
-
-        var progressoAula = await aulaRepository.ObterProgressoAula(aula.Id, request.AlunoId);
-
-        if (progressoAula is null)
-        {
-            progressoAula = new ProgressoAula(request.AlunoId, request.AulaId);
-            progressoAula.EmAndamento();
-            aulaRepository.AdicionarProgressoAula(progressoAula);
-        }
-        else
-        {
-            progressoAula.EmAndamento();
-            aulaRepository.AtualizarProgressoAula(progressoAula);
-        }
-
-        return await aulaRepository.UnitOfWork.Commit();
-    }
-
-    public async Task<bool> Handle(ConcluirAulaCommand request, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(request))
-            return false;
-
-        var aula = await cursoRepository.ObterAulaPorId(request.AulaId);
-
-        if (aula is null)
-        {
-            await AdicionarNotificacao(request.MessageType, "Aula não encontrada.", cancellationToken);
-            return false;
-        }
-
-        var progressoAula = await aulaRepository.ObterProgressoAula(aula.Id, request.AlunoId);
-
-        if (progressoAula is null)
-        {
-            await AdicionarNotificacao(request.MessageType, "Progresso não encontrado.", cancellationToken);
-            return false;
-        }
-
-        progressoAula.ConcluirAula();
-        aulaRepository.AtualizarProgressoAula(progressoAula);
-
-        progressoAula.AdicionarEvento(new AulaConcluidaEvent(aula.Id, request.AlunoId, aula.CursoId));
-
-        return await aulaRepository.UnitOfWork.Commit();
     }
 
     protected override async Task AdicionarNotificacao(string messageType, string descricao, CancellationToken cancellationToken)

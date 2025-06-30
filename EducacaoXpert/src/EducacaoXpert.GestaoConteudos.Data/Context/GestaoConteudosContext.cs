@@ -1,11 +1,11 @@
 ﻿using EducacaoXpert.Core.Data;
 using EducacaoXpert.Core.DomainObjects;
 using EducacaoXpert.Core.Messages;
+using EducacaoXpert.GestaoConteudos.Data.Extension;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
-using EducacaoXpert.GestaoConteudos.Data.Extension;
 
 namespace EducacaoXpert.GestaoConteudos.Data.Context;
 

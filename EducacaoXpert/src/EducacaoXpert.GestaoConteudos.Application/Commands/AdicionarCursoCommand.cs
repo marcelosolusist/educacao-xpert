@@ -8,9 +8,9 @@ public class AdicionarCursoCommand : Command
     public string Nome { get; set; }
     public string ConteudoProgramatico { get; set; }
     public Guid UsuarioCriacaoId { get; set; }
-    public decimal Preco { get; set; }
+    public int Preco { get; set; }
 
-    public AdicionarCursoCommand(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, decimal preco)
+    public AdicionarCursoCommand(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, int preco)
     {
         AggregateId = usuarioCriacaoId;
         Nome = nome;

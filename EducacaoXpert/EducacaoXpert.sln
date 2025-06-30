@@ -21,21 +21,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.Core", "src\E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Data", "src\EducacaoXpert.GestaoAlunos.Data\EducacaoXpert.GestaoAlunos.Data.csproj", "{5DB0CA24-DD58-45DA-8BE8-F5E2F20FA9BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Application", "src\EducacaoXpert.GestaoAlunos.Application\EducacaoXpert.GestaoAlunos.Application.csproj", "{A25545D5-3192-4BE5-95A1-C4CEBA49770C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Application", "src\EducacaoXpert.GestaoAlunos.Application\EducacaoXpert.GestaoAlunos.Application.csproj", "{A25545D5-3192-4BE5-95A1-C4CEBA49770C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Domain", "src\EducacaoXpert.GestaoAlunos.Domain\EducacaoXpert.GestaoAlunos.Domain.csproj", "{64D3FE44-C219-4C38-82FE-7A2EE08093BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Domain", "src\EducacaoXpert.GestaoAlunos.Domain\EducacaoXpert.GestaoAlunos.Domain.csproj", "{64D3FE44-C219-4C38-82FE-7A2EE08093BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Application", "src\EducacaoXpert.GestaoConteudos.Application\EducacaoXpert.GestaoConteudos.Application.csproj", "{769EC09C-B8C5-4276-B11C-648CC59CD973}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteudos.Application", "src\EducacaoXpert.GestaoConteudos.Application\EducacaoXpert.GestaoConteudos.Application.csproj", "{769EC09C-B8C5-4276-B11C-648CC59CD973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Data", "src\EducacaoXpert.GestaoConteudos.Data\EducacaoXpert.GestaoConteudos.Data.csproj", "{F16514D7-3E6C-4368-A691-4048BC511A3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteudos.Data", "src\EducacaoXpert.GestaoConteudos.Data\EducacaoXpert.GestaoConteudos.Data.csproj", "{F16514D7-3E6C-4368-A691-4048BC511A3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Domain", "src\EducacaoXpert.GestaoConteudos.Domain\EducacaoXpert.GestaoConteudos.Domain.csproj", "{77824F48-F0AA-47AE-BBB4-00502013071F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteudos.Domain", "src\EducacaoXpert.GestaoConteudos.Domain\EducacaoXpert.GestaoConteudos.Domain.csproj", "{77824F48-F0AA-47AE-BBB4-00502013071F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Anticorruption", "src\EducacaoXpert.PagamentoFaturamento.Anticorruption\EducacaoXpert.PagamentoFaturamento.Anticorruption.csproj", "{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFaturamento.Anticorruption", "src\EducacaoXpert.PagamentoFaturamento.Anticorruption\EducacaoXpert.PagamentoFaturamento.Anticorruption.csproj", "{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Domain", "src\EducacaoXpert.PagamentoFaturamento.Domain\EducacaoXpert.PagamentoFaturamento.Domain.csproj", "{150134F8-2C41-43F6-B233-979B8343305B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFaturamento.Domain", "src\EducacaoXpert.PagamentoFaturamento.Domain\EducacaoXpert.PagamentoFaturamento.Domain.csproj", "{150134F8-2C41-43F6-B233-979B8343305B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Data", "src\EducacaoXpert.PagamentoFaturamento.Data\EducacaoXpert.PagamentoFaturamento.Data.csproj", "{E0530387-6E5D-4B04-A140-C46B7D267DF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFaturamento.Data", "src\EducacaoXpert.PagamentoFaturamento.Data\EducacaoXpert.PagamentoFaturamento.Data.csproj", "{E0530387-6E5D-4B04-A140-C46B7D267DF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.Api", "src\EducacaoXpert.Api\EducacaoXpert.Api.csproj", "{797C7581-2A0B-4688-866E-E08205672CA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0530387-6E5D-4B04-A140-C46B7D267DF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{797C7581-2A0B-4688-866E-E08205672CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{797C7581-2A0B-4688-866E-E08205672CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{797C7581-2A0B-4688-866E-E08205672CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{797C7581-2A0B-4688-866E-E08205672CA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{D6677A09-8E2F-4BDF-9A59-7881A6C3EE43} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
 		{150134F8-2C41-43F6-B233-979B8343305B} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
 		{E0530387-6E5D-4B04-A140-C46B7D267DF1} = {AF0CE3F3-B957-4BE4-8ADA-87FAF2090DDA}
+		{797C7581-2A0B-4688-866E-E08205672CA7} = {0AC8A5D0-E6EE-4011-9C61-0925D2DD1716}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B557137F-0012-4AF2-915D-2148FBEFC4EC}

@@ -8,11 +8,11 @@ using MediatR;
 namespace EducacaoXpert.GestaoConteudos.Application.Handlers;
 
 public class CursoCommandHandler(ICursoRepository cursoRepository,
+                                 IProgressoCursoRepository progressoCursoRepository,
                                  IMediator mediator) : CommandHandler,
                                                     IRequestHandler<AdicionarCursoCommand, bool>,
                                                     IRequestHandler<AtualizarCursoCommand, bool>,
-                                                    IRequestHandler<DeletarCursoCommand, bool>,
-                                                    IRequestHandler<AtualizarProgressoCursoCommand, bool>
+                                                    IRequestHandler<DeletarCursoCommand, bool>
 {
     public async Task<bool> Handle(AdicionarCursoCommand command, CancellationToken cancellationToken)
     {
@@ -64,27 +64,7 @@ public class CursoCommandHandler(ICursoRepository cursoRepository,
         cursoRepository.Remover(curso);
         return await cursoRepository.UnitOfWork.Commit();
     }
-    public async Task<bool> Handle(AtualizarProgressoCursoCommand request, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(request))
-            return false;
 
-        var progressoCurso = await cursoRepository.ObterProgressoCurso(request.AlunoId, request.CursoId);
-        var totalAulas = cursoRepository.ObterCursoComAulas(request.CursoId).Result!.Aulas.Count;
-
-        if (progressoCurso is null)
-        {
-            progressoCurso = new ProgressoCurso(request.AlunoId, request.CursoId, totalAulas);
-            progressoCurso.IncrementarProgresso();
-            cursoRepository.Adicionar(progressoCurso);
-        }
-        else
-        {
-            progressoCurso.IncrementarProgresso();
-            cursoRepository.Atualizar(progressoCurso);
-        }
-        return await cursoRepository.UnitOfWork.Commit();
-    }
     protected override async Task AdicionarNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {
         await mediator.Publish(new DomainNotification(messageType, descricao), cancellationToken);

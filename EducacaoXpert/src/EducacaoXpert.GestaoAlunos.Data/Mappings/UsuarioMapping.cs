@@ -1,4 +1,4 @@
-﻿using EducacaoXpert.Core.DomainObjects;
+﻿using EducacaoXpert.GestaoAlunos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

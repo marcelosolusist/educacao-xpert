@@ -22,7 +22,7 @@ public class PagamentoCommandHandler(IPagamentoService pagamentoService, IMediat
             ExpiracaoCartao = command.ExpiracaoCartao,
             NomeCartao = command.NomeCartao,
             NumeroCartao = command.NumeroCartao,
-            Total = command.Total
+            Valor = command.Valor
         };
 
         return await pagamentoService.RealizarPagamentoCurso(pagamentoCurso);

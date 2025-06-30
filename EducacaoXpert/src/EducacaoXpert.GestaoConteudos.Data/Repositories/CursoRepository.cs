@@ -40,21 +40,6 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
              .FirstOrDefaultAsync(pc => pc.CursoId == cursoId && pc.AlunoId == alunoId);
     }
 
-    public void Adicionar(Aula aula)
-    {
-        dbContext.Set<Aula>().Add(aula);
-    }
-
-    public void Adicionar(ProgressoCurso progressoCurso)
-    {
-        dbContext.Set<ProgressoCurso>().Add(progressoCurso);
-    }
-
-    public void Atualizar(ProgressoCurso progressoCurso)
-    {
-        dbContext.Set<ProgressoCurso>().Update(progressoCurso);
-    }
-
     public void Adicionar(Curso curso)
     {
         _dbSet.Add(curso);
@@ -70,5 +55,15 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
     public void Dispose()
     {
         dbContext.Dispose();
+    }
+
+    public void AdicionarAula(Aula aula)
+    {
+        dbContext.Set<Aula>().Add(aula);
+    }
+
+    public void AtualizarAula(Aula aula)
+    {
+        dbContext.Set<Aula>().Update(aula);
     }
 }
