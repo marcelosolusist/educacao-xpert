@@ -41,6 +41,20 @@ public class ProgressoCurso : Entity, IAggregateRoot
         progressoAula.AssociarProgressoCurso(Id);
         _progressoAulas.Add(progressoAula);
     }
+    public void MarcarAulaAssistindo(ProgressoAula progressoAula)
+    {
+        foreach (ProgressoAula aula in _progressoAulas)
+        {
+            if (aula.Id == progressoAula.Id)
+            {
+                aula.MarcarAssistindo();
+            }
+            else
+            {
+                aula.DesmarcarAssistindo();
+            }
+        }
+    }
     public void FinalizarProgressoAula(ProgressoAula progressoAula)
     {
         var aulaMarcar = _progressoAulas.FirstOrDefault(p => p.Id == progressoAula.Id);

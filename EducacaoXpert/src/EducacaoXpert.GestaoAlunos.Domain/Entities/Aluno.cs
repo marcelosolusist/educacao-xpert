@@ -18,6 +18,7 @@ public class Aluno : Usuario
 
     public Aluno(Guid id, string nome) : base(id)
     {
+        Id = id;
         Nome = nome;
     }
 

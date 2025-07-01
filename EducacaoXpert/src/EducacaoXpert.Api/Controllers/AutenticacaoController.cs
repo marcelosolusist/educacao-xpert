@@ -1,6 +1,6 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Api.Jwt;
+using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Commands;

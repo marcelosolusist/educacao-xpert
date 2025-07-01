@@ -52,7 +52,7 @@ public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
     {
         var certificados = await alunoRepository.ListarCertificadosPorAlunoId(alunoId);
         var certificadosDto = new List<CertificadoDto>();
-        foreach (var certificado in certificadosDto)
+        foreach (var certificado in certificados)
         {
             certificadosDto.Add(new CertificadoDto()
             {

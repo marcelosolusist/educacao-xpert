@@ -10,8 +10,8 @@ public static class DbContextConfiguration
 {
     public static WebApplicationBuilder AddDbContextConfiguration(this WebApplicationBuilder builder)
     {
-        if (builder.Environment.IsProduction())
-        {
+        //if (builder.Environment.IsProduction())
+        //{
             builder.Services.AddDbContext<GestaoConteudosContext>(opt =>
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -28,26 +28,26 @@ public static class DbContextConfiguration
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-        }
-        else
-        {
-            builder.Services.AddDbContext<GestaoConteudosContext>(opt =>
-            {
-                opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddDbContext<GestaoAlunosContext>(opt =>
-            {
-                opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            }, ServiceLifetime.Transient);
-            builder.Services.AddDbContext<ApiContext>(opt =>
-            {
-                opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddDbContext<PagamentoFaturamentoContext>(opt =>
-            {
-                opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-        }
+        //}
+        //else
+        //{
+        //    builder.Services.AddDbContext<GestaoConteudosContext>(opt =>
+        //    {
+        //        opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //    });
+        //    builder.Services.AddDbContext<GestaoAlunosContext>(opt =>
+        //    {
+        //        opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //    }, ServiceLifetime.Transient);
+        //    builder.Services.AddDbContext<ApiContext>(opt =>
+        //    {
+        //        opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //    });
+        //    builder.Services.AddDbContext<PagamentoFaturamentoContext>(opt =>
+        //    {
+        //        opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //    });
+        //}
 
         return builder;
     }

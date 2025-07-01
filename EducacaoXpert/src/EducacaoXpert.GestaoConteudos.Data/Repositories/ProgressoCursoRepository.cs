@@ -29,7 +29,7 @@ public class ProgressoCursoRepository(GestaoConteudosContext dbContext) : IProgr
     }
     public async Task<ProgressoCurso?> Obter(Guid cursoId, Guid alunoId)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(pc => pc.CursoId == cursoId && pc.AlunoId == alunoId);
+        return await _dbSet.Include(pc => pc.ProgressoAulas).FirstOrDefaultAsync(pc => pc.CursoId == cursoId && pc.AlunoId == alunoId);
     }
     public async Task<ProgressoAula?> ObterProgressoAula(Guid aulaId, Guid alunoId)
     {

@@ -22,6 +22,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
                                 IMediator mediator,
                                 IAppIdentityUser identityUser,
                                 IAlunoQueries alunoQueries,
+                                ICursoRepository cursoRepository,
                                 IProgressoCursoRepository progressoCursoRepository,
                                 ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
 {
@@ -75,7 +76,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "ADMIN,ALUNO")]
     [HttpGet("{id:guid}/aulas")]
     public async Task<ActionResult<IEnumerable<CursoViewModel>>> ListarTodasAulasPorCursoId(Guid id)
     {
@@ -146,7 +147,12 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<IActionResult> PagarMatricula(Guid id, [FromBody] DadosPagamentoViewModel dadosPagamento)
     {
         var curso = await cursoQueries.ObterPorId(id);
-        await ValidarCursoMatricula(curso);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+        await ValidarMatriculaEmPagamento(curso);
         if (!OperacaoValida()) return RespostaPadrao();
         var command = new RealizarPagamentoCursoCommand(UsuarioId, id, dadosPagamento.CvvCartao, dadosPagamento.ExpiracaoCartao, dadosPagamento.NomeCartao, dadosPagamento.NumeroCartao, curso.Preco);
         await _mediator.Send(command);
@@ -154,12 +160,62 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     }
 
     [Authorize(Roles = "ALUNO")]
-    [HttpGet("{id:guid}/aulas/{idAula:guid}/iniciar")]
+    [HttpPost("{id:guid}/aulas/{idAula:guid}/iniciar")]
     public async Task<IActionResult> IniciarAula(Guid id, Guid idAula)
     {
         //TODO: Iniciar a aula
+        var curso = await cursoQueries.ObterPorId(id);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+        await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
+        if (!OperacaoValida()) return RespostaPadrao();
+        var command = new IniciarAulaCommand(id, idAula, UsuarioId);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.Created);
+    }
 
-        return RespostaPadrao(HttpStatusCode.OK);
+    [Authorize(Roles = "ALUNO")]
+    [HttpGet("{id:guid}/aulas/{idAula:guid}/assistir")]
+    public async Task<IActionResult> AssistirAula(Guid id, Guid idAula)
+    {
+        var curso = await cursoQueries.ObterPorId(id);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+        await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
+        if (!OperacaoValida()) return RespostaPadrao();
+        var progressoCurso = await progressoCursoRepository.Obter(id, UsuarioId);
+        if (progressoCurso is null)
+        {
+            NotificarErro("ProgressoCurso", "Progresso de curso não encontrado.");
+            return RespostaPadrao();
+        }
+        var progressoAula = progressoCurso.ProgressoAulas.FirstOrDefault(pa => pa.AulaId == idAula);
+        if (progressoAula is null)
+        {
+            NotificarErro("ProgressoAula", "Progresso de aula não encontrado.");
+            return RespostaPadrao();
+        }
+        progressoCurso.MarcarAulaAssistindo(progressoAula);
+        progressoCursoRepository.Editar(progressoCurso);
+        await progressoCursoRepository.UnitOfWork.Commit();
+
+        var aula = await cursoRepository.ObterAulaPorId(idAula) ;
+        var material = aula.Materiais.FirstOrDefault();
+        var aulaViewModel = new AulaViewModel() {
+            Id = aula.Id,
+            Nome = aula.Nome,
+            Conteudo = aula.Conteudo,
+            TipoMaterial = material?.Tipo,
+            NomeMaterial = material?.Nome,
+        };
+
+        return RespostaPadrao(HttpStatusCode.OK, aulaViewModel);
     }
 
     [Authorize(Roles = "ALUNO")]
@@ -167,11 +223,20 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<IActionResult> FinalizarAula(Guid id, Guid idAula)
     {
         //TODO: Finalizar a aula
-
-        return RespostaPadrao(HttpStatusCode.OK);
+        var curso = await cursoQueries.ObterPorId(id);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+        await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
+        if (!OperacaoValida()) return RespostaPadrao();
+        var command = new FinalizarAulaCommand(id, idAula, UsuarioId);
+        await _mediator.Send(command);
+        return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
-    private async Task ValidarCursoMatricula(CursoDto? curso)
+    private async Task ValidarMatriculaEmPagamento(CursoDto? curso)
     {
         if (curso is null)
         {
@@ -184,18 +249,25 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             NotificarErro("Matricula", "A matrícula deve estar com status 'Em Pagamento' para realizar o pagamento.");
         }
     }
-
-    private async Task ValidarConclusaoCurso(CursoDto? curso)
+    private async Task<bool> ValidarSeAlunoPossuiMatriculaAtivaNoCurso(Guid idCurso, Guid idAluno)
     {
+        var curso = await cursoQueries.ObterPorId(idCurso);
         if (curso is null)
         {
             NotificarErro("Curso", "Curso não encontrado.");
-            return;
+            return false;
         }
-        var progressoCurso = await progressoCursoRepository.Obter(curso.Id, UsuarioId);
-        if (progressoCurso is null || !progressoCurso.CursoConcluido)
+        var matricula = await alunoQueries.ObterMatricula(idCurso, idAluno);
+        if (matricula is null)
         {
-            NotificarErro("Curso", "Todas as aulas deste curso precisam estar concluídas.");
+            NotificarErro("Matricula", "Matrícula não encontrada.");
+            return false;
         }
+        if (matricula is not { Status: StatusMatricula.Ativa })
+        {
+            NotificarErro("Matricula", "A matrícula deve estar com status 'Ativa' para realizar o curso.");
+            return false;
+        }
+        return true;
     }
 }

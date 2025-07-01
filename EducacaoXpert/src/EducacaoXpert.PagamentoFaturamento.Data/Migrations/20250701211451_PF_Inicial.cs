@@ -15,15 +15,15 @@ namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
                 name: "Pagamentos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Valor = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CursoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AlunoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Valor = table.Column<int>(type: "int", nullable: false),
                     NomeCartao = table.Column<string>(type: "varchar(250)", nullable: false),
                     NumeroCartaoMascarado = table.Column<string>(type: "varchar(16)", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,14 +34,14 @@ namespace EducacaoXpert.PagamentoFaturamento.Data.Migrations
                 name: "Transacoes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MatriculaId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PagamentoId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Total = table.Column<int>(type: "INTEGER", nullable: false),
-                    StatusTransacao = table.Column<int>(type: "INTEGER", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MatriculaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PagamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Total = table.Column<int>(type: "int", nullable: false),
+                    StatusTransacao = table.Column<int>(type: "int", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

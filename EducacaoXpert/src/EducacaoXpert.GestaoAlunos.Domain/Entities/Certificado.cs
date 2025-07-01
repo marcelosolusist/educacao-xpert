@@ -28,7 +28,7 @@ public class Certificado : Entity
 
     private void GerarDescricao()
     {
-        Descricao = "CERTIFICADO/n/n/n"+$"{NomeAluno} participou e concluiu o curso {NomeCurso} com sucesso no dia {DataEmissao:dd/MM/yyyy}.";
+        Descricao = $"{NomeAluno} concluiu o curso {NomeCurso} no dia {DataEmissao:dd/MM/yyyy}.";
     }
 
     public void IncluirArquivo(byte[] arquivoPdf)

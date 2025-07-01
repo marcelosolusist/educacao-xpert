@@ -39,7 +39,7 @@ public class AlunosController(INotificationHandler<DomainNotification> notificac
             return BadRequest();
         }
 
-        return File(certificado.Arquivo, "application/pdf", "certificado.pdf");
+        return File(certificado.Arquivo, "application/pdf", $"Certificado_{id}.pdf");
     }
     
 }

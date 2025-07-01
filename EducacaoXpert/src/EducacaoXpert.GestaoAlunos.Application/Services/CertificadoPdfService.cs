@@ -16,26 +16,26 @@ public class CertificadoPdfService : ICertificadoPdfService
 
         document.Open();
 
-        var tituloFonte = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 22);
-        var titulo = new Paragraph("Certificado de Conclusão", tituloFonte)
+        var tituloFonte = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 44);
+        var titulo = new Paragraph("CERTIFICADO", tituloFonte)
         {
             Alignment = Element.ALIGN_CENTER,
-            SpacingAfter = 40f
+            SpacingAfter = 150f
         };
         document.Add(titulo);
 
-        var corpoFonte = FontFactory.GetFont(FontFactory.HELVETICA, 14);
+        var corpoFonte = FontFactory.GetFont(FontFactory.HELVETICA, 22);
         var corpo = new Paragraph(certificado.Descricao, corpoFonte)
         {
             Alignment = Element.ALIGN_CENTER
         };
         document.Add(corpo);
 
-        var dataFonte = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 12);
-        var dataTexto = new Paragraph($"Emitido em: {DateTime.Now:dd 'de' MMMM 'de' yyyy}", dataFonte)
+        var dataFonte = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 16);
+        var dataTexto = new Paragraph($"Emitido em {DateTime.Now:dd/MM/yyyy} às {DateTime.Now:HH:mm:ss}.", dataFonte)
         {
             Alignment = Element.ALIGN_RIGHT,
-            SpacingBefore = 50
+            SpacingBefore = 150f
         };
         document.Add(dataTexto);
 
