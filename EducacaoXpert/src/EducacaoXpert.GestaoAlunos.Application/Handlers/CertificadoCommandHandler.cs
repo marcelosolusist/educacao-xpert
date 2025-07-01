@@ -12,37 +12,25 @@ public class CertificadoCommandHandler(ICertificadoPdfService certificadoPdfServ
                                        IAlunoRepository alunoRepository) : CommandHandler,
                                         IRequestHandler<IncluirCertificadoCommand, bool>
 {
-    public async Task<bool> Handle(IncluirCertificadoCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirCertificadoCommand command, CancellationToken cancellationToken)
     {
-        if (!ValidarComando(request))
+        if (!ValidarComando(command))
             return false;
 
-        var aluno = await alunoRepository.ObterPorId(request.AlunoId);
+        var aluno = await alunoRepository.ObterPorId(command.AlunoId);
         if (aluno is null)
         {
-            await IncluirNotificacao(request.MessageType, "Aluno não encontrado.", cancellationToken);
-            return false;
-        }
-        var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, request.AlunoId);
-        if (matricula is null)
-        {
-            await IncluirNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Aluno não encontrado.", cancellationToken);
             return false;
         }
 
-        if (!matricula.DataConclusao.HasValue)
-        {
-            await IncluirNotificacao(request.MessageType, "Matrícula não está concluída.", cancellationToken);
-            return false;
-        }
-
-        var certificado = new Certificado(aluno.Nome, request.NomeCurso, matricula.Id, aluno.Id, matricula.DataConclusao);
+        var certificado = new Certificado(aluno.Nome, command.NomeCurso, aluno.Id);
 
         var pdf = certificadoPdfService.GerarPdf(certificado);
 
         if (!pdf.Any())
         {
-            await IncluirNotificacao(request.MessageType, "Erro ao gerar o PDF do certificado.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Erro ao gerar o PDF do certificado.", cancellationToken);
             return false;
         }
 

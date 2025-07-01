@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducacaoXpert.Api.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20250630140355_Api_Inicial")]
+    [Migration("20250701150906_Api_Inicial")]
     partial class Api_Inicial
     {
         /// <inheritdoc />

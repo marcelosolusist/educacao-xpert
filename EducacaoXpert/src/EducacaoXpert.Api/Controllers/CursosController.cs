@@ -95,9 +95,9 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
 
     [Authorize(Roles = "ADMIN")]
     [HttpPost("{id:guid}/aulas")]
-    public async Task<IActionResult> IncluirAula([FromBody] AulaViewModel aulaDto, Guid cursoId)
+    public async Task<IActionResult> IncluirAula(Guid id, [FromBody] AulaViewModel aulaDto)
     {
-        var command = new IncluirAulaCommand(aulaDto.Nome, aulaDto.Conteudo, cursoId,
+        var command = new IncluirAulaCommand(aulaDto.Nome, aulaDto.Conteudo, id,
                                                aulaDto.NomeMaterial, aulaDto.TipoMaterial);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.Created);
@@ -169,18 +169,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         //TODO: Finalizar a aula
 
         return RespostaPadrao(HttpStatusCode.OK);
-    }
-
-    [Authorize(Roles = "ALUNO")]
-    [HttpPost("{id:guid}/concluir-curso")]
-    public async Task<IActionResult> ConcluirCurso(Guid id)
-    {
-        var curso = await cursoQueries.ObterPorId(id);
-        await ValidarConclusaoCurso(curso);
-        if (!OperacaoValida()) return RespostaPadrao();
-        var command = new ConcluirMatriculaCommand(UsuarioId, id, curso.Nome);
-        await _mediator.Send(command);
-        return RespostaPadrao(HttpStatusCode.Created);
     }
 
     private async Task ValidarCursoMatricula(CursoDto? curso)

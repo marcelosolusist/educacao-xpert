@@ -61,6 +61,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
                     AulasFinalizadas = table.Column<int>(type: "INTEGER", nullable: false),
                     PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
+                    CertificadoGerado = table.Column<bool>(type: "INTEGER", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)

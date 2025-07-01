@@ -162,6 +162,9 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Property<int>("AulasFinalizadas")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("CertificadoGerado")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("CursoId")
                         .HasColumnType("TEXT");
 

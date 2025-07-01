@@ -11,51 +11,31 @@ namespace EducacaoXpert.GestaoAlunos.Application.Handlers;
 public class MatriculaCommandHandler(IMediator mediator,
                                     IAlunoRepository alunoRepository) : CommandHandler,
                                     IRequestHandler<IncluirMatriculaCommand, bool>,
-                                    IRequestHandler<ConcluirMatriculaCommand, bool>,
                                     IRequestHandler<AtivarMatriculaCommand, bool>
 {
-    public async Task<bool> Handle(IncluirMatriculaCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirMatriculaCommand command, CancellationToken cancellationToken)
     {
-        if (!ValidarComando(request))
+        if (!ValidarComando(command))
             return false;
 
-        var aluno = await alunoRepository.ObterPorId(request.AlunoId);
+        var aluno = await alunoRepository.ObterPorId(command.AlunoId);
         if (aluno is null)
         {
-            await IncluirNotificacao(request.MessageType, "Aluno não encontrado.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Aluno não encontrado.", cancellationToken);
             return false;
         }
 
-        var matriculaExiste = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, aluno.Id);
+        var matriculaExiste = await alunoRepository.ObterMatriculaPorCursoEAlunoId(command.CursoId, aluno.Id);
         if (matriculaExiste is not null)
         {
-            await IncluirNotificacao(request.MessageType, "Matrícula já existente.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Matrícula já existente.", cancellationToken);
             return false;
         }
 
-        var matricula = new Matricula(request.AlunoId, request.CursoId);
+        var matricula = new Matricula(command.AlunoId, command.CursoId);
 
         aluno.IncluirMatricula(matricula);
         alunoRepository.IncluirMatricula(matricula);
-
-        return await alunoRepository.UnitOfWork.Commit();
-    }
-
-    public async Task<bool> Handle(ConcluirMatriculaCommand request, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(request))
-            return false;
-
-        var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, request.AlunoId);
-        if (matricula is null)
-        {
-            await IncluirNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
-            return false;
-        }
-        matricula.Concluir();
-        alunoRepository.EditarMatricula(matricula);
-
-        matricula.IncluirEvento(new MatriculaConcluidaEvent(request.AlunoId, matricula.Id, request.CursoId, request.NomeCurso));
 
         return await alunoRepository.UnitOfWork.Commit();
     }

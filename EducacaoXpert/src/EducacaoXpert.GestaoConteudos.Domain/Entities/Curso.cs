@@ -25,7 +25,6 @@ public class Curso : Entity, IAggregateRoot
         UsuarioCriacaoId = usuarioCriacaoId;
         Preco = preco;
         _aulas = [];
-
         Validar();
     }
 

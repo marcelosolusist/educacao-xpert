@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducacaoXpert.GestaoConteudos.Data.Migrations
 {
     [DbContext(typeof(GestaoConteudosContext))]
-    [Migration("20250630140331_GC_Inicial")]
+    [Migration("20250701150847_GC_Inicial")]
     partial class GC_Inicial
     {
         /// <inheritdoc />
@@ -163,6 +163,9 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AulasFinalizadas")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CertificadoGerado")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("CursoId")

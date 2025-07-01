@@ -8,7 +8,6 @@ public class Matricula : Entity
     public Guid AlunoId { get; private set; }
     public Guid CursoId { get; private set; }
     public DateTime? DataMatricula { get; private set; }
-    public DateTime? DataConclusao { get; private set; }
     public StatusMatricula Status { get; private set; }
 
     // Ef relationship
@@ -36,11 +35,6 @@ public class Matricula : Entity
     public void AguardarPagamento()
     {
         Status = StatusMatricula.EmPagamento;
-    }
-    public void Concluir()
-    {
-        Status = StatusMatricula.Concluida;
-        DataConclusao = DateTime.Now;
     }
 
     private void Validar()

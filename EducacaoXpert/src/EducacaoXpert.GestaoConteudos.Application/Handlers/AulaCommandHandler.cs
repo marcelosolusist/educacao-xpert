@@ -1,7 +1,7 @@
 ﻿using EducacaoXpert.Core.Messages;
+using EducacaoXpert.Core.Messages.IntegrationEvents;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
-using EducacaoXpert.GestaoConteudos.Application.Events;
 using EducacaoXpert.GestaoConteudos.Domain.Entities;
 using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 using MediatR;
@@ -11,7 +11,11 @@ namespace EducacaoXpert.GestaoConteudos.Application.Handlers;
 public class AulaCommandHandler(IMediator mediator,
                                 ICursoRepository cursoRepository,
                                 IProgressoCursoRepository progressoCursoRepository) : CommandHandler,
-                                IRequestHandler<IncluirAulaCommand, bool>
+                                IRequestHandler<IncluirAulaCommand, bool>,
+                                IRequestHandler<EditarAulaCommand, bool>,
+                                IRequestHandler<ExcluirAulaCommand, bool>,
+                                IRequestHandler<IniciarAulaCommand, bool>,
+                                IRequestHandler<FinalizarAulaCommand, bool>
 {
     public async Task<bool> Handle(IncluirAulaCommand command, CancellationToken cancellationToken)
     {
@@ -76,6 +80,60 @@ public class AulaCommandHandler(IMediator mediator,
         }
 
         cursoRepository.RemoverAula(aula);
+        return await cursoRepository.UnitOfWork.Commit();
+    }
+
+    public async Task<bool> Handle(IniciarAulaCommand command, CancellationToken cancellationToken)
+    {
+        if (!ValidarComando(command))
+            return false;
+
+        var progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
+
+        if (progressoCurso is null)
+        {
+            var curso = await cursoRepository.ObterCursoComAulas(command.CursoId);
+            progressoCurso = new ProgressoCurso(command.CursoId, command.AlunoId, curso.Aulas.Count());
+            progressoCursoRepository.Incluir(progressoCurso);
+        }
+
+        var progressoAula = new ProgressoAula(command.AulaId);
+        progressoCurso.IncluirProgressoAula(progressoAula);
+
+        progressoCursoRepository.Editar(progressoCurso);
+
+        return await cursoRepository.UnitOfWork.Commit();
+    }
+
+    public async Task<bool> Handle(FinalizarAulaCommand command, CancellationToken cancellationToken)
+    {
+        if (!ValidarComando(command))
+            return false;
+
+        var progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
+
+        if (progressoCurso is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso do curso não encontrado.", cancellationToken);
+            return false;
+        }
+
+        var progressoAula = await progressoCursoRepository.ObterProgressoAula(command.AulaId, command.AlunoId);
+        if (progressoAula is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso de aula não encontrado.", cancellationToken);
+            return false;
+        }
+        progressoCurso.FinalizarProgressoAula(progressoAula);
+
+        if (progressoCurso.CursoConcluido && !progressoCurso.CertificadoGerado)
+        {
+            await mediator.Publish(new CursoConcluidoEvent(command.AlunoId, command.CursoId, progressoCurso.Curso.Nome));
+            progressoCurso.MarcarCertificadoGerado();
+        }
+
+        progressoCursoRepository.Editar(progressoCurso);
+
         return await cursoRepository.UnitOfWork.Commit();
     }
 

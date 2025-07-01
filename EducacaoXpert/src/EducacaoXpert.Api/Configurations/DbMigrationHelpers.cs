@@ -116,7 +116,6 @@ public static class DbMigrationHelpers
 
         var matricula = new Matricula(aluno.Id, curso.Id);
         matricula.Ativar();
-        matricula.Concluir();
 
         //var progressoBoasVindas = new ProgressoAula(aluno.Id, aulaBoasVindas.Id);
         //progressoBoasVindas.ConcluirAula();
@@ -129,7 +128,7 @@ public static class DbMigrationHelpers
         //progressoCursoConcluido.IncrementarProgresso();
 
         // Certificado para o aluno
-        var certificado = new Certificado(aluno.Nome, curso.Nome, matricula.Id, aluno.Id, matricula.DataConclusao);
+        var certificado = new Certificado(aluno.Nome, curso.Nome, aluno.Id);
         var pdf = pdfService.GerarPdf(certificado);
         certificado.IncluirArquivo(pdf);
 
