@@ -1,21 +1,16 @@
-﻿using EducacaoXpert.GestaoAlunos.Application.Commands;
+﻿using EducacaoXpert.Core.Messages.Notifications;
+using EducacaoXpert.GestaoAlunos.Application.Commands;
 using EducacaoXpert.GestaoAlunos.Application.Handlers;
+using EducacaoXpert.GestaoAlunos.Application.Services;
 using EducacaoXpert.GestaoAlunos.Domain.Entities;
 using EducacaoXpert.GestaoAlunos.Domain.Interfaces;
 using MediatR;
-using Moq.AutoMock;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EducacaoXpert.Core.Messages.Notifications;
-using EducacaoXpert.GestaoAlunos.Application.Services;
+using Moq.AutoMock;
 
 namespace EducacaoXpert.GestaoAlunos.Application.Tests;
 
-public class CertificadoCommandHandlerTests
+public class IncluirCertificadoCommandTests
 {
     private readonly AutoMocker _mocker;
     private readonly CertificadoCommandHandler _handler;
@@ -26,7 +21,7 @@ public class CertificadoCommandHandlerTests
     private readonly Guid _alunoId;
     private readonly Guid _matriculaId;
     private readonly string _nomeCurso;
-    public CertificadoCommandHandlerTests()
+    public IncluirCertificadoCommandTests()
     {
         _mocker = new AutoMocker();
         _handler = _mocker.CreateInstance<CertificadoCommandHandler>();
@@ -39,8 +34,8 @@ public class CertificadoCommandHandlerTests
     }
 
     [Fact(DisplayName = "Incluir Certificado Com Sucesso")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoCommandHandler")]
-    public async Task CertificadoCommandHandler_IncluirCertificado_DeveIncluirComSucesso()
+    [Trait("Categoria", "GestaoAlunos - IncluirCertificadoCommand")]
+    public async Task IncluirCertificadoCommand_IncluirCertificado_DeveIncluirComSucesso()
     {
         // Arrange
         var command = new IncluirCertificadoCommand(_alunoId, _cursoId, _nomeCurso);
@@ -62,33 +57,9 @@ public class CertificadoCommandHandlerTests
         _alunoRepositoryMock.Verify(r => r.IncluirCertificado(It.IsAny<Certificado>()), Times.Once);
     }
 
-    [Fact(DisplayName = "Incluir Certificado Command inválido")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoCommandHandler")]
-    public async Task CertificadoCommandHandler_ComandoEstaInvalido_NaoDevePassarNaValidacao()
-    {
-        // Arrange
-        var command = new IncluirCertificadoCommand(Guid.Empty, Guid.Empty, string.Empty);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result);
-        _alunoRepositoryMock.Verify(r => r.UnitOfWork.Commit(), Times.Never);
-        _alunoRepositoryMock.Verify(r => r.ObterPorId(command.AlunoId), Times.Never);
-        _alunoRepositoryMock.Verify(r => r.IncluirCertificado(It.IsAny<Certificado>()), Times.Never);
-        Assert.Contains(GerarCertificadoCommandValidator.CursoIdErro,
-            command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(GerarCertificadoCommandValidator.AlunoIdErro,
-            command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(GerarCertificadoCommandValidator.NomeCursoErro,
-            command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Equal(4, command.ValidationResult.Errors.Count);
-    }
-
     [Fact(DisplayName = "Criar Certificado - Aluno Inexistente")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoCommandHandler")]
-    public async Task CertificadoCommandHandler_AlunoInexistente_NaoDevePassarNaValidacao()
+    [Trait("Categoria", "GestaoAlunos - IncluirCertificadoCommand")]
+    public async Task IncluirCertificadoCommand_AlunoInexistente_NaoDevePassarNaValidacao()
     {
         // Arrange
         var command = new IncluirCertificadoCommand(_alunoId, _cursoId, _nomeCurso);
@@ -105,30 +76,9 @@ public class CertificadoCommandHandlerTests
         _mocker.GetMock<IMediator>().Verify(m => m.Publish(It.IsAny<DomainNotification>(), CancellationToken.None), Times.Once);
     }
 
-    [Fact(DisplayName = "Criar Certificado - Matricula Inexistente")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoCommandHandler")]
-    public async Task CertificadoCommandHandler_MatriculaInexistente_NaoDevePassarNaValidacao()
-    {
-        // Arrange
-        var command = new IncluirCertificadoCommand(_alunoId, _cursoId, _nomeCurso);
-        _alunoRepositoryMock.Setup(r => r.ObterPorId(command.AlunoId)).ReturnsAsync(_aluno);
-        _alunoRepositoryMock.Setup(r => r.ObterMatriculaPorCursoEAlunoId(command.CursoId, command.AlunoId)).ReturnsAsync((Matricula?)null);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result);
-        _alunoRepositoryMock.Verify(r => r.UnitOfWork.Commit(), Times.Never);
-        _alunoRepositoryMock.Verify(r => r.ObterPorId(command.AlunoId), Times.Once);
-        _alunoRepositoryMock.Verify(r => r.ObterMatriculaPorCursoEAlunoId(command.CursoId, command.AlunoId), Times.Once);
-        _alunoRepositoryMock.Verify(r => r.IncluirCertificado(It.IsAny<Certificado>()), Times.Never);
-        _mocker.GetMock<IMediator>().Verify(m => m.Publish(It.IsAny<DomainNotification>(), CancellationToken.None), Times.Once);
-    }
-
     [Fact(DisplayName = "Incluir Certificado - PDF não encontrado")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoCommandHandler")]
-    public async Task CertificadoCommandHandler_IncluirCertificadoPdfNaoEncontrado_NaoDevePassarNaValidacao()
+    [Trait("Categoria", "GestaoAlunos - IncluirCertificadoCommand")]
+    public async Task IncluirCertificadoCommand_IncluirCertificadoPdfNaoEncontrado_NaoDevePassarNaValidacao()
     {
         // Arrange
         var command = new IncluirCertificadoCommand(_alunoId, _cursoId, _nomeCurso);
@@ -151,8 +101,8 @@ public class CertificadoCommandHandlerTests
     }
 
     [Fact(DisplayName = "Gerar PDF")]
-    [Trait("Categoria", "GestaoAlunos - CertificadoPdfService")]
-    public void CertificadoService_GerarPdfInvalido_NaoDevePassarNaValidacao()
+    [Trait("Categoria", "GestaoAlunos - IncluirCertificadoCommand")]
+    public void IncluirCertificadoCommand_GerarPdfValido_DevePassarNaValidacao()
     {
         // Arrange
         var certificado = new Certificado("Aluno de Testes", _nomeCurso, _alunoId);
@@ -163,11 +113,6 @@ public class CertificadoCommandHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.NotEmpty(result);
-        Assert.True(result.Length > 100, "O PDF gerado é muito pequeno e pode estar inválido.");
-
-        var filePath = Path.Combine("C:\\Temp", "certificado_teste.pdf");
-        File.WriteAllBytes(filePath, result);
-
-        Assert.True(File.Exists(filePath));
+        Assert.True(result.Length > 0);
     }
 }

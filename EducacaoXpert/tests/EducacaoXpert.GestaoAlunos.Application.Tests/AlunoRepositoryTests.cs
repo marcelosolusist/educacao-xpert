@@ -24,7 +24,6 @@ public class AlunoRepositoryTests
 
     [Fact(DisplayName = "Obter Matricula")]
     [Trait("Categoria", "GestaoAlunos - AlunoRepository")]
-    //IncluirAdminCommand_ComandoEstaValido_DevePassarNaValidacao
     public async Task AlunoRepository_ObterMatriculaPorCursoEAlunoId_DeveRetornarAlunoECursoId()
     {
         // Arrange

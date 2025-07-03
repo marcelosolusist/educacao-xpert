@@ -7,10 +7,10 @@ public class ExcluirAulaCommand : Command
 {
     public Guid AulaId { get; set; }
 
-    public ExcluirAulaCommand(Guid cursoId)
+    public ExcluirAulaCommand(Guid aulaId)
     {
-        AggregateId = cursoId;
-        AulaId = cursoId;
+        AggregateId = aulaId;
+        AulaId = aulaId;
     }
     public override bool EhValido()
     {
