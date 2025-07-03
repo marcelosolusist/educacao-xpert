@@ -39,17 +39,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFatu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.Api", "src\EducacaoXpert.Api\EducacaoXpert.Api.csproj", "{797C7581-2A0B-4688-866E-E08205672CA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Application.Tests", "tests\EducacaoXpert.GestaoAlunos.Application.Tests\EducacaoXpert.GestaoAlunos.Application.Tests.csproj", "{BCCADD40-A0A0-4D83-8330-23880EE7C639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Application.Tests", "tests\EducacaoXpert.GestaoAlunos.Application.Tests\EducacaoXpert.GestaoAlunos.Application.Tests.csproj", "{BCCADD40-A0A0-4D83-8330-23880EE7C639}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoAlunos.Domain.Tests", "tests\EducacaoXpert.GestaoAlunos.Domain.Tests\EducacaoXpert.GestaoAlunos.Domain.Tests.csproj", "{4F77B001-0816-43E2-9493-20D8588FB16E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoAlunos.Domain.Tests", "tests\EducacaoXpert.GestaoAlunos.Domain.Tests\EducacaoXpert.GestaoAlunos.Domain.Tests.csproj", "{4F77B001-0816-43E2-9493-20D8588FB16E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Application.Tests", "tests\EducacaoXpert.GestaoConteudos.Application.Tests\EducacaoXpert.GestaoConteudos.Application.Tests.csproj", "{2E501D60-056F-4956-8258-5D213A916162}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteudos.Application.Tests", "tests\EducacaoXpert.GestaoConteudos.Application.Tests\EducacaoXpert.GestaoConteudos.Application.Tests.csproj", "{2E501D60-056F-4956-8258-5D213A916162}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.GestaoConteudos.Domain.Tests", "tests\EducacaoXpert.GestaoConteudos.Domain.Tests\EducacaoXpert.GestaoConteudos.Domain.Tests.csproj", "{5E437C50-A5F9-4E1D-A9FF-9411EE00B41A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteudos.Domain.Tests", "tests\EducacaoXpert.GestaoConteudos.Domain.Tests\EducacaoXpert.GestaoConteudos.Domain.Tests.csproj", "{5E437C50-A5F9-4E1D-A9FF-9411EE00B41A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Domain.Tests", "tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests.csproj", "{51432517-521F-4D98-B5A8-59D6CA6DBC70}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.PagamentoFaturamento.Domain.Anticorruption.Tests", "tests\EducacaoXpert.PagamentoFaturamento.Domain.Anticorruption.Tests\EducacaoXpert.PagamentoFaturamento.Domain.Anticorruption.Tests.csproj", "{50E937D3-DB2B-496E-9D46-5517B0C625A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFaturamento.Domain.Tests", "tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests.csproj", "{51432517-521F-4D98-B5A8-59D6CA6DBC70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,10 +119,6 @@ Global
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50E937D3-DB2B-496E-9D46-5517B0C625A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50E937D3-DB2B-496E-9D46-5517B0C625A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50E937D3-DB2B-496E-9D46-5517B0C625A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50E937D3-DB2B-496E-9D46-5517B0C625A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,7 +144,6 @@ Global
 		{2E501D60-056F-4956-8258-5D213A916162} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
 		{5E437C50-A5F9-4E1D-A9FF-9411EE00B41A} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
-		{50E937D3-DB2B-496E-9D46-5517B0C625A8} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B557137F-0012-4AF2-915D-2148FBEFC4EC}
