@@ -1,6 +1,6 @@
 ﻿using EducacaoXpert.Api.Controllers.Base;
-using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Api.Jwt;
+using EducacaoXpert.Api.ViewModels;
 using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Commands;
@@ -18,11 +18,11 @@ namespace EducacaoXpert.Api.Controllers;
 
 [Route("api/conta")]
 public class AutenticacaoController(INotificationHandler<DomainNotification> notificacoes,
-                                IMediator mediator,
-                                SignInManager<IdentityUser> signInManager,
-                                UserManager<IdentityUser> userManager,
-                                IAppIdentityUser identityUser,
-                                IOptions<JwtSettings> jwtSettings) : MainController(notificacoes, mediator, identityUser)
+                                        IMediator mediator,
+                                        SignInManager<IdentityUser> signInManager,
+                                        UserManager<IdentityUser> userManager,
+                                        IAppIdentityUser identityUser,
+                                        IOptions<JwtSettings> jwtSettings) : MainController(notificacoes, mediator, identityUser)
 {
     private readonly IMediator _mediator = mediator;
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
@@ -44,7 +44,7 @@ public class AutenticacaoController(INotificationHandler<DomainNotification> not
             return RespostaPadrao();
         }
 
-        var command = new AdicionarAlunoCommand(result.User.Id, registerUser.Nome);
+        var command = new IncluirAlunoCommand(result.User.Id, registerUser.Nome);
 
         if (!await _mediator.Send(command))
         {
@@ -72,7 +72,7 @@ public class AutenticacaoController(INotificationHandler<DomainNotification> not
             return RespostaPadrao();
         }
 
-        var command = new AdicionarAdminCommand(result.User.Id);
+        var command = new IncluirAdminCommand(result.User.Id);
 
         if (!await _mediator.Send(command))
         {

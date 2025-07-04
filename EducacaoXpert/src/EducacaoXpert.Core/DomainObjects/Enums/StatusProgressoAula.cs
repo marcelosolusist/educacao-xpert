@@ -3,5 +3,5 @@
 public enum StatusProgressoAula
 {
     Iniciada = 0,
-    Assistida = 1,
+    Finalizada = 1,
 }

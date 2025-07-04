@@ -14,6 +14,9 @@ namespace EducacaoXpert.Api.Configurations;
 
 public static class DbMigrationHelpers
 {
+    public const string GUID_USER_ADMIN = "7dd867ad-4e56-4e6a-9c52-d863ce68d1d6";
+    public const string GUID_USER_ALUNO = "1703abf6-94ea-4f36-b3a8-7de9471865a2";
+
     public static void UseDbMigrationHelper(this WebApplication app)
     {
         EnsureSeedData(app).Wait();
@@ -37,23 +40,23 @@ public static class DbMigrationHelpers
 
         if (env.IsDevelopment() || env.IsEnvironment("Testing"))
         {
-            await contextGestaoAlunos.Database.EnsureDeletedAsync();
-            await contextGestaoConteudos.Database.EnsureDeletedAsync();
-            await contextIdentity.Database.EnsureDeletedAsync();
-            await contextPagamentoFaturamento.Database.EnsureDeletedAsync();
-
             await contextGestaoConteudos.Database.MigrateAsync();
             await contextGestaoAlunos.Database.MigrateAsync();
             await contextIdentity.Database.MigrateAsync();
             await contextPagamentoFaturamento.Database.MigrateAsync();
 
-            await SeedUsersAndRoles(scope.ServiceProvider);
-            await SeedDataInitial(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
+            await SeedUsuariosEPerfis(scope.ServiceProvider);
+            await SeedDadosIniciais(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
         }
     }
 
-    private static async Task SeedUsersAndRoles(IServiceProvider serviceProvider)
+    private static async Task SeedUsuariosEPerfis(IServiceProvider serviceProvider)
     {
+        using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        var contextIdentity = scope.ServiceProvider.GetRequiredService<ApiContext>();
+
+        if (contextIdentity.Users.Any()) return;
+
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
@@ -69,6 +72,7 @@ public static class DbMigrationHelpers
 
         var userAluno = new IdentityUser
         {
+            Id = GUID_USER_ALUNO,
             Email = "usuario@aluno.com",
             EmailConfirmed = true,
             UserName = "usuario@aluno.com",
@@ -76,6 +80,7 @@ public static class DbMigrationHelpers
 
         var userAdmin = new IdentityUser
         {
+            Id = GUID_USER_ADMIN,
             Email = "usuario@admin.com",
             EmailConfirmed = true,
             UserName = "usuario@admin.com",
@@ -88,7 +93,7 @@ public static class DbMigrationHelpers
         await userManager.AddToRoleAsync(userAdmin, "ADMIN");
     }
 
-    private static async Task SeedDataInitial(
+    private static async Task SeedDadosIniciais(
          GestaoAlunosContext dbAlunosContext,
          GestaoConteudosContext dbConteudosContext,
          ApiContext dbApiContext,
@@ -106,32 +111,32 @@ public static class DbMigrationHelpers
         var admin = new Usuario(Guid.Parse(userAdmin.Id));
         var aluno = new Aluno(Guid.Parse(userAluno.Id), "Aluno Exemplar");
 
-        var curso = new Curso("Clean Code", "Código Limpo", admin.Id, 35000);
+        var curso = new Curso( "Clean Code", "Código Limpo", admin.Id, 35000);
         var aulaBoasVindas = new Aula("Boas Vindas", "Bem vindo ao curso de Clean Code");
         var aulaComoFazerOCurso = new Aula("Como fazer o curso", "Dicas de como aproveitar melhor o curso");
         var aulaMaoNaMassa = new Aula("Mão na massa", "Hora de colocar a mão na massa");
-        curso.AdicionarAula(aulaBoasVindas);
-        curso.AdicionarAula(aulaComoFazerOCurso);
-        curso.AdicionarAula(aulaMaoNaMassa);
+        curso.IncluirAula(aulaBoasVindas);
+        curso.IncluirAula(aulaComoFazerOCurso);
+        curso.IncluirAula(aulaMaoNaMassa);
 
         var matricula = new Matricula(aluno.Id, curso.Id);
         matricula.Ativar();
-        matricula.Concluir();
 
-        //var progressoBoasVindas = new ProgressoAula(aluno.Id, aulaBoasVindas.Id);
-        //progressoBoasVindas.ConcluirAula();
-        //var progressoComoFazerOCurso = new ProgressoAula(aluno.Id, aulaComoFazerOCurso.Id);
-        //progressoComoFazerOCurso.ConcluirAula();
-        //var progressoMaoNaMassa = new ProgressoAula(aluno.Id, aulaMaoNaMassa.Id);
-        //progressoMaoNaMassa.ConcluirAula();
-
-        //var progressoCursoConcluido = new ProgressoCurso(curso.Id, aluno.Id, curso.Aulas.Count);
-        //progressoCursoConcluido.IncrementarProgresso();
+        var progressoCurso = new ProgressoCurso(curso.Id, aluno.Id, 3);
+        var progressoAulaBoasVindas = new ProgressoAula(aulaBoasVindas.Id);
+        progressoCurso.IncluirProgressoAula(progressoAulaBoasVindas);
+        progressoCurso.FinalizarProgressoAula(progressoAulaBoasVindas);
+        var progressoAulaComoFazerOCurso = new ProgressoAula(aulaComoFazerOCurso.Id);
+        progressoCurso.IncluirProgressoAula(progressoAulaComoFazerOCurso);
+        progressoCurso.FinalizarProgressoAula(progressoAulaComoFazerOCurso);
+        var progressoAulaMaoNaMassa = new ProgressoAula(aulaMaoNaMassa.Id);
+        progressoCurso.IncluirProgressoAula(progressoAulaMaoNaMassa);
+        progressoCurso.FinalizarProgressoAula(progressoAulaMaoNaMassa);
 
         // Certificado para o aluno
-        var certificado = new Certificado(aluno.Nome, curso.Nome, matricula.Id, aluno.Id, matricula.DataConclusao);
+        var certificado = new Certificado(aluno.Nome, curso.Nome, aluno.Id);
         var pdf = pdfService.GerarPdf(certificado);
-        certificado.AdicionarArquivo(pdf);
+        certificado.IncluirArquivo(pdf);
 
         // Pagamento
         var pagamento = new Pagamento
@@ -158,8 +163,8 @@ public static class DbMigrationHelpers
 
         await dbConteudosContext.Set<Curso>().AddRangeAsync([curso]);
         await dbConteudosContext.Set<Aula>().AddRangeAsync([aulaBoasVindas, aulaComoFazerOCurso, aulaMaoNaMassa]);
-        //await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoBoasVindas, progressoComoFazerOCurso, progressoMaoNaMassa]);
-        //await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCursoConcluido);
+        await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCurso);
+        await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoAulaBoasVindas, progressoAulaComoFazerOCurso, progressoAulaMaoNaMassa]);
 
         await dbPagamentoFaturamentoContext.Set<Pagamento>().AddAsync(pagamento);
         await dbPagamentoFaturamentoContext.Set<Transacao>().AddAsync(transacao);

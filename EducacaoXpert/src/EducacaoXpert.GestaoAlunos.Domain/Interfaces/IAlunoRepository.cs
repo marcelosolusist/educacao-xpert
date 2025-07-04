@@ -10,9 +10,10 @@ public interface IAlunoRepository : IRepository<Aluno>, IAggregateRoot
     Task<Matricula?> ObterMatriculaPorCursoEAlunoId(Guid cursoId, Guid alunoId);
     Task<IEnumerable<Matricula>> ObterMatriculasEmPagamento(Guid alunoId);
     Task<Certificado?> ObterCertificadoPorId(Guid certificadoId, Guid alunoId);
+    Task<IEnumerable<Certificado>> ListarCertificadosPorAlunoId(Guid alunoId);
 
-    void AdicionarMatricula(Matricula matricula);
-    void AtualizarMatricula(Matricula matricula);
-    void Adicionar(Aluno aluno);
-    void AdicionarCertificado(Certificado certificado);
+    void IncluirMatricula(Matricula matricula);
+    void EditarMatricula(Matricula matricula);
+    void Incluir(Aluno aluno);
+    void IncluirCertificado(Certificado certificado);
 }

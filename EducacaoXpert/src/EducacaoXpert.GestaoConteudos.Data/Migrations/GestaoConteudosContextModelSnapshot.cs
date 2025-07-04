@@ -56,7 +56,7 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ConteudoProgramatico")
+                    b.Property<string>("Conteudo")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -123,6 +123,9 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Assistindo")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("AulaId")
                         .HasColumnType("TEXT");
 
@@ -159,7 +162,10 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                     b.Property<Guid>("AlunoId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AulasAssistidas")
+                    b.Property<int>("AulasFinalizadas")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CertificadoGerado")
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("CursoId")

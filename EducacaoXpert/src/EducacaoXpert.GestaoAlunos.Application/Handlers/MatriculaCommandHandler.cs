@@ -10,52 +10,32 @@ namespace EducacaoXpert.GestaoAlunos.Application.Handlers;
 
 public class MatriculaCommandHandler(IMediator mediator,
                                     IAlunoRepository alunoRepository) : CommandHandler,
-                                    IRequestHandler<AdicionarMatriculaCommand, bool>,
-                                    IRequestHandler<ConcluirMatriculaCommand, bool>,
+                                    IRequestHandler<IncluirMatriculaCommand, bool>,
                                     IRequestHandler<AtivarMatriculaCommand, bool>
 {
-    public async Task<bool> Handle(AdicionarMatriculaCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirMatriculaCommand command, CancellationToken cancellationToken)
     {
-        if (!ValidarComando(request))
+        if (!ValidarComando(command))
             return false;
 
-        var aluno = await alunoRepository.ObterPorId(request.AlunoId);
+        var aluno = await alunoRepository.ObterPorId(command.AlunoId);
         if (aluno is null)
         {
-            await AdicionarNotificacao(request.MessageType, "Aluno não encontrado.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Aluno não encontrado.", cancellationToken);
             return false;
         }
 
-        var matriculaExiste = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, aluno.Id);
+        var matriculaExiste = await alunoRepository.ObterMatriculaPorCursoEAlunoId(command.CursoId, aluno.Id);
         if (matriculaExiste is not null)
         {
-            await AdicionarNotificacao(request.MessageType, "Matrícula já existente.", cancellationToken);
+            await IncluirNotificacao(command.MessageType, "Matrícula já existente.", cancellationToken);
             return false;
         }
 
-        var matricula = new Matricula(request.AlunoId, request.CursoId);
+        var matricula = new Matricula(command.AlunoId, command.CursoId);
 
-        aluno.AdicionarMatricula(matricula);
-        alunoRepository.AdicionarMatricula(matricula);
-
-        return await alunoRepository.UnitOfWork.Commit();
-    }
-
-    public async Task<bool> Handle(ConcluirMatriculaCommand request, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(request))
-            return false;
-
-        var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, request.AlunoId);
-        if (matricula is null)
-        {
-            await AdicionarNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
-            return false;
-        }
-        matricula.Concluir();
-        alunoRepository.AtualizarMatricula(matricula);
-
-        matricula.AdicionarEvento(new MatriculaConcluidaEvent(request.AlunoId, matricula.Id, request.CursoId, request.NomeCurso));
+        aluno.IncluirMatricula(matricula);
+        alunoRepository.IncluirMatricula(matricula);
 
         return await alunoRepository.UnitOfWork.Commit();
     }
@@ -68,16 +48,16 @@ public class MatriculaCommandHandler(IMediator mediator,
         var matricula = await alunoRepository.ObterMatriculaPorCursoEAlunoId(request.CursoId, request.AlunoId);
         if (matricula is null)
         {
-            await AdicionarNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
+            await IncluirNotificacao(request.MessageType, "Matrícula não encontrada.", cancellationToken);
             return false;
         }
         matricula.Ativar();
-        alunoRepository.AtualizarMatricula(matricula);
+        alunoRepository.EditarMatricula(matricula);
 
         return await alunoRepository.UnitOfWork.Commit();
     }
 
-    protected override async Task AdicionarNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
+    protected override async Task IncluirNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {
         await mediator.Publish(new DomainNotification(messageType, descricao), cancellationToken);
     }

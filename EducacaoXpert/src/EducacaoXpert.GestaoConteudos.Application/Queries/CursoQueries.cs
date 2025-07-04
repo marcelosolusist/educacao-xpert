@@ -17,7 +17,7 @@ public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
         {
             Id = curso.Id,
             Nome = curso.Nome,
-            ConteudoProgramatico = curso.ConteudoProgramatico,
+            Conteudo = curso.Conteudo,
             Preco = curso.Preco,
             Aulas = curso.Aulas?.Select(a => new AulaDto
             {
@@ -28,15 +28,17 @@ public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
         };
     }
 
-    public async Task<IEnumerable<CursoDto>> ObterTodos()
+    
+
+    public async Task<IEnumerable<CursoDto>> ListarTodos()
     {
-        var cursos = await cursoRepository.ObterTodos();
+        var cursos = await cursoRepository.ListarTodos();
 
         return cursos.Select(c => new CursoDto
         {
             Id = c.Id,
             Nome = c.Nome,
-            ConteudoProgramatico = c.ConteudoProgramatico,
+            Conteudo = c.Conteudo,
             Preco = c.Preco,
             Aulas = c.Aulas?.Select(a => new AulaDto
             {
@@ -44,6 +46,18 @@ public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
                 Nome = a.Nome,
                 Conteudo = a.Conteudo
             }).ToList() ?? []
+        }).ToList();
+    }
+
+    public async Task<IEnumerable<AulaDto>> ListarTodasAulasPorCursoId(Guid cursoId)
+    {
+        var aulas = await cursoRepository.ListarTodasAulasPorCursoId(cursoId);
+
+        return aulas.Select(a => new AulaDto
+        {
+            Id = a.Id,
+            Nome = a.Nome,
+            Conteudo = a.Conteudo,
         }).ToList();
     }
 }

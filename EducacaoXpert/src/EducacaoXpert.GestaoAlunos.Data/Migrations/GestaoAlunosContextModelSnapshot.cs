@@ -33,9 +33,6 @@ namespace EducacaoXpert.GestaoAlunos.Data.Migrations
                     b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DataConclusao")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime?>("DataCriacao")
                         .HasColumnType("TEXT");
 
@@ -49,9 +46,6 @@ namespace EducacaoXpert.GestaoAlunos.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MatriculaId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("NomeAluno")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -63,8 +57,6 @@ namespace EducacaoXpert.GestaoAlunos.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AlunoId");
-
-                    b.HasIndex("MatriculaId");
 
                     b.ToTable("Certificados", (string)null);
                 });
@@ -82,9 +74,6 @@ namespace EducacaoXpert.GestaoAlunos.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
@@ -146,14 +135,7 @@ namespace EducacaoXpert.GestaoAlunos.Data.Migrations
                         .HasForeignKey("AlunoId")
                         .IsRequired();
 
-                    b.HasOne("EducacaoXpert.GestaoAlunos.Domain.Entities.Matricula", "Matricula")
-                        .WithMany()
-                        .HasForeignKey("MatriculaId")
-                        .IsRequired();
-
                     b.Navigation("Aluno");
-
-                    b.Navigation("Matricula");
                 });
 
             modelBuilder.Entity("EducacaoXpert.GestaoAlunos.Domain.Entities.Matricula", b =>

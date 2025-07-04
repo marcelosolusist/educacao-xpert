@@ -10,28 +10,28 @@ namespace EducacaoXpert.GestaoAlunos.Application.Handlers;
 public class UsuarioCommandHandler(IMediator mediator,
                                    IAlunoRepository alunoRepository,
                                    IUsuarioRepository usuarioRepository) : CommandHandler,
-                                    IRequestHandler<AdicionarAlunoCommand, bool>,
-                                    IRequestHandler<AdicionarAdminCommand, bool>
+                                    IRequestHandler<IncluirAlunoCommand, bool>,
+                                    IRequestHandler<IncluirAdminCommand, bool>
 {
-    public async Task<bool> Handle(AdicionarAlunoCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirAlunoCommand request, CancellationToken cancellationToken)
     {
         if (!ValidarComando(request))
             return false;
 
         var aluno = new Aluno(Guid.Parse(request.UsuarioId), request.Nome);
 
-        alunoRepository.Adicionar(aluno);
+        alunoRepository.Incluir(aluno);
         return await alunoRepository.UnitOfWork.Commit();
     }
 
-    public async Task<bool> Handle(AdicionarAdminCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(IncluirAdminCommand request, CancellationToken cancellationToken)
     {
         if (!ValidarComando(request))
             return false;
 
         var usuario = new Usuario(Guid.Parse(request.UsuarioId));
 
-        usuarioRepository.Adicionar(usuario);
+        usuarioRepository.Incluir(usuario);
         return await usuarioRepository.UnitOfWork.Commit();
     }
 

@@ -18,10 +18,11 @@ public class Aluno : Usuario
 
     public Aluno(Guid id, string nome) : base(id)
     {
+        Id = id;
         Nome = nome;
     }
 
-    public void AdicionarMatricula(Matricula matricula)
+    public void IncluirMatricula(Matricula matricula)
     {
         if (MatriculaExistente(matricula))
             throw new DomainException("Matrícula já existente.");
@@ -31,7 +32,7 @@ public class Aluno : Usuario
         _matriculas.Add(matricula);
     }
 
-    public void AdicionarCertificado(Certificado certificado)
+    public void IncluirCertificado(Certificado certificado)
     {
         if (CertificadoExistente(certificado))
             throw new DomainException("Certificado já existente.");

@@ -12,6 +12,5 @@ public class CertificadoMapping : IEntityTypeConfiguration<Certificado>
         builder.HasKey(c => c.Id);
 
         builder.HasOne(c => c.Aluno);
-        builder.HasOne(c => c.Matricula);
     }
 }

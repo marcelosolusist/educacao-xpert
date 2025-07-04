@@ -54,7 +54,7 @@ public abstract class Entity
         return (GetType().GetHashCode() * 907) + Id.GetHashCode();
     }
 
-    public void AdicionarEvento(Event evento)
+    public void IncluirEvento(Event evento)
     {
         _notificacoes ??= [];
         _notificacoes.Add(evento);

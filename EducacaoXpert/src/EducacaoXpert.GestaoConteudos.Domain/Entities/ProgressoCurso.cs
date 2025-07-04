@@ -9,8 +9,9 @@ public class ProgressoCurso : Entity, IAggregateRoot
     public Guid CursoId { get; private set; }
     public Guid AlunoId { get; private set; }
     public int TotalAulas { get; private set; }
-    public int AulasAssistidas { get; private set; }
+    public int AulasFinalizadas { get; private set; }
     public int PercentualConcluido { get; private set; }
+    public bool CertificadoGerado { get; private set; }
     public bool CursoConcluido => PercentualConcluido == 100;
 
     private readonly List<ProgressoAula> _progressoAulas;
@@ -26,12 +27,13 @@ public class ProgressoCurso : Entity, IAggregateRoot
         CursoId = cursoId;
         AlunoId = alunoId;
         TotalAulas = totalAulas;
-        AulasAssistidas = 0;
+        AulasFinalizadas = 0;
         PercentualConcluido = 0;
+        CertificadoGerado = false;
         _progressoAulas = new List<ProgressoAula>();
     }
 
-    public void AdicionarProgressoAula(ProgressoAula progressoAula)
+    public void IncluirProgressoAula(ProgressoAula progressoAula)
     {
         if (ProgressoAulaExistente(progressoAula))
             throw new DomainException("Progresso de aula já associada ao progresso do curso."); 
@@ -39,13 +41,32 @@ public class ProgressoCurso : Entity, IAggregateRoot
         progressoAula.AssociarProgressoCurso(Id);
         _progressoAulas.Add(progressoAula);
     }
-    public void MarcarProgressoAulaAssistida(ProgressoAula progressoAula)
+    public void MarcarAulaAssistindo(ProgressoAula progressoAula)
+    {
+        foreach (ProgressoAula aula in _progressoAulas)
+        {
+            if (aula.Id == progressoAula.Id)
+            {
+                aula.MarcarAssistindo();
+            }
+            else
+            {
+                aula.DesmarcarAssistindo();
+            }
+        }
+    }
+    public void FinalizarProgressoAula(ProgressoAula progressoAula)
     {
         var aulaMarcar = _progressoAulas.FirstOrDefault(p => p.Id == progressoAula.Id);
         if (aulaMarcar is null)
             throw new DomainException("Progresso de aula não existe.");
-        aulaMarcar.AtualizarAulaAssistida();
-        AtualizarAulasAssistidas();
+        aulaMarcar.FinalizarAula();
+        AtualizarAulasFinalizadas();
+    }
+
+    public void MarcarCertificadoGerado()
+    {
+        CertificadoGerado = true;
     }
 
     private bool ProgressoAulaExistente(ProgressoAula progressoAula)
@@ -53,14 +74,14 @@ public class ProgressoCurso : Entity, IAggregateRoot
         return _progressoAulas.Any(p => p.AulaId == progressoAula.AulaId);
     }
 
-    private void AtualizarAulasAssistidas()
+    private void AtualizarAulasFinalizadas()
     {
-        AulasAssistidas = _progressoAulas.Count(p => p.Status == StatusProgressoAula.Assistida);
+        AulasFinalizadas = _progressoAulas.Count(p => p.Status == StatusProgressoAula.Finalizada);
         AtualizarPercentualConcluido();
     }
 
     private void AtualizarPercentualConcluido()
     {
-        PercentualConcluido = TotalAulas == 0 ? 0 : Convert.ToInt32(Convert.ToDecimal(AulasAssistidas / TotalAulas) * 100);
+        PercentualConcluido = TotalAulas == 0 ? 0 : Convert.ToInt32(Convert.ToDecimal(AulasFinalizadas / TotalAulas) * 100);
     }
 }

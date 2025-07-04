@@ -6,7 +6,7 @@ namespace EducacaoXpert.GestaoConteudos.Domain.Entities;
 public class Curso : Entity, IAggregateRoot
 {
     public string Nome { get; private set; }
-    public string ConteudoProgramatico { get; private set; }
+    public string Conteudo { get; private set; }
     public Guid UsuarioCriacaoId { get; private set; }
     public int Preco { get; private set; } //O Preço é em centavos
 
@@ -18,18 +18,19 @@ public class Curso : Entity, IAggregateRoot
 
     // Ef Constructor
     protected Curso() { }
-    public Curso(string nome, string conteudoProgramatico, Guid usuarioCriacaoId, int preco)
+
+    public Curso(string nome, string conteudo, Guid usuarioCriacaoId, int preco)
     {
         Nome = nome;
-        ConteudoProgramatico = conteudoProgramatico;
+        Conteudo = conteudo;
         UsuarioCriacaoId = usuarioCriacaoId;
         Preco = preco;
-        _aulas = [];
-
         Validar();
+        _aulas = new List<Aula>();
+        _progressoCursos = new List<ProgressoCurso>();
     }
 
-    public void AdicionarAula(Aula aula)
+    public void IncluirAula(Aula aula)
     {
         if (AulaExistente(aula))
             throw new DomainException("Aula já associada a este curso.");
@@ -38,19 +39,19 @@ public class Curso : Entity, IAggregateRoot
         _aulas.Add(aula);
     }
 
-    public void AtualizarNome(string nome)
+    public void EditarNome(string nome)
     {
         if (string.IsNullOrWhiteSpace(nome))
             throw new DomainException("O nome do curso é obrigatório.");
         Nome = nome;
     }
-    public void AtualizarConteudo(string conteudoProgramatico)
+    public void EditarConteudo(string conteudo)
     {
-        if (string.IsNullOrWhiteSpace(conteudoProgramatico))
-            throw new DomainException("O conteúdo programático é obrigatório.");
-        ConteudoProgramatico = conteudoProgramatico;
+        if (string.IsNullOrWhiteSpace(conteudo))
+            throw new DomainException("O conteúdo é obrigatório.");
+        Conteudo = conteudo;
     }
-    public void AtualizarPreco(int preco)
+    public void EditarPreco(int preco)
     {
         if (preco <= 0)
             throw new DomainException("O preço do curso deve ser maior que zero.");
@@ -61,8 +62,8 @@ public class Curso : Entity, IAggregateRoot
     {
         if (string.IsNullOrWhiteSpace(Nome))
             throw new DomainException("O nome do curso é obrigatório.");
-        if (string.IsNullOrWhiteSpace(ConteudoProgramatico))
-            throw new DomainException("O conteúdo programático é obrigatório.");
+        if (string.IsNullOrWhiteSpace(Conteudo))
+            throw new DomainException("O conteúdo é obrigatório.");
         if (UsuarioCriacaoId == Guid.Empty)
             throw new DomainException("O ID do usuário criador é obrigatório.");
         if (Preco <= 0)

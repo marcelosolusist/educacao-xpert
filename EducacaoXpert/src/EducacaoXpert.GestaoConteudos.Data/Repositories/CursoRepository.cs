@@ -17,34 +17,33 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
             .Include(c => c.Aulas)
             .FirstOrDefaultAsync(c => c.Id == cursoId);
     }
-
     public async Task<Curso?> ObterPorId(Guid id)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
     }
-
-    public async Task<IEnumerable<Curso>> ObterTodos()
+    public async Task<IEnumerable<Curso>> ListarTodos()
     {
         return await _dbSet.AsNoTracking().ToListAsync();
     }
-
     public async Task<Aula?> ObterAulaPorId(Guid aulaId)
     {
         return await dbContext.Set<Aula>().AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == aulaId);
     }
-
     public async Task<ProgressoCurso?> ObterProgressoCurso(Guid cursoId, Guid alunoId)
     {
         return await dbContext.Set<ProgressoCurso>().AsNoTracking()
              .FirstOrDefaultAsync(pc => pc.CursoId == cursoId && pc.AlunoId == alunoId);
     }
-
-    public void Adicionar(Curso curso)
+    public async Task<IEnumerable<Aula>> ListarTodasAulasPorCursoId(Guid cursoId)
+    {
+        return await dbContext.Set<Aula>().AsNoTracking().Where(a => a.CursoId == cursoId).ToListAsync();
+    }
+    public void Incluir(Curso curso)
     {
         _dbSet.Add(curso);
     }
-    public void Atualizar(Curso curso)
+    public void Editar(Curso curso)
     {
         _dbSet.Update(curso);
     }
@@ -52,18 +51,22 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
     {
         _dbSet.Remove(curso);
     }
+    public void IncluirAula(Aula aula)
+    {
+        dbContext.Set<Aula>().Add(aula);
+    }
+    public void EditarAula(Aula aula)
+    {
+        dbContext.Set<Aula>().Update(aula);
+    }
+    public void RemoverAula(Aula aula)
+    {
+        dbContext.Set<Aula>().Remove(aula);
+    }
     public void Dispose()
     {
         dbContext.Dispose();
     }
 
-    public void AdicionarAula(Aula aula)
-    {
-        dbContext.Set<Aula>().Add(aula);
-    }
-
-    public void AtualizarAula(Aula aula)
-    {
-        dbContext.Set<Aula>().Update(aula);
-    }
+    
 }
