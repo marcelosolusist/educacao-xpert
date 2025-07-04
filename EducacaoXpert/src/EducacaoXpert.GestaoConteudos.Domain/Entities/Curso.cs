@@ -18,14 +18,16 @@ public class Curso : Entity, IAggregateRoot
 
     // Ef Constructor
     protected Curso() { }
+
     public Curso(string nome, string conteudo, Guid usuarioCriacaoId, int preco)
     {
         Nome = nome;
         Conteudo = conteudo;
         UsuarioCriacaoId = usuarioCriacaoId;
         Preco = preco;
-        _aulas = [];
         Validar();
+        _aulas = new List<Aula>();
+        _progressoCursos = new List<ProgressoCurso>();
     }
 
     public void IncluirAula(Aula aula)

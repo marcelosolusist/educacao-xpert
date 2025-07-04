@@ -3,7 +3,6 @@ using System;
 using EducacaoXpert.GestaoConteudos.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -12,44 +11,40 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducacaoXpert.GestaoConteudos.Data.Migrations
 {
     [DbContext(typeof(GestaoConteudosContext))]
-    [Migration("20250701211438_GC_Inicial")]
+    [Migration("20250704091659_GC_Inicial")]
     partial class GC_Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.15")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.15");
 
             modelBuilder.Entity("EducacaoXpert.GestaoConteudos.Domain.Entities.Aula", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Conteudo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("CursoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -62,30 +57,30 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Conteudo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Preco")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("UsuarioCriacaoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -96,27 +91,27 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("AulaId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -129,28 +124,28 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Assistindo")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("AulaId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProgressoCursoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -165,34 +160,34 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("AlunoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AulasFinalizadas")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("CertificadoGerado")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("CursoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataCriacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("PercentualConcluido")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TotalAulas")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

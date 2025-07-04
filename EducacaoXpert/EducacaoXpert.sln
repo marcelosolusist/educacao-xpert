@@ -49,6 +49,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.GestaoConteud
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducacaoXpert.PagamentoFaturamento.Domain.Tests", "tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests\EducacaoXpert.PagamentoFaturamento.Domain.Tests.csproj", "{51432517-521F-4D98-B5A8-59D6CA6DBC70}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{6796D3E0-334E-45E7-8689-BAC77D4F7A46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducacaoXpert.Api.Tests", "tests\EducacaoXpert.Api.Tests\EducacaoXpert.Api.Tests.csproj", "{474F40C2-1678-4A4C-8857-7828AC16C64E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +123,10 @@ Global
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474F40C2-1678-4A4C-8857-7828AC16C64E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474F40C2-1678-4A4C-8857-7828AC16C64E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474F40C2-1678-4A4C-8857-7828AC16C64E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474F40C2-1678-4A4C-8857-7828AC16C64E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +152,8 @@ Global
 		{2E501D60-056F-4956-8258-5D213A916162} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
 		{5E437C50-A5F9-4E1D-A9FF-9411EE00B41A} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
 		{51432517-521F-4D98-B5A8-59D6CA6DBC70} = {4BCAE25C-55A6-4D58-BFE5-33CAEC4DF185}
+		{6796D3E0-334E-45E7-8689-BAC77D4F7A46} = {0AC8A5D0-E6EE-4011-9C61-0925D2DD1716}
+		{474F40C2-1678-4A4C-8857-7828AC16C64E} = {6796D3E0-334E-45E7-8689-BAC77D4F7A46}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B557137F-0012-4AF2-915D-2148FBEFC4EC}

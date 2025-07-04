@@ -15,14 +15,14 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "Cursos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Conteudo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Preco = table.Column<int>(type: "int", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Conteudo = table.Column<string>(type: "TEXT", nullable: false),
+                    UsuarioCriacaoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Preco = table.Column<int>(type: "INTEGER", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,13 +33,13 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "Aulas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Conteudo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CursoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Conteudo = table.Column<string>(type: "TEXT", nullable: false),
+                    CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,16 +55,16 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "ProgressoCursos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CursoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AlunoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TotalAulas = table.Column<int>(type: "int", nullable: false),
-                    AulasFinalizadas = table.Column<int>(type: "int", nullable: false),
-                    PercentualConcluido = table.Column<int>(type: "int", nullable: false),
-                    CertificadoGerado = table.Column<bool>(type: "bit", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CursoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AlunoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TotalAulas = table.Column<int>(type: "INTEGER", nullable: false),
+                    AulasFinalizadas = table.Column<int>(type: "INTEGER", nullable: false),
+                    PercentualConcluido = table.Column<int>(type: "INTEGER", nullable: false),
+                    CertificadoGerado = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,13 +80,13 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "Materiais",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AulaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: false),
+                    Tipo = table.Column<string>(type: "TEXT", nullable: false),
+                    AulaId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,14 +102,14 @@ namespace EducacaoXpert.GestaoConteudos.Data.Migrations
                 name: "ProgressoAulas",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProgressoCursoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AulaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<short>(type: "smallint", nullable: false),
-                    Assistindo = table.Column<bool>(type: "bit", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProgressoCursoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AulaId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Status = table.Column<short>(type: "INTEGER", nullable: false),
+                    Assistindo = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataAlteracao = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

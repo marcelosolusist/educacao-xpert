@@ -14,8 +14,9 @@ namespace EducacaoXpert.Api.Configurations;
 
 public static class DbMigrationHelpers
 {
-    const string GUID_USER_ADMIN = "7dd867ad-4e56-4e6a-9c52-d863ce68d1d6";
-    const string GUID_USER_ALUNO = "1703abf6-94ea-4f36-b3a8-7de9471865a2";
+    public const string GUID_USER_ADMIN = "7dd867ad-4e56-4e6a-9c52-d863ce68d1d6";
+    public const string GUID_USER_ALUNO = "1703abf6-94ea-4f36-b3a8-7de9471865a2";
+
     public static void UseDbMigrationHelper(this WebApplication app)
     {
         EnsureSeedData(app).Wait();
@@ -39,22 +40,17 @@ public static class DbMigrationHelpers
 
         if (env.IsDevelopment() || env.IsEnvironment("Testing"))
         {
-            //await contextGestaoAlunos.Database.EnsureDeletedAsync();
-            //await contextGestaoConteudos.Database.EnsureDeletedAsync();
-            //await contextIdentity.Database.EnsureDeletedAsync();
-            //await contextPagamentoFaturamento.Database.EnsureDeletedAsync();
-
             await contextGestaoConteudos.Database.MigrateAsync();
             await contextGestaoAlunos.Database.MigrateAsync();
             await contextIdentity.Database.MigrateAsync();
             await contextPagamentoFaturamento.Database.MigrateAsync();
 
-            await SeedUsersAndRoles(scope.ServiceProvider);
-            await SeedDataInitial(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
+            await SeedUsuariosEPerfis(scope.ServiceProvider);
+            await SeedDadosIniciais(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
         }
     }
 
-    private static async Task SeedUsersAndRoles(IServiceProvider serviceProvider)
+    private static async Task SeedUsuariosEPerfis(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var contextIdentity = scope.ServiceProvider.GetRequiredService<ApiContext>();
@@ -97,7 +93,7 @@ public static class DbMigrationHelpers
         await userManager.AddToRoleAsync(userAdmin, "ADMIN");
     }
 
-    private static async Task SeedDataInitial(
+    private static async Task SeedDadosIniciais(
          GestaoAlunosContext dbAlunosContext,
          GestaoConteudosContext dbConteudosContext,
          ApiContext dbApiContext,
@@ -115,7 +111,7 @@ public static class DbMigrationHelpers
         var admin = new Usuario(Guid.Parse(userAdmin.Id));
         var aluno = new Aluno(Guid.Parse(userAluno.Id), "Aluno Exemplar");
 
-        var curso = new Curso("Clean Code", "Código Limpo", admin.Id, 35000);
+        var curso = new Curso( "Clean Code", "Código Limpo", admin.Id, 35000);
         var aulaBoasVindas = new Aula("Boas Vindas", "Bem vindo ao curso de Clean Code");
         var aulaComoFazerOCurso = new Aula("Como fazer o curso", "Dicas de como aproveitar melhor o curso");
         var aulaMaoNaMassa = new Aula("Mão na massa", "Hora de colocar a mão na massa");
