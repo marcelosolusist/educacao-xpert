@@ -30,7 +30,21 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<ActionResult<IEnumerable<CursoViewModel>>> ListarTodos()
     {
         var cursos = await cursoQueries.ListarTodos();
-        return RespostaPadrao(HttpStatusCode.OK, cursos);
+        var retornoCursos = new List<CursoViewModel>();
+        if (cursos.Count() > 0)
+        {
+            foreach (var curso in cursos)
+            {
+                retornoCursos.Add(new CursoViewModel()
+                {
+                    Id = curso.Id,
+                    Nome = curso.Nome,
+                    Conteudo = curso.Conteudo,
+                    Preco = curso.Preco,
+                });
+            }
+        }
+        return RespostaPadrao(HttpStatusCode.OK, retornoCursos);
     }
 
     [AllowAnonymous]
@@ -38,7 +52,14 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     public async Task<ActionResult<CursoViewModel>> ObterPorId(Guid id)
     {
         var curso = await cursoQueries.ObterPorId(id);
-        return RespostaPadrao(HttpStatusCode.OK, curso);
+        var retornoCurso = new CursoViewModel()
+        {
+            Id = curso.Id,
+            Nome = curso.Nome,
+            Conteudo = curso.Conteudo,
+            Preco = curso.Preco
+        };
+        return RespostaPadrao(HttpStatusCode.OK, retornoCurso);
     }
 
     [Authorize(Roles = "ADMIN")]
