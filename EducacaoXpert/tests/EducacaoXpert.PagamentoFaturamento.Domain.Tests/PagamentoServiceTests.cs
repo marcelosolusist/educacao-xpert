@@ -24,23 +24,23 @@ public class PagamentoServiceTests
         _handler = _mocker.CreateInstance<PagamentoCommandHandler>();
         _pagamentoCursoFixture = new PagamentoCursoFixture();
     }
-    [Fact(DisplayName = "Realizar Pagamento com Sucesso")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public async Task PagamentoService_RealizarPagamentoCursoValido_DeveSalvarDados()
+    [Fact(DisplayName = "Efetuar Pagamento com Sucesso")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public async Task PagamentoService_EfetuarPagamentoCursoValido_DeveSalvarDados()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoValido();
 
         var pagamentoService = _mocker.CreateInstance<PagamentoService>();
-        _mocker.GetMock<IPagamentoService>().Setup(p => p.RealizarPagamentoCurso(It.IsAny<PagamentoCurso>()))
+        _mocker.GetMock<IPagamentoService>().Setup(p => p.EfetuarPagamentoCurso(It.IsAny<PagamentoCurso>()))
             .ReturnsAsync(true);
         _mocker.GetMock<IPagamentoCartaoCreditoFacade>()
-            .Setup(p => p.RealizarPagamento(It.IsAny<Pedido>(), It.IsAny<PagamentoCurso>()))
+            .Setup(p => p.EfetuarPagamento(It.IsAny<Pedido>(), It.IsAny<PagamentoCurso>()))
             .Returns(new Transacao { StatusTransacao = StatusTransacao.Autorizado });
         _mocker.GetMock<IPagamentoRepository>().Setup(r => r.UnitOfWork.Commit()).ReturnsAsync(true);
 
         // Act
-        var result = await pagamentoService.RealizarPagamentoCurso(pagamentoCurso);
+        var result = await pagamentoService.EfetuarPagamentoCurso(pagamentoCurso);
 
         // Assert
         Assert.True(result);
@@ -50,22 +50,22 @@ public class PagamentoServiceTests
         _mocker.GetMock<IMediator>().Verify(m => m.Publish(It.IsAny<DomainNotification>(), CancellationToken.None),
             Times.Never);
     }
-    [Fact(DisplayName = "Realizar Pagamento com Falha")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public async Task PagamentoService_RealizarPagamentoCursoInvalido_NaoDeveSalvarDados()
+    [Fact(DisplayName = "Efetuar Pagamento com Falha")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public async Task PagamentoService_EfetuarPagamentoCursoInvalido_NaoDeveSalvarDados()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoValido();
 
         var pagamentoService = _mocker.CreateInstance<PagamentoService>();
-        _mocker.GetMock<IPagamentoService>().Setup(p => p.RealizarPagamentoCurso(It.IsAny<PagamentoCurso>()))
+        _mocker.GetMock<IPagamentoService>().Setup(p => p.EfetuarPagamentoCurso(It.IsAny<PagamentoCurso>()))
             .ReturnsAsync(false);
         _mocker.GetMock<IPagamentoCartaoCreditoFacade>()
-            .Setup(p => p.RealizarPagamento(It.IsAny<Pedido>(), It.IsAny<PagamentoCurso>()))
+            .Setup(p => p.EfetuarPagamento(It.IsAny<Pedido>(), It.IsAny<PagamentoCurso>()))
             .Returns(new Transacao { StatusTransacao = StatusTransacao.Negado });
 
         // Act
-        var result = await pagamentoService.RealizarPagamentoCurso(pagamentoCurso);
+        var result = await pagamentoService.EfetuarPagamentoCurso(pagamentoCurso);
 
         // Assert
         Assert.False(result);
@@ -76,14 +76,14 @@ public class PagamentoServiceTests
         _mocker.GetMock<IMediator>().Verify(m => m.Publish(It.IsAny<DomainNotification>(), CancellationToken.None),
             Times.Once);
     }
-    [Fact(DisplayName = "Realizar Pagamento Command Válido")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public void PagamentoService_RealizarPagamentoCursoCommandValido_DevePassarNaValidacao()
+    [Fact(DisplayName = "Efetuar Pagamento Command Válido")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public void PagamentoService_EfetuarPagamentoCursoCommandValido_DevePassarNaValidacao()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoValido();
 
-        var command = new RealizarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
+        var command = new EfetuarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
             pagamentoCurso.CvvCartao, pagamentoCurso.ExpiracaoCartao, pagamentoCurso.NomeCartao,
             pagamentoCurso.NumeroCartao, pagamentoCurso.Valor);
 
@@ -93,14 +93,14 @@ public class PagamentoServiceTests
         // Assert
         Assert.True(result);
     }
-    [Fact(DisplayName = "Realizar Pagamento Command Inválido")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public void PagamentoService_RealizarPagamentoCursoCommandInvalido_NaoDevePassarNaValidacao()
+    [Fact(DisplayName = "Efetuar Pagamento Command Inválido")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public void PagamentoService_EfetuarPagamentoCursoCommandInvalido_NaoDevePassarNaValidacao()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoInvalido();
 
-        var command = new RealizarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
+        var command = new EfetuarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
             pagamentoCurso.CvvCartao, pagamentoCurso.ExpiracaoCartao, pagamentoCurso.NomeCartao,
             pagamentoCurso.NumeroCartao, pagamentoCurso.Valor);
 
@@ -109,30 +109,30 @@ public class PagamentoServiceTests
 
         // Assert
         Assert.False(result);
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.AlunoIdErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.AlunoIdErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.CursoIdErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.CursoIdErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.NomeCartaoErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.NomeCartaoErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.NumeroCartaoInvalidoErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.NumeroCartaoInvalidoErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.ExpiracaoCartaoErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.ExpiracaoCartaoErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.CvvCartaoErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.CvvCartaoErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
-        Assert.Contains(RealizarPagamentoCursoCommandValidation.ValorErro,
+        Assert.Contains(EfetuarPagamentoCursoCommandValidation.ValorErro,
             command.ValidationResult.Errors.Select(e => e.ErrorMessage));
         Assert.Equal(7, command.ValidationResult.Errors.Count);
     }
-    [Fact(DisplayName = "Realizar Pagamento CommandHandler Sucesso")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public async Task PagamentoService_RealizarPagamentoCursoValido_DeveSalvarPagamento()
+    [Fact(DisplayName = "Efetuar Pagamento CommandHandler Sucesso")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public async Task PagamentoService_EfetuarPagamentoCursoValido_DeveSalvarPagamento()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoValido();
 
-        var command = new RealizarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
+        var command = new EfetuarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
             pagamentoCurso.CvvCartao, pagamentoCurso.ExpiracaoCartao, pagamentoCurso.NomeCartao,
             pagamentoCurso.NumeroCartao, pagamentoCurso.Valor);
 
@@ -141,16 +141,16 @@ public class PagamentoServiceTests
 
         // Assert
         _mocker.GetMock<IPagamentoService>()
-            .Verify(p => p.RealizarPagamentoCurso(It.IsAny<PagamentoCurso>()), Times.Once);
+            .Verify(p => p.EfetuarPagamentoCurso(It.IsAny<PagamentoCurso>()), Times.Once);
     }
-    [Fact(DisplayName = "Realizar Pagamento CommandHandler Falha")]
-    [Trait("Categoria", "Pagamentos - RealizarPagamentoCurso")]
-    public async Task PagamentoService_RealizarPagamentoCursoInvalido_NaoDeveSalvarPagamento()
+    [Fact(DisplayName = "Efetuar Pagamento CommandHandler Falha")]
+    [Trait("Categoria", "Pagamentos - EfetuarPagamentoCurso")]
+    public async Task PagamentoService_EfetuarPagamentoCursoInvalido_NaoDeveSalvarPagamento()
     {
         // Arrange
         var pagamentoCurso = _pagamentoCursoFixture.GerarPagamentoCursoInvalido();
 
-        var command = new RealizarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
+        var command = new EfetuarPagamentoCursoCommand(pagamentoCurso.AlunoId, pagamentoCurso.CursoId,
             pagamentoCurso.CvvCartao, pagamentoCurso.ExpiracaoCartao, pagamentoCurso.NomeCartao,
             pagamentoCurso.NumeroCartao, pagamentoCurso.Valor);
 
@@ -159,6 +159,6 @@ public class PagamentoServiceTests
 
         // Assert
         _mocker.GetMock<IPagamentoService>()
-            .Verify(p => p.RealizarPagamentoCurso(It.IsAny<PagamentoCurso>()), Times.Never);
+            .Verify(p => p.EfetuarPagamentoCurso(It.IsAny<PagamentoCurso>()), Times.Never);
     }
 }

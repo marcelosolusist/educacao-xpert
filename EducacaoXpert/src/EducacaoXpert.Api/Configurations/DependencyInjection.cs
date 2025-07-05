@@ -44,19 +44,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<GestaoConteudosContext>();
 
         // Mediator
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AtivarMatriculaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirAdminCommand>());
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirAlunoCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirCertificadoCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirMatriculaCommand>());
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirAulaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<EditarAulaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ExcluirAulaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IniciarAulaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<FinalizarAulaCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IncluirCursoCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<EditarCursoCommand>());
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ExcluirCursoCommand>());
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<PagamentoService>());
 
         // Pagamentos

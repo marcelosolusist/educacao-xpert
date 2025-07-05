@@ -19,16 +19,16 @@ public static class DbMigrationHelpers
 
     public static void UseDbMigrationHelper(this WebApplication app)
     {
-        EnsureSeedData(app).Wait();
+        ExecutarMigrationsEEfetuarCargaDeDados(app).Wait();
     }
 
-    public static async Task EnsureSeedData(WebApplication application)
+    public static async Task ExecutarMigrationsEEfetuarCargaDeDados(WebApplication application)
     {
         var service = application.Services.CreateScope().ServiceProvider;
-        await EnsureSeedData(service);
+        await ExecutarMigrationsEEfetuarCargaDeDados(service);
     }
 
-    public static async Task EnsureSeedData(IServiceProvider serviceProvider)
+    public static async Task ExecutarMigrationsEEfetuarCargaDeDados(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var contextGestaoConteudos = scope.ServiceProvider.GetRequiredService<GestaoConteudosContext>();
@@ -40,17 +40,25 @@ public static class DbMigrationHelpers
 
         if (env.IsDevelopment() || env.IsEnvironment("Testing"))
         {
+            //Apagando objetos de dados
+            await contextGestaoConteudos.Database.EnsureDeletedAsync();
+            await contextGestaoAlunos.Database.EnsureDeletedAsync();
+            await contextIdentity.Database.EnsureDeletedAsync();
+            await contextPagamentoFaturamento.Database.EnsureDeletedAsync();
+
+            //Executando migrations
             await contextGestaoConteudos.Database.MigrateAsync();
             await contextGestaoAlunos.Database.MigrateAsync();
             await contextIdentity.Database.MigrateAsync();
             await contextPagamentoFaturamento.Database.MigrateAsync();
 
-            await SeedUsuariosEPerfis(scope.ServiceProvider);
-            await SeedDadosIniciais(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
+            //Efetuando carga de dados
+            await CargaDadosUsuariosEPerfis(scope.ServiceProvider);
+            await CargaDadosIniciais(contextGestaoAlunos, contextGestaoConteudos, contextIdentity, contextPagamentoFaturamento, certificadoService);
         }
     }
 
-    private static async Task SeedUsuariosEPerfis(IServiceProvider serviceProvider)
+    private static async Task CargaDadosUsuariosEPerfis(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var contextIdentity = scope.ServiceProvider.GetRequiredService<ApiContext>();
@@ -93,23 +101,17 @@ public static class DbMigrationHelpers
         await userManager.AddToRoleAsync(userAdmin, "ADMIN");
     }
 
-    private static async Task SeedDadosIniciais(
+    private static async Task CargaDadosIniciais(
          GestaoAlunosContext dbAlunosContext,
          GestaoConteudosContext dbConteudosContext,
          ApiContext dbApiContext,
          PagamentoFaturamentoContext dbPagamentoFaturamentoContext,
          ICertificadoPdfService pdfService)
     {
-        if (dbAlunosContext.Set<Aluno>().Any() || dbAlunosContext.Set<Matricula>().Any() || dbAlunosContext.Set<Usuario>().Any())
-            return;
-        if (dbConteudosContext.Set<Curso>().Any() || dbConteudosContext.Set<Aula>().Any())
-            return;
+        if (dbAlunosContext.Set<Aluno>().Any()) return;
 
-        var userAluno = await dbApiContext.Users.FirstOrDefaultAsync(x => x.Email == "usuario@aluno.com");
-        var userAdmin = await dbApiContext.Users.FirstOrDefaultAsync(x => x.Email == "usuario@admin.com");
-
-        var admin = new Usuario(Guid.Parse(userAdmin.Id));
-        var aluno = new Aluno(Guid.Parse(userAluno.Id), "Aluno Exemplar");
+        var admin = new Usuario(Guid.Parse(GUID_USER_ADMIN));
+        var aluno = new Aluno(Guid.Parse(GUID_USER_ALUNO), "Aluno Exemplar");
 
         var curso = new Curso( "Clean Code", "Código Limpo", admin.Id, 35000);
         var aulaBoasVindas = new Aula("Boas Vindas", "Bem vindo ao curso de Clean Code");
@@ -156,12 +158,14 @@ public static class DbMigrationHelpers
             Total = pagamento.Valor,
         };
 
+        var cursoTestes = new Curso("Curso de Testes", "Conteúdo de Testes", admin.Id, 15000);
+
         await dbAlunosContext.Set<Aluno>().AddRangeAsync([aluno]);
         await dbAlunosContext.Set<Usuario>().AddAsync(admin);
         await dbAlunosContext.Set<Matricula>().AddRangeAsync([matricula]);
         await dbAlunosContext.Set<Certificado>().AddAsync(certificado);
 
-        await dbConteudosContext.Set<Curso>().AddRangeAsync([curso]);
+        await dbConteudosContext.Set<Curso>().AddRangeAsync([curso, cursoTestes]);
         await dbConteudosContext.Set<Aula>().AddRangeAsync([aulaBoasVindas, aulaComoFazerOCurso, aulaMaoNaMassa]);
         await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCurso);
         await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoAulaBoasVindas, progressoAulaComoFazerOCurso, progressoAulaMaoNaMassa]);

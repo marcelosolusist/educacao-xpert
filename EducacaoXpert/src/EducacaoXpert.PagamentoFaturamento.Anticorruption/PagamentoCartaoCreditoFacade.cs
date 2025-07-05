@@ -11,7 +11,7 @@ public class PagamentoCartaoCreditoFacade(IPayPalGateway payPalGateway,
     IOptions<PagamentoSettings> options) : IPagamentoCartaoCreditoFacade
 {
     private readonly PagamentoSettings _settings = options.Value;
-    public Transacao RealizarPagamento(Pedido pedido, PagamentoCurso pagamento)
+    public Transacao EfetuarPagamento(Pedido pedido, PagamentoCurso pagamento)
     {
         var apiKey = _settings.ApiKey;
         var encriptionKey = _settings.EncriptionKey;

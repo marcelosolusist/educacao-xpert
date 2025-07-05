@@ -20,12 +20,11 @@ public class PayPalGateway : IPayPalGateway
 
     public Transacao CommitTransaction(string cardHashKey, string orderId, int amount)
     {
-        var sucesso = true;
         return new Transacao
         {
             MatriculaId = Guid.Parse(orderId),
             Total = amount,
-            StatusTransacao = sucesso ? StatusTransacao.Autorizado : StatusTransacao.Negado
+            StatusTransacao = StatusTransacao.Autorizado //Sempre autorizado
         };
     }
 }

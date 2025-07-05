@@ -5,6 +5,7 @@ using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Commands;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
+using EducacaoXpert.GestaoAlunos.Data.Repositories;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
 using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
@@ -143,6 +144,34 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     }
 
     [Authorize(Roles = "ALUNO")]
+    [HttpGet("{id:guid}/listar-matricula")]
+    public async Task<IActionResult> ObterMatriculaDoAlunoNoCurso(Guid id)
+    {
+        var curso = await cursoQueries.ObterPorId(id);
+        if (curso is null)
+        {
+            NotificarErro("Curso", "Curso não encontrado.");
+            return RespostaPadrao();
+        }
+
+        var matricula = await alunoQueries.ObterMatricula(id, UsuarioId);
+        if (matricula is null)
+        {
+            NotificarErro("Matricula", "Matrícula não encontrada.");
+            return RespostaPadrao();
+        }
+        var matriculaView = new MatriculaDetalhadaViewModel()
+        {
+            Id = matricula.Id,
+            AlunoId = matricula.AlunoId,
+            CursoId = matricula.CursoId,
+            DataMatricula = matricula.DataMatricula,
+            Status = matricula.Status
+        };
+        return RespostaPadrao(HttpStatusCode.OK, matriculaView);
+    }
+
+    [Authorize(Roles = "ALUNO")]
     [HttpPost("{id:guid}/pagar-matricula")]
     public async Task<IActionResult> PagarMatricula(Guid id, [FromBody] DadosPagamentoViewModel dadosPagamento)
     {
@@ -152,9 +181,9 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             NotificarErro("Curso", "Curso não encontrado.");
             return RespostaPadrao();
         }
-        await ValidarMatriculaEmPagamento(curso);
+        await ValidarMatriculaAPagar(curso);
         if (!OperacaoValida()) return RespostaPadrao();
-        var command = new RealizarPagamentoCursoCommand(UsuarioId, id, dadosPagamento.CvvCartao, dadosPagamento.ExpiracaoCartao, dadosPagamento.NomeCartao, dadosPagamento.NumeroCartao, curso.Preco);
+        var command = new EfetuarPagamentoCursoCommand(UsuarioId, id, dadosPagamento.CvvCartao, dadosPagamento.ExpiracaoCartao, dadosPagamento.NomeCartao, dadosPagamento.NumeroCartao, curso.Preco);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.Created);
     }
@@ -236,7 +265,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
-    private async Task ValidarMatriculaEmPagamento(CursoDto? curso)
+    private async Task ValidarMatriculaAPagar(CursoDto? curso)
     {
         if (curso is null)
         {
@@ -244,9 +273,9 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             return;
         }
         var matricula = await alunoQueries.ObterMatricula(curso.Id, UsuarioId);
-        if (matricula is not { Status: StatusMatricula.EmPagamento })
+        if (matricula is not { Status: StatusMatricula.APagar })
         {
-            NotificarErro("Matricula", "A matrícula deve estar com status 'Em Pagamento' para realizar o pagamento.");
+            NotificarErro("Matricula", "A matrícula deve estar com status 'A Pagar' para realizar o pagamento.");
         }
     }
     private async Task<bool> ValidarSeAlunoPossuiMatriculaAtivaNoCurso(Guid idCurso, Guid idAluno)

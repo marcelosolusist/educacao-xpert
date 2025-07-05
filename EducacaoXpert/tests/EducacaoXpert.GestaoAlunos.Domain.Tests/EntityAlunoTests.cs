@@ -11,7 +11,7 @@ public class EntityAlunoTests
 
     [Fact(DisplayName = "EntityAluno - Incluir Matricula")]
     [Trait("Categoria", "GestaoAlunos - IncluirMatricula")]
-    public void EntityAluno_IncluirMatriculaEmPagamento_DevePassarNaValidacao()
+    public void EntityAluno_IncluirMatriculaAPagar_DevePassarNaValidacao()
     {
         // Arrange
         var aluno = new Aluno(Guid.NewGuid(), NOME_ALUNO);
@@ -23,7 +23,7 @@ public class EntityAlunoTests
 
         // Assert
         Assert.Single(aluno.Matriculas);
-        Assert.Equal(StatusMatricula.EmPagamento, matricula.Status);
+        Assert.Equal(StatusMatricula.APagar, matricula.Status);
     }
     [Fact(DisplayName = "EntityAluno - Incluir Matricula Existente")]
     [Trait("Categoria", "GestaoAlunos - IncluirMatricula")]

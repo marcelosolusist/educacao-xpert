@@ -3,7 +3,7 @@
 public enum StatusMatricula
 {
     Pendente,
-    EmPagamento = 1,
+    APagar = 1,
     Ativa = 4,
     Cancelada = 6,
 }

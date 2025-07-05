@@ -24,9 +24,9 @@ public class AlunoQueries(IAlunoRepository alunoRepository) : IAlunoQueries
         };
     }
 
-    public async Task<IEnumerable<MatriculaDto>> ObterMatriculasEmPagamento(Guid alunoId)
+    public async Task<IEnumerable<MatriculaDto>> ObterMatriculasAPagar(Guid alunoId)
     {
-        var matriculas = await alunoRepository.ObterMatriculasEmPagamento(alunoId);
+        var matriculas = await alunoRepository.ObterMatriculasAPagar(alunoId);
 
         return matriculas.Select(m => new MatriculaDto
         {
