@@ -3,13 +3,13 @@ using FluentValidation;
 
 namespace EducacaoXpert.GestaoConteudos.Application.Commands;
 
-public class IniciarAulaCommand : Command
+public class AssistirAulaCommand : Command
 {
     public Guid CursoId { get; set; }
     public Guid AulaId { get; set; }
     public Guid AlunoId { get; set; }
 
-    public IniciarAulaCommand(Guid cursoId, Guid aulaId, Guid alunoId)
+    public AssistirAulaCommand(Guid cursoId, Guid aulaId, Guid alunoId)
     {
         CursoId = cursoId;
         AulaId = aulaId;
@@ -18,17 +18,17 @@ public class IniciarAulaCommand : Command
 
     public override bool EhValido()
     {
-        ValidationResult = new IniciarAulaCommandValidation().Validate(this);
+        ValidationResult = new AssistirAulaCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
 
-public class IniciarAulaCommandValidation : AbstractValidator<IniciarAulaCommand>
+public class AssistirAulaCommandValidation : AbstractValidator<AssistirAulaCommand>
 {
     public static string CursoIdErro = "O campo CursoId é obrigatório.";
     public static string AulaIdErro = "O campo AulaId é obrigatório.";
     public static string AlunoIdErro = "O campo AlunoId é obrigatório.";
-    public IniciarAulaCommandValidation()
+    public AssistirAulaCommandValidation()
     {
         RuleFor(a => a.CursoId)
             .NotEqual(Guid.Empty)

@@ -4,7 +4,8 @@ using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 
 namespace EducacaoXpert.GestaoConteudos.Application.Queries;
 
-public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
+public class CursoQueries(ICursoRepository cursoRepository,
+                            IProgressoCursoRepository progressoCursoRepository) : ICursoQueries
 {
     public async Task<CursoDto?> ObterPorId(Guid cursoId)
     {
@@ -59,5 +60,70 @@ public class CursoQueries(ICursoRepository cursoRepository) : ICursoQueries
             Nome = a.Nome,
             Conteudo = a.Conteudo,
         }).ToList();
+    }
+
+    public async Task<ProgressoCursoDto?> ObterProgressoCurso(Guid cursoId, Guid alunoId)
+    {
+        var progressoCurso = await progressoCursoRepository.Obter(cursoId, alunoId);
+
+        if (progressoCurso is null)
+            return null;
+
+        return new ProgressoCursoDto
+        {
+            Id = progressoCurso.Id,
+            AlunoId = progressoCurso.AlunoId,
+            CursoId = progressoCurso.CursoId,
+            AulasFinalizadas = progressoCurso.AulasFinalizadas,
+            TotalAulas = progressoCurso.TotalAulas,
+            PercentualConcluido = progressoCurso.PercentualConcluido,
+            CertificadoGerado = progressoCurso.CertificadoGerado,
+            ProgressoAulas = progressoCurso.ProgressoAulas?.Select(a => new ProgressoAulaDto
+            {
+                Id = a.Id,
+                Assistindo = a.Assistindo,
+                AulaId = a.AulaId,
+                ProgressoCursoId = a.ProgressoCursoId,
+                Status = a.Status
+            }).ToList() ?? []
+        };
+    }
+
+    public async Task<ProgressoAulaDto?> ObterProgressoAula(Guid aulaId, Guid alunoId)
+    {
+        var progressoAula = await progressoCursoRepository.ObterProgressoAula(aulaId, alunoId);
+
+        if (progressoAula is null)
+            return null;
+
+        return new ProgressoAulaDto
+        {
+            Id = progressoAula.Id,
+            AulaId = progressoAula.AulaId,
+            ProgressoCursoId =  progressoAula.ProgressoCursoId,
+            Status = progressoAula.Status,
+            Assistindo = progressoAula.Assistindo
+        };
+    }
+
+    public async Task<AulaDto?> ObterAulaPorId(Guid aulaId)
+    {
+        var aula = await cursoRepository.ObterAulaPorId(aulaId);
+
+        if (aula is null)
+            return null;
+
+        return new AulaDto
+        {
+            Id = aula.Id,
+            Nome = aula.Nome,
+            Conteudo = aula.Conteudo,
+            Materiais = aula.Materiais?.Select(a => new MaterialDto
+            {
+                Id = a.Id,
+                Nome = a.Nome,
+                Tipo = a.Tipo
+            }).ToList() ?? []
+        };
     }
 }

@@ -15,7 +15,8 @@ public class AulaCommandHandler(IMediator mediator,
                                 IRequestHandler<EditarAulaCommand, bool>,
                                 IRequestHandler<ExcluirAulaCommand, bool>,
                                 IRequestHandler<IniciarAulaCommand, bool>,
-                                IRequestHandler<FinalizarAulaCommand, bool>
+                                IRequestHandler<FinalizarAulaCommand, bool>,
+                                IRequestHandler<AssistirAulaCommand, bool>
 {
     public async Task<bool> Handle(IncluirAulaCommand command, CancellationToken cancellationToken)
     {
@@ -131,6 +132,32 @@ public class AulaCommandHandler(IMediator mediator,
             await mediator.Publish(new CursoConcluidoEvent(command.AlunoId, command.CursoId, progressoCurso.Curso.Nome));
             progressoCurso.MarcarCertificadoGerado();
         }
+
+        progressoCursoRepository.Editar(progressoCurso);
+
+        return await cursoRepository.UnitOfWork.Commit();
+    }
+
+    public async Task<bool> Handle(AssistirAulaCommand command, CancellationToken cancellationToken)
+    {
+        if (!ValidarComando(command))
+            return false;
+
+        var progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
+
+        if (progressoCurso is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso do curso não encontrado.", cancellationToken);
+            return false;
+        }
+
+        var progressoAula = await progressoCursoRepository.ObterProgressoAula(command.AulaId, command.AlunoId);
+        if (progressoAula is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso de aula não encontrado.", cancellationToken);
+            return false;
+        }
+        progressoCurso.MarcarAulaAssistindo(progressoAula);
 
         progressoCursoRepository.Editar(progressoCurso);
 

@@ -13,7 +13,7 @@ public class IniciarAulaCommandTests
     public void IniciarAulaCommand_ComandoEstaValido_DevePassarNaValidacao()
     {
         // Arrange
-        var command = new IniciarAulaCommand(CURSO_ID, AULA_ID, ALUNO_ID);
+        var command = new AssistirAulaCommand(CURSO_ID, AULA_ID, ALUNO_ID);
 
         // Act
         var ehValido = command.EhValido();
@@ -34,7 +34,7 @@ public class IniciarAulaCommandTests
     public void IniciarAulaCommand_ComandoEstaInvalido_NaoDevePassarNaValidacao()
     {
         // Arrange
-        var command = new IniciarAulaCommand(Guid.Empty, Guid.Empty, Guid.Empty);
+        var command = new AssistirAulaCommand(Guid.Empty, Guid.Empty, Guid.Empty);
 
         // Act
         var ehValido = command.EhValido();

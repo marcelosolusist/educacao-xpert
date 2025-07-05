@@ -5,11 +5,9 @@ using EducacaoXpert.Core.DomainObjects.Interfaces;
 using EducacaoXpert.Core.Messages.Notifications;
 using EducacaoXpert.GestaoAlunos.Application.Commands;
 using EducacaoXpert.GestaoAlunos.Application.Queries;
-using EducacaoXpert.GestaoAlunos.Data.Repositories;
 using EducacaoXpert.GestaoConteudos.Application.Commands;
 using EducacaoXpert.GestaoConteudos.Application.Queries.DTO;
 using EducacaoXpert.GestaoConteudos.Application.Queries.Interfaces;
-using EducacaoXpert.GestaoConteudos.Domain.Interfaces;
 using EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,8 +21,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
                                 IMediator mediator,
                                 IAppIdentityUser identityUser,
                                 IAlunoQueries alunoQueries,
-                                ICursoRepository cursoRepository,
-                                IProgressoCursoRepository progressoCursoRepository,
                                 ICursoQueries cursoQueries) : MainController(notificacoes, mediator, identityUser)
 {
     private readonly IMediator _mediator = mediator;
@@ -201,7 +197,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
         await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
         if (!OperacaoValida()) return RespostaPadrao();
-        var command = new IniciarAulaCommand(id, idAula, UsuarioId);
+        var command = new AssistirAulaCommand(id, idAula, UsuarioId);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.Created);
     }
@@ -218,24 +214,27 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
         await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
         if (!OperacaoValida()) return RespostaPadrao();
-        var progressoCurso = await progressoCursoRepository.Obter(id, UsuarioId);
+        var progressoCurso = await cursoQueries.ObterProgressoCurso(id, UsuarioId);
         if (progressoCurso is null)
         {
             NotificarErro("ProgressoCurso", "Progresso de curso não encontrado.");
             return RespostaPadrao();
         }
-        var progressoAula = progressoCurso.ProgressoAulas.FirstOrDefault(pa => pa.AulaId == idAula);
+        var progressoAula = await cursoQueries.ObterProgressoAula(idAula, UsuarioId);
         if (progressoAula is null)
         {
             NotificarErro("ProgressoAula", "Progresso de aula não encontrado.");
             return RespostaPadrao();
         }
-        progressoCurso.MarcarAulaAssistindo(progressoAula);
-        progressoCursoRepository.Editar(progressoCurso);
-        await progressoCursoRepository.UnitOfWork.Commit();
-
-        var aula = await cursoRepository.ObterAulaPorId(idAula) ;
-        var material = aula.Materiais.FirstOrDefault();
+        var command = new AssistirAulaCommand(id, idAula, UsuarioId);
+        await _mediator.Send(command);
+        var aula = await cursoQueries.ObterAulaPorId(idAula) ;
+        if (aula is null)
+        {
+            NotificarErro("Aula", "Aula não encontrada.");
+            return RespostaPadrao();
+        }
+        var material = aula?.Materiais?.FirstOrDefault();
         var aulaViewModel = new AulaViewModel() {
             Id = aula.Id,
             Nome = aula.Nome,
