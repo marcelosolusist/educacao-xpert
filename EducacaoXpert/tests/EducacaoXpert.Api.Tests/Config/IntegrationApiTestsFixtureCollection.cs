@@ -1,12 +1,9 @@
 ﻿using Bogus;
 using Bogus.DataSets;
-using Dapper;
 using EducacaoXpert.Api.ViewModels;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using EducacaoXpert.Api.ViewModels;
-using EducacaoXpert.Core.DomainObjects.Enums;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -36,7 +33,7 @@ public class IntegrationTestsFixture : IDisposable
     {
         var options = new WebApplicationFactoryClientOptions
         {
-            BaseAddress = new Uri("http://localhost:7139")
+            BaseAddress = new Uri("http://localhost:5229")
         };
         Factory = new EducacaoXpertAppFactory();
         Client = Factory.CreateClient(options);
@@ -117,15 +114,18 @@ public class IntegrationTestsFixture : IDisposable
         SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task<Guid> ObterIdCurso()
+    public async Task<Guid> ObterIdCursoTestes()
     {
         var response = await Client.GetAsync("/api/cursos");
         response.EnsureSuccessStatusCode();
-
         var data = await response.Content.ReadAsStringAsync();
-
-        var json = JsonSerializer.Deserialize<JsonElement>(data);
-        return json.GetProperty("data")[0].GetProperty("id").GetGuid();
+        var retorno = JsonSerializer.Deserialize<RetornoGetCursos>(data);
+        if (retorno == null) return Guid.NewGuid();
+        foreach (JsonElement registro in retorno.data)
+        {
+            if (registro.GetProperty("nome").GetString() == CursoTests.NOME_CURSO) return registro.GetProperty("id").GetGuid();
+        }
+        return Guid.NewGuid();
     }
 
     public JsonElement ObterErros(string result)
@@ -133,6 +133,7 @@ public class IntegrationTestsFixture : IDisposable
         var json = JsonSerializer.Deserialize<JsonElement>(result);
         return json.GetProperty("erros");
     }
+
     public void Dispose()
     {
         Factory.Dispose();

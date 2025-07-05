@@ -158,14 +158,12 @@ public static class DbMigrationHelpers
             Total = pagamento.Valor,
         };
 
-        var cursoTestes = new Curso("Curso de Testes", "Conteúdo de Testes", admin.Id, 15000);
-
         await dbAlunosContext.Set<Aluno>().AddRangeAsync([aluno]);
         await dbAlunosContext.Set<Usuario>().AddAsync(admin);
         await dbAlunosContext.Set<Matricula>().AddRangeAsync([matricula]);
         await dbAlunosContext.Set<Certificado>().AddAsync(certificado);
 
-        await dbConteudosContext.Set<Curso>().AddRangeAsync([curso, cursoTestes]);
+        await dbConteudosContext.Set<Curso>().AddRangeAsync([curso]);
         await dbConteudosContext.Set<Aula>().AddRangeAsync([aulaBoasVindas, aulaComoFazerOCurso, aulaMaoNaMassa]);
         await dbConteudosContext.Set<ProgressoCurso>().AddAsync(progressoCurso);
         await dbConteudosContext.Set<ProgressoAula>().AddRangeAsync([progressoAulaBoasVindas, progressoAulaComoFazerOCurso, progressoAulaMaoNaMassa]);

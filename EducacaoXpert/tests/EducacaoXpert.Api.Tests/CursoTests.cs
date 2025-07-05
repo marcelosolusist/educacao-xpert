@@ -1,27 +1,27 @@
-﻿using System.Net.Http.Json;
-using EducacaoXpert.Api.Tests.Config;
+﻿using EducacaoXpert.Api.Tests.Config;
 using EducacaoXpert.Api.ViewModels;
-using EducacaoXpert.Core.DomainObjects.Enums;
+using System.Net.Http.Json;
 
 namespace EducacaoXpert.Api.Tests;
 
+[TestCaseOrderer("EducacaoXpert.Api.Tests.PriorityOrderer", "EducacaoXpert.Api.Tests")]
 [Collection(nameof(IntegrationApiTestsFixtureCollection))]
 public class CursoTests
 {
     private readonly IntegrationTestsFixture _fixture;
-    private readonly string NOME_CURSO = "Curso de Testes";
-    private readonly string CONTEUDO_CURSO = "Conteúdo do Curso de Testes";
-    private readonly int PRECO_CURSO = 10000;
-    private readonly string NOME_AULA = "Aula de Testes";
-    private readonly string CONTEUDO_AULA = "Conteúdo da Aula de Testes";
-    private readonly string NOME_MATERIAL_AULA = "Nome do Material da Aula";
-    private readonly string TIPO_MATERIAL_AULA = "Tipo de Material da Aula";
+    public static string NOME_CURSO = "Curso de Testes";
+    public static string CONTEUDO_CURSO = "Conteúdo do Curso de Testes";
+    public static int PRECO_CURSO = 10000;
+    public static string NOME_AULA = "Aula de Testes";
+    public static string CONTEUDO_AULA = "Conteúdo da Aula de Testes";
+    public static string NOME_MATERIAL_AULA = "Nome do Material da Aula";
+    public static string TIPO_MATERIAL_AULA = "Tipo de Material da Aula";
 
     public CursoTests(IntegrationTestsFixture fixture)
     {
         _fixture = fixture;
     }
-    [Fact(DisplayName = "Incluir Curso Dados Válidos")]
+    [Fact(DisplayName = "Incluir Curso Dados Válidos"), TestPriority(1)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task Incluir_CursoValido_DeveIncluir()
     {
@@ -45,7 +45,7 @@ public class CursoTests
         // Assert
         Assert.True(!string.IsNullOrEmpty(result));
     }
-    [Fact(DisplayName = "Incluir Curso Dados Inválidos")]
+    [Fact(DisplayName = "Incluir Curso Dados Inválidos"), TestPriority(2)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task Incluir_CursoInvalido_NaoDeveIncluir()
     {
@@ -70,7 +70,7 @@ public class CursoTests
         Assert.Contains("O conteúdo não pode ser vazio.", erros.ToString());
         Assert.Contains("O preço do curso deve ser maior que zero.", erros.ToString());
     }
-    [Fact(DisplayName = "Incluir Aula Dados Válidos")]
+    [Fact(DisplayName = "Incluir Aula Dados Válidos"), TestPriority(3)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task Incluir_AulaValida_DeveIncluir()
     {
@@ -86,7 +86,7 @@ public class CursoTests
         await _fixture.EfetuarLoginAdmin();
         _fixture.Client.AtribuirToken(_fixture.Token);
 
-        var cursoId = await _fixture.ObterIdCurso();
+        var cursoId = await _fixture.ObterIdCursoTestes();
 
         // Act
         var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/aulas", data);
@@ -97,7 +97,7 @@ public class CursoTests
         // Assert
         Assert.True(!string.IsNullOrEmpty(result));
     }
-    [Fact(DisplayName = "Incluir Aula Dados Inválidos")]
+    [Fact(DisplayName = "Incluir Aula Dados Inválidos"), TestPriority(4)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task Incluir_AulaInvalida_NaoDeveIncluir()
     {
@@ -113,7 +113,7 @@ public class CursoTests
         await _fixture.EfetuarLoginAdmin();
         _fixture.Client.AtribuirToken(_fixture.Token);
 
-        var cursoId = await _fixture.ObterIdCurso();
+        var cursoId = await _fixture.ObterIdCursoTestes();
 
         // Act
         var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/aulas", data);
@@ -125,7 +125,7 @@ public class CursoTests
         Assert.Contains("O campo Conteúdo não pode ser vazio.", erros.ToString());
     }
 
-    [Fact(DisplayName = "Realizar Matrícula com Sucesso")]
+    [Fact(DisplayName = "Realizar Matrícula com Sucesso"), TestPriority(98)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task MatriculaTests_RealizarMatriculaValida_DeveRealizar()
     {
@@ -133,7 +133,7 @@ public class CursoTests
         await _fixture.RegistrarAluno();
         _fixture.Client.AtribuirToken(_fixture.Token);
 
-        var cursoId = await _fixture.ObterIdCurso();
+        var cursoId = await _fixture.ObterIdCursoTestes();
 
         // Act
         var response = await _fixture.Client.PostAsync($"/api/cursos/{cursoId}/matricular", null);
@@ -142,7 +142,7 @@ public class CursoTests
         response.EnsureSuccessStatusCode();
     }
 
-    [Fact(DisplayName = "Realizar Matrícula com Erro")]
+    [Fact(DisplayName = "Realizar Matrícula com Erro"), TestPriority(99)]
     [Trait("Categoria", "Integração Api - Curso")]
     public async Task MatriculaTests_RealizarMatriculaInvalida_NaoDeveRealizar()
     {
