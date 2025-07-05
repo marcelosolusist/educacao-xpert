@@ -32,7 +32,7 @@ public class IncluirAulaCommand : Command
 public class IncluirAulaCommandValidation : AbstractValidator<IncluirAulaCommand>
 {
     public static string NomeErro = "O campo Nome não pode ser vazio.";
-    public static string ConteudoErro = "O campo Conteudo não pode ser vazio.";
+    public static string ConteudoErro = "O campo Conteúdo não pode ser vazio.";
     public static string CursoIdErro = "O campo CursoId é obrigatório.";
     public IncluirAulaCommandValidation()
     {

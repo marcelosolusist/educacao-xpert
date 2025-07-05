@@ -72,7 +72,21 @@ public class IntegrationTestsFixture : IDisposable
         AlunoId = Guid.Parse(response.Data.UserToken.Id);
     }
 
-    public async Task RealizarLoginApi(string? email = null, string? senha = null)
+    public async Task EfetuarLoginAluno(string? email = null, string? senha = null)
+    {
+        var userData = new LoginUserViewModel()
+        {
+            Email = email ?? "usuario@aluno.com",
+            Senha = senha ?? "Teste@123"
+        };
+
+        var response = await Client.PostAsJsonAsync("/api/conta/login", userData);
+        response.EnsureSuccessStatusCode();
+
+        SalvarUserToken(await response.Content.ReadAsStringAsync());
+    }
+
+    public async Task EfetuarLoginAdmin(string? email = null, string? senha = null)
     {
         var userData = new LoginUserViewModel()
         {
@@ -86,7 +100,7 @@ public class IntegrationTestsFixture : IDisposable
         SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task RealizarRegistroAluno()
+    public async Task RegistrarAluno()
     {
         GerarDadosUsuario();
         var registerUser = new RegisterUserViewModel()
