@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace EducacaoXpert.PagamentoFaturamento.Domain.Commands;
 
-public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, int valor) : Command
+public class EfetuarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cvvCartao, string expiracaoCartao, string nomeCartao, string numeroCartao, int valor) : Command
 {
     public Guid CursoId { get; set; } = cursoId;
     public Guid AlunoId { get; set; } = alunoId;
@@ -15,11 +15,11 @@ public class RealizarPagamentoCursoCommand(Guid alunoId, Guid cursoId, string cv
 
     public override bool EhValido()
     {
-        ValidationResult = new RealizarPagamentoCursoCommandValidation().Validate(this);
+        ValidationResult = new EfetuarPagamentoCursoCommandValidation().Validate(this);
         return ValidationResult.IsValid;
     }
 }
-public class RealizarPagamentoCursoCommandValidation : AbstractValidator<RealizarPagamentoCursoCommand>
+public class EfetuarPagamentoCursoCommandValidation : AbstractValidator<EfetuarPagamentoCursoCommand>
 {
     public static string AlunoIdErro = "O campo AlunoId é obrigatório.";
     public static string CursoIdErro = "O campo CursoId é obrigatório.";
@@ -30,7 +30,7 @@ public class RealizarPagamentoCursoCommandValidation : AbstractValidator<Realiza
     public static string ValorErro = "O campo Valor deve ser maior que zero.";
     public static string NumeroCartaoInvalidoErro = "O número do cartão de crédito é inválido.";
 
-    public RealizarPagamentoCursoCommandValidation()
+    public EfetuarPagamentoCursoCommandValidation()
     {
         RuleFor(x => x.CursoId)
             .NotEqual(Guid.Empty)

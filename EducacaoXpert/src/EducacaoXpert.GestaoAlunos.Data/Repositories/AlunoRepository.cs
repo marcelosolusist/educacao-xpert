@@ -19,13 +19,13 @@ public class AlunoRepository(GestaoAlunosContext dbContext) : IAlunoRepository
     public async Task<Matricula?> ObterMatriculaPorCursoEAlunoId(Guid cursoId, Guid alunoId)
     {
         return await dbContext.Set<Matricula>().AsNoTracking()
-            .FirstOrDefaultAsync(m => m.AlunoId == alunoId && m.CursoId == cursoId);
+            .FirstOrDefaultAsync(m => m.CursoId == cursoId && m.AlunoId == alunoId );
     }
-    public async Task<IEnumerable<Matricula>> ObterMatriculasEmPagamento(Guid alunoId)
+    public async Task<IEnumerable<Matricula>> ObterMatriculasAPagar(Guid alunoId)
     {
         return await dbContext.Set<Matricula>()
             .AsNoTracking()
-            .Where(m => m.AlunoId == alunoId && m.Status == StatusMatricula.EmPagamento)
+            .Where(m => m.AlunoId == alunoId && m.Status == StatusMatricula.APagar)
             .ToListAsync();
     }
     public async Task<Certificado?> ObterCertificadoPorId(Guid certificadoId, Guid alunoId)

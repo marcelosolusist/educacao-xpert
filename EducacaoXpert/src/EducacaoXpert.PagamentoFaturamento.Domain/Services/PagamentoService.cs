@@ -12,7 +12,7 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
                                 IPagamentoRepository pagamentoRepository,
                                 IMediator mediator) : IPagamentoService
 {
-    public async Task<bool> RealizarPagamentoCurso(PagamentoCurso pagamentoCurso)
+    public async Task<bool> EfetuarPagamentoCurso(PagamentoCurso pagamentoCurso)
     {
         var pedido = new Pedido
         {
@@ -25,14 +25,14 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
         {
             Valor = pagamentoCurso.Valor,
             NomeCartao = pagamentoCurso.NomeCartao,
-            NumeroCartaoMascarado = await MascararNumeroCartao(pagamentoCurso.NumeroCartao),
+            NumeroCartaoMascarado = MascararNumeroCartao(pagamentoCurso.NumeroCartao),
             AlunoId = pagamentoCurso.AlunoId,
             CursoId = pagamentoCurso.CursoId
         };
 
         pagamentoCurso.PagamentoId = pagamento.Id;
 
-        var transacao = pagamentoCartaoCreditoFacade.RealizarPagamento(pedido, pagamentoCurso);
+        var transacao = pagamentoCartaoCreditoFacade.EfetuarPagamento(pedido, pagamentoCurso);
 
         if (transacao.StatusTransacao == StatusTransacao.Autorizado)
         {
@@ -49,7 +49,7 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
         return false;
     }
 
-    private async Task<string> MascararNumeroCartao(string numeroCartao)
+    private string MascararNumeroCartao(string numeroCartao)
     {
         return numeroCartao[..4]+"********"+numeroCartao[4..];
     }

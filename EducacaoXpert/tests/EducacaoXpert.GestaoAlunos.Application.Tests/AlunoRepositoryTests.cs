@@ -42,9 +42,9 @@ public class AlunoRepositoryTests
         Assert.Equal(_cursoId, result.CursoId);
     }
 
-    [Fact(DisplayName = "Obter Matriculas EmPagamento")]
+    [Fact(DisplayName = "Obter Matriculas APagar")]
     [Trait("Categoria", "GestaoAlunos - AlunoRepository")]
-    public async Task AlunoRepository_ObterMatriculasEmPagamento_DeveRetornarMatriculasEmPagamento()
+    public async Task AlunoRepository_ObterMatriculasAPagar_DeveRetornarMatriculasAPagar()
     {
         // Arrange
         var matriculas = new List<Matricula>()
@@ -54,11 +54,11 @@ public class AlunoRepositoryTests
         matriculas[0].AguardarPagamento();
 
         _mocker.GetMock<IAlunoRepository>()
-            .Setup(q => q.ObterMatriculasEmPagamento(It.IsAny<Guid>()))
+            .Setup(q => q.ObterMatriculasAPagar(It.IsAny<Guid>()))
             .ReturnsAsync(matriculas);
 
         // Act
-        var result = await _query.ObterMatriculasEmPagamento(_alunoId);
+        var result = await _query.ObterMatriculasAPagar(_alunoId);
 
         // Assert
         Assert.NotNull(result);
@@ -67,7 +67,7 @@ public class AlunoRepositoryTests
         {
             Assert.Equal(item.AlunoId, _alunoId);
             Assert.Equal(item.CursoId, _cursoId);
-            Assert.Equal(StatusMatricula.EmPagamento, item.Status);
+            Assert.Equal(StatusMatricula.APagar, item.Status);
         });
     }
 }

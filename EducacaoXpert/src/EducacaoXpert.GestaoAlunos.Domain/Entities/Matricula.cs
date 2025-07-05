@@ -34,7 +34,7 @@ public class Matricula : Entity
     }
     public void AguardarPagamento()
     {
-        Status = StatusMatricula.EmPagamento;
+        Status = StatusMatricula.APagar;
     }
 
     private void Validar()

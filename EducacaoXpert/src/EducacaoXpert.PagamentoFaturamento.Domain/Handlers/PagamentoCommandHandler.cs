@@ -7,9 +7,11 @@ using MediatR;
 
 namespace EducacaoXpert.PagamentoFaturamento.Domain.Handlers;
 
-public class PagamentoCommandHandler(IPagamentoService pagamentoService, IMediator mediator) : CommandHandler, IRequestHandler<RealizarPagamentoCursoCommand, bool>
+public class PagamentoCommandHandler(IPagamentoService pagamentoService, IMediator mediator) : 
+                                        CommandHandler, 
+                                        IRequestHandler<EfetuarPagamentoCursoCommand, bool>
 {
-    public async Task<bool> Handle(RealizarPagamentoCursoCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(EfetuarPagamentoCursoCommand command, CancellationToken cancellationToken)
     {
         if (!ValidarComando(command))
             return false;
@@ -25,7 +27,7 @@ public class PagamentoCommandHandler(IPagamentoService pagamentoService, IMediat
             Valor = command.Valor
         };
 
-        return await pagamentoService.RealizarPagamentoCurso(pagamentoCurso);
+        return await pagamentoService.EfetuarPagamentoCurso(pagamentoCurso);
     }
 
     private bool ValidarComando(Command command)
