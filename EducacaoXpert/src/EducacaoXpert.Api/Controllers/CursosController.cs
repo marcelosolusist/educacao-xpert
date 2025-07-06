@@ -94,7 +94,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         return RespostaPadrao(HttpStatusCode.NoContent);
     }
 
-    [Authorize(Roles = "ADMIN,ALUNO")]
+    [AllowAnonymous]
     [HttpGet("{id:guid}/aulas")]
     public async Task<ActionResult<IEnumerable<CursoViewModel>>> ListarTodasAulasPorCursoId(Guid id)
     {
@@ -157,7 +157,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
         var command = new IncluirMatriculaCommand(UsuarioId, id);
         await _mediator.Send(command);
-        return RespostaPadrao(HttpStatusCode.Created);
+        return RespostaPadrao(HttpStatusCode.OK);
     }
 
     [Authorize(Roles = "ALUNO")]
@@ -209,7 +209,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     [HttpPost("{id:guid}/aulas/{idAula:guid}/iniciar")]
     public async Task<IActionResult> IniciarAula(Guid id, Guid idAula)
     {
-        //TODO: Iniciar a aula
         var curso = await cursoQueries.ObterPorId(id);
         if (curso is null)
         {
@@ -218,7 +217,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
         }
         await ValidarSeAlunoPossuiMatriculaAtivaNoCurso(id, UsuarioId);
         if (!OperacaoValida()) return RespostaPadrao();
-        var command = new AssistirAulaCommand(id, idAula, UsuarioId);
+        var command = new IniciarAulaCommand(id, idAula, UsuarioId);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.Created);
     }
@@ -271,7 +270,6 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
     [HttpPut("{id:guid}/aulas/{idAula:guid}/finalizar")]
     public async Task<IActionResult> FinalizarAula(Guid id, Guid idAula)
     {
-        //TODO: Finalizar a aula
         var curso = await cursoQueries.ObterPorId(id);
         if (curso is null)
         {

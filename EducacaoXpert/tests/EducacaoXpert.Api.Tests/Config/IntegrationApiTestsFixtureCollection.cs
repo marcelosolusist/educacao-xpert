@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace EducacaoXpert.Api.Tests.Config;
 
@@ -43,22 +44,13 @@ public class IntegrationTestsFixture : IDisposable
                            throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
     }
 
-    public void GerarDadosUsuario()
-    {
-        var faker = new Faker("pt_BR");
-        EmailUsuario = faker.Internet.Email().ToLower();
-        NomeUsuario = EmailUsuario;
-        SenhaUsuario = faker.Internet.Password(8, false, "", "@1Ab_");
-        SenhaConfirmacao = SenhaUsuario;
-    }
-
     public void GerarDadosCartao()
     {
         var faker = new Faker("pt_BR");
         DadosPagamento.NomeCartao = faker.Name.FullName();
-        DadosPagamento.NumeroCartao = faker.Finance.CreditCardNumber(CardType.Mastercard);
-        DadosPagamento.ExpiracaoCartao = faker.Date.Future(1, DateTime.Now).ToString("MM/yy");
-        DadosPagamento.CvvCartao = faker.Finance.CreditCardCvv();
+        DadosPagamento.NumeroCartao = Regex.Replace(faker.Finance.CreditCardNumber(CardType.Visa), @"[^\d]", "") ;
+        DadosPagamento.ExpiracaoCartao = faker.Date.Future(4, DateTime.Now).ToString("MM/yy");
+        DadosPagamento.CvvCartao = Regex.Replace(faker.Finance.CreditCardCvv(), @"[^\d]", "");
     }
 
     public void SalvarUserToken(string token)
@@ -67,6 +59,20 @@ public class IntegrationTestsFixture : IDisposable
              new JsonSerializerOptions() { PropertyNameCaseInsensitive = true }) ?? new LoginResponseWrapper();
         Token = response.Data.AccessToken;
         AlunoId = Guid.Parse(response.Data.UserToken.Id);
+    }
+
+    public async Task EfetuarLoginAlunoDeTestes(string? email = null, string? senha = null)
+    {
+        var userData = new LoginUserViewModel()
+        {
+            Email = email ?? CursoTests.EMAIL_ALUNO_TESTES,
+            Senha = senha ?? CursoTests.SENHA_ALUNO_TESTES
+        };
+
+        var response = await Client.PostAsJsonAsync("/api/conta/login", userData);
+        response.EnsureSuccessStatusCode();
+
+        SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
     public async Task EfetuarLoginAluno(string? email = null, string? senha = null)
@@ -97,33 +103,46 @@ public class IntegrationTestsFixture : IDisposable
         SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task RegistrarAluno()
-    {
-        GerarDadosUsuario();
-        var registerUser = new RegisterUserViewModel()
-        {
-            Nome = NomeUsuario,
-            Email = EmailUsuario,
-            Senha = SenhaUsuario,
-            ConfirmacaoSenha = SenhaConfirmacao
-        };
-
-        var response = await Client.PostAsJsonAsync("/api/conta/registrar-aluno", registerUser);
-        response.EnsureSuccessStatusCode();
-
-        SalvarUserToken(await response.Content.ReadAsStringAsync());
-    }
-
     public async Task<Guid> ObterIdCursoTestes()
     {
         var response = await Client.GetAsync("/api/cursos");
         response.EnsureSuccessStatusCode();
         var data = await response.Content.ReadAsStringAsync();
-        var retorno = JsonSerializer.Deserialize<RetornoGetCursos>(data);
+        var retorno = JsonSerializer.Deserialize<RetornoGenericoGet>(data);
         if (retorno == null) return Guid.NewGuid();
         foreach (JsonElement registro in retorno.data)
         {
             if (registro.GetProperty("nome").GetString() == CursoTests.NOME_CURSO) return registro.GetProperty("id").GetGuid();
+        }
+        return Guid.NewGuid();
+    }
+
+    public async Task<Guid> ObterIdAulaTestes()
+    {
+        var idCursoTestes = await ObterIdCursoTestes();
+        var response = await Client.GetAsync($"/api/cursos/{idCursoTestes}/aulas");
+        response.EnsureSuccessStatusCode();
+        var data = await response.Content.ReadAsStringAsync();
+        var retorno = JsonSerializer.Deserialize<RetornoGenericoGet>(data);
+        if (retorno == null) return Guid.NewGuid();
+        foreach (JsonElement registro in retorno.data)
+        {
+            if (registro.GetProperty("nome").GetString() == CursoTests.NOME_AULA) return registro.GetProperty("id").GetGuid();
+        }
+        return Guid.NewGuid();
+    }
+
+    public async Task<Guid> ObterIdCertificadoCursoTestes()
+    {
+        var response = await Client.GetAsync("/api/alunos/certificados");
+        response.EnsureSuccessStatusCode();
+        var data = await response.Content.ReadAsStringAsync();
+        var retorno = JsonSerializer.Deserialize<RetornoGenericoGet>(data);
+        if (retorno == null) return Guid.NewGuid();
+        foreach (JsonElement registro in retorno.data)
+        {
+            if (registro.GetProperty("nomeAluno").GetString() == CursoTests.NOME_ALUNO_TESTES &&
+                    registro.GetProperty("nomeCurso").GetString() == CursoTests.NOME_CURSO) return registro.GetProperty("id").GetGuid();
         }
         return Guid.NewGuid();
     }

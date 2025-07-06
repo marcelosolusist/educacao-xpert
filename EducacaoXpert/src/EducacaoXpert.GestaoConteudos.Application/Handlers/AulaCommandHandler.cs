@@ -96,10 +96,38 @@ public class AulaCommandHandler(IMediator mediator,
             var curso = await cursoRepository.ObterCursoComAulas(command.CursoId);
             progressoCurso = new ProgressoCurso(command.CursoId, command.AlunoId, curso.Aulas.Count());
             progressoCursoRepository.Incluir(progressoCurso);
+            await cursoRepository.UnitOfWork.Commit();
+            progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
         }
 
         var progressoAula = new ProgressoAula(command.AulaId);
         progressoCurso.IncluirProgressoAula(progressoAula);
+
+        progressoCursoRepository.IncluirProgressoAula(progressoAula);
+
+        return await cursoRepository.UnitOfWork.Commit();
+    }
+
+    public async Task<bool> Handle(AssistirAulaCommand command, CancellationToken cancellationToken)
+    {
+        if (!ValidarComando(command))
+            return false;
+
+        var progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
+
+        if (progressoCurso is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso do curso não encontrado.", cancellationToken);
+            return false;
+        }
+
+        var progressoAula = await progressoCursoRepository.ObterProgressoAula(command.AulaId, command.AlunoId);
+        if (progressoAula is null)
+        {
+            await IncluirNotificacao(command.MessageType, "Progresso de aula não encontrado.", cancellationToken);
+            return false;
+        }
+        progressoCurso.MarcarAulaAssistindo(progressoAula);
 
         progressoCursoRepository.Editar(progressoCurso);
 
@@ -138,31 +166,7 @@ public class AulaCommandHandler(IMediator mediator,
         return await cursoRepository.UnitOfWork.Commit();
     }
 
-    public async Task<bool> Handle(AssistirAulaCommand command, CancellationToken cancellationToken)
-    {
-        if (!ValidarComando(command))
-            return false;
-
-        var progressoCurso = await progressoCursoRepository.Obter(command.CursoId, command.AlunoId);
-
-        if (progressoCurso is null)
-        {
-            await IncluirNotificacao(command.MessageType, "Progresso do curso não encontrado.", cancellationToken);
-            return false;
-        }
-
-        var progressoAula = await progressoCursoRepository.ObterProgressoAula(command.AulaId, command.AlunoId);
-        if (progressoAula is null)
-        {
-            await IncluirNotificacao(command.MessageType, "Progresso de aula não encontrado.", cancellationToken);
-            return false;
-        }
-        progressoCurso.MarcarAulaAssistindo(progressoAula);
-
-        progressoCursoRepository.Editar(progressoCurso);
-
-        return await cursoRepository.UnitOfWork.Commit();
-    }
+    
 
     protected override async Task IncluirNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {

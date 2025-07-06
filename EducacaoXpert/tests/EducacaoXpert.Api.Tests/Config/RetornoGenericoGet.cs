@@ -1,9 +1,8 @@
-﻿using EducacaoXpert.Api.ViewModels;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace EducacaoXpert.Api.Tests.Config;
 
-public class RetornoGetCursos
+public class RetornoGenericoGet
 {
     public bool sucesso { get; set; }
     public List<JsonElement> data { get; set; }
