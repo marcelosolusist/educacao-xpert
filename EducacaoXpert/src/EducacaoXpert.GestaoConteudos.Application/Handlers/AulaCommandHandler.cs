@@ -166,8 +166,6 @@ public class AulaCommandHandler(IMediator mediator,
         return await cursoRepository.UnitOfWork.Commit();
     }
 
-    
-
     protected override async Task IncluirNotificacao(string messageType, string descricao, CancellationToken cancellationToken)
     {
         await mediator.Publish(new DomainNotification(messageType, descricao), cancellationToken);
