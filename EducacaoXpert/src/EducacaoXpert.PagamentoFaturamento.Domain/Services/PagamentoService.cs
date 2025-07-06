@@ -51,6 +51,6 @@ public class PagamentoService(IPagamentoCartaoCreditoFacade pagamentoCartaoCredi
 
     private string MascararNumeroCartao(string numeroCartao)
     {
-        return numeroCartao[..4]+"********"+numeroCartao[4..];
+        return numeroCartao[..4].Substring(0, 4) + "********"+numeroCartao[4..].Substring(0,4);
     }
 }

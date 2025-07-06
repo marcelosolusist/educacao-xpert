@@ -9,7 +9,7 @@ namespace EducacaoXpert.GestaoAlunos.Application.Handlers;
 
 public class CertificadoCommandHandler(ICertificadoPdfService certificadoPdfService,
                                         IMediator mediator,
-                                       IAlunoRepository alunoRepository) : CommandHandler,
+                                        IAlunoRepository alunoRepository) : CommandHandler,
                                         IRequestHandler<IncluirCertificadoCommand, bool>
 {
     public async Task<bool> Handle(IncluirCertificadoCommand command, CancellationToken cancellationToken)

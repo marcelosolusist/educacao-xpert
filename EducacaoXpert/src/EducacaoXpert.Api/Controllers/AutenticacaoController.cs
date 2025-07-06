@@ -114,7 +114,7 @@ public class AutenticacaoController(INotificationHandler<DomainNotification> not
     {
         var userIdentity = new IdentityUser
         {
-            UserName = registerUser.Nome,
+            UserName = registerUser.Email,
             Email = registerUser.Email,
             EmailConfirmed = true,
         };

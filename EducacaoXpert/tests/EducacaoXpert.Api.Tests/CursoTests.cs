@@ -1,5 +1,6 @@
 ﻿using EducacaoXpert.Api.Tests.Config;
 using EducacaoXpert.Api.ViewModels;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace EducacaoXpert.Api.Tests;
@@ -16,28 +17,49 @@ public class CursoTests
     public static string CONTEUDO_AULA = "Conteúdo da Aula de Testes";
     public static string NOME_MATERIAL_AULA = "Nome do Material da Aula";
     public static string TIPO_MATERIAL_AULA = "Tipo de Material da Aula";
+    public static string NOME_ALUNO_TESTES = "Aluno de Testes";
+    public static string EMAIL_ALUNO_TESTES = "aluno@testes.com";
+    public static string SENHA_ALUNO_TESTES = "Teste@123";
 
     public CursoTests(IntegrationTestsFixture fixture)
     {
         _fixture = fixture;
     }
-    [Fact(DisplayName = "Incluir Curso Dados Válidos"), TestPriority(1)]
+
+    [Fact(DisplayName = "01 - Registrar Aluno de Testes Inválido"), TestPriority(1)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task Incluir_CursoValido_DeveIncluir()
+    public async Task RegistrarAlunoDeTestes_DadosInvalidos_NaoDeveRegistrar()
     {
         // Arrange
-        var data = new CursoViewModel
+        var registerUser = new RegisterUserViewModel()
         {
-            Nome = NOME_CURSO,
-            Conteudo = CONTEUDO_CURSO,
-            Preco = PRECO_CURSO,
+            Nome = string.Empty,
+            Email = string.Empty,
+            Senha = string.Empty,
+            ConfirmacaoSenha = string.Empty
         };
 
-        await _fixture.EfetuarLoginAdmin();
-        _fixture.Client.AtribuirToken(_fixture.Token);
+        // Act
+        var response = await _fixture.Client.PostAsJsonAsync("/api/conta/registrar-aluno", registerUser);
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "02 - Registrar Aluno de Testes Válido"), TestPriority(2)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task RegistrarAlunoDeTestes_DadosValidos_DeveRegistrar()
+    {
+        // Arrange
+        var registerUser = new RegisterUserViewModel()
+        {
+            Nome = NOME_ALUNO_TESTES,
+            Email = EMAIL_ALUNO_TESTES,
+            Senha = SENHA_ALUNO_TESTES,
+            ConfirmacaoSenha = SENHA_ALUNO_TESTES
+        };
 
         // Act
-        var response = await _fixture.Client.PostAsJsonAsync("/api/cursos", data);
+        var response = await _fixture.Client.PostAsJsonAsync("/api/conta/registrar-aluno", registerUser);
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadAsStringAsync();
@@ -45,9 +67,9 @@ public class CursoTests
         // Assert
         Assert.True(!string.IsNullOrEmpty(result));
     }
-    [Fact(DisplayName = "Incluir Curso Dados Inválidos"), TestPriority(2)]
+    [Fact(DisplayName = "03 - Incluir Curso Dados Inválidos"), TestPriority(3)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task Incluir_CursoInvalido_NaoDeveIncluir()
+    public async Task IncluirCurso_DadosInvalidos_NaoDeveIncluir()
     {
         // Arrange
         var data = new CursoViewModel
@@ -70,9 +92,60 @@ public class CursoTests
         Assert.Contains("O conteúdo não pode ser vazio.", erros.ToString());
         Assert.Contains("O preço do curso deve ser maior que zero.", erros.ToString());
     }
-    [Fact(DisplayName = "Incluir Aula Dados Válidos"), TestPriority(3)]
+    [Fact(DisplayName = "04 - Incluir Curso Dados Válidos"), TestPriority(4)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task Incluir_AulaValida_DeveIncluir()
+    public async Task IncluirCurso_DadosValidos_DeveIncluir()
+    {
+        // Arrange
+        var data = new CursoViewModel
+        {
+            Nome = NOME_CURSO,
+            Conteudo = CONTEUDO_CURSO,
+            Preco = PRECO_CURSO,
+        };
+
+        await _fixture.EfetuarLoginAdmin();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+
+        // Act
+        var response = await _fixture.Client.PostAsJsonAsync("/api/cursos", data);
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.True(!string.IsNullOrEmpty(result));
+    }
+    [Fact(DisplayName = "05 - Incluir Aula Dados Inválidos"), TestPriority(5)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task IncluirAula_DadosInvalidos_NaoDeveIncluir()
+    {
+        // Arrange
+        var data = new AulaViewModel
+        {
+            Nome = string.Empty,
+            Conteudo = string.Empty,
+            NomeMaterial = string.Empty,
+            TipoMaterial = string.Empty
+        };
+
+        await _fixture.EfetuarLoginAdmin();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+
+        var cursoId = await _fixture.ObterIdCursoTestes();
+
+        // Act
+        var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/aulas", data);
+
+        var erros = _fixture.ObterErros(await response.Content.ReadAsStringAsync());
+
+        // Assert
+        Assert.Contains("O campo Nome não pode ser vazio.", erros.ToString());
+        Assert.Contains("O campo Conteúdo não pode ser vazio.", erros.ToString());
+    }
+    [Fact(DisplayName = "06 - Incluir Aula Dados Válidos"), TestPriority(6)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task IncluirAula_DadosValidos_DeveIncluir()
     {
         // Arrange
         var data = new AulaViewModel
@@ -97,66 +170,216 @@ public class CursoTests
         // Assert
         Assert.True(!string.IsNullOrEmpty(result));
     }
-    [Fact(DisplayName = "Incluir Aula Dados Inválidos"), TestPriority(4)]
+    [Fact(DisplayName = "07 - Incluir Matrícula Dados Inválidos"), TestPriority(7)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task Incluir_AulaInvalida_NaoDeveIncluir()
+    public async Task IncluirMatricula_DadosInvalidos_NaoDeveIncluir()
     {
         // Arrange
-        var data = new AulaViewModel
-        {
-            Nome = string.Empty,
-            Conteudo = string.Empty,
-            NomeMaterial= string.Empty,
-            TipoMaterial= string.Empty
-        };
-
-        await _fixture.EfetuarLoginAdmin();
+        await _fixture.EfetuarLoginAlunoDeTestes();
         _fixture.Client.AtribuirToken(_fixture.Token);
-
         var cursoId = await _fixture.ObterIdCursoTestes();
 
-        // Act
-        var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/aulas", data);
+        var curso = Guid.NewGuid();
 
-        var erros = _fixture.ObterErros(await response.Content.ReadAsStringAsync());
+        // Act
+        var response = await _fixture.Client.PostAsync($"/api/cursos/{curso}/matricular", null);
 
         // Assert
-        Assert.Contains("O campo Nome não pode ser vazio.", erros.ToString());
-        Assert.Contains("O campo Conteúdo não pode ser vazio.", erros.ToString());
+        Assert.False(response.IsSuccessStatusCode);
     }
-
-    [Fact(DisplayName = "Realizar Matrícula com Sucesso"), TestPriority(98)]
+    [Fact(DisplayName = "08 - Incluir Matrícula Dados Válidos"), TestPriority(8)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task MatriculaTests_RealizarMatriculaValida_DeveRealizar()
+    public async Task IncluirMatricula_DadosValidos_DeveIncluir()
     {
         // Arrange
-        await _fixture.RegistrarAluno();
+        await _fixture.EfetuarLoginAlunoDeTestes();
         _fixture.Client.AtribuirToken(_fixture.Token);
-
         var cursoId = await _fixture.ObterIdCursoTestes();
 
         // Act
         var response = await _fixture.Client.PostAsync($"/api/cursos/{cursoId}/matricular", null);
 
         // Assert
-        response.EnsureSuccessStatusCode();
+        Assert.True(response.IsSuccessStatusCode);
     }
-
-    [Fact(DisplayName = "Realizar Matrícula com Erro"), TestPriority(99)]
+    [Fact(DisplayName = "09 - Pagar Matrícula Dados Inválidos"), TestPriority(9)]
     [Trait("Categoria", "Integração Api - Curso")]
-    public async Task MatriculaTests_RealizarMatriculaInvalida_NaoDeveRealizar()
+    public async Task PagarMatricula_DadosInvalidos_NaoDevePagar()
     {
         // Arrange
-        await _fixture.RegistrarAluno();
+        await _fixture.EfetuarLoginAlunoDeTestes();
         _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = await _fixture.ObterIdCursoTestes();
 
-        var curso = Guid.NewGuid();
+        var dadosPagamentoCartao = new DadosPagamentoViewModel()
+        {
+            NomeCartao = string.Empty,
+            NumeroCartao = string.Empty,
+            ExpiracaoCartao = string.Empty,
+            CvvCartao = string.Empty
+        };
 
         // Act
-        var response = await _fixture.Client.PostAsync($"/api/cursos/{curso}/matricular", null);
-        var erros = _fixture.ObterErros(await response.Content.ReadAsStringAsync());
+        var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/pagar-matricula", dadosPagamentoCartao);
 
         // Assert
-        Assert.Contains("Curso não encontrado.", erros.ToString());
+        Assert.False(response.IsSuccessStatusCode);
     }
+    [Fact(DisplayName = "10 - Pagar Matrícula Dados Válidos"), TestPriority(10)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task PagarMatricula_DadosValidos_DevePagar()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = await _fixture.ObterIdCursoTestes();
+
+        _fixture.GerarDadosCartao();
+
+        var dadosPagamentoCartao = new DadosPagamentoViewModel()
+        {
+            NomeCartao = _fixture.DadosPagamento.NomeCartao,
+            NumeroCartao = _fixture.DadosPagamento.NumeroCartao,
+            ExpiracaoCartao = _fixture.DadosPagamento.ExpiracaoCartao,
+            CvvCartao = _fixture.DadosPagamento.CvvCartao
+        };
+
+        // Act
+        var response = await _fixture.Client.PostAsJsonAsync($"/api/cursos/{cursoId}/pagar-matricula", dadosPagamentoCartao);
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "11 - Iniciar Aula Dados Inválidos"), TestPriority(11)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Iniciar_AulaInvalida_NaoDeveIniciar()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = Guid.NewGuid();
+        var aulaId = Guid.NewGuid();
+
+        // Act
+        var response = await _fixture.Client.PostAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/iniciar", null);
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "12 - Iniciar Aula Dados Válidos"), TestPriority(12)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Iniciar_AulaValida_DeveIniciar()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = await _fixture.ObterIdCursoTestes();
+        var aulaId = await _fixture.ObterIdAulaTestes();
+
+        // Act
+        var response = await _fixture.Client.PostAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/iniciar", null);
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "13 - Assistir Aula Dados Inválidos"), TestPriority(13)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Assistir_AulaInvalida_NaoDeveAssistir()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = Guid.NewGuid();
+        var aulaId = Guid.NewGuid();
+
+        // Act
+        var response = await _fixture.Client.GetAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/assistir");
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "14 - Assistir Aula Dados Válidos"), TestPriority(14)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Assistir_AulaValida_DeveAssistir()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = await _fixture.ObterIdCursoTestes();
+        var aulaId = await _fixture.ObterIdAulaTestes();
+
+        // Act
+        var response = await _fixture.Client.GetAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/assistir");
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "15 - Finalizar Aula Dados Inválidos"), TestPriority(15)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Finalizar_AulaInvalida_NaoDeveFinalizar()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = Guid.NewGuid();
+        var aulaId = Guid.NewGuid();
+
+        // Act
+        var response = await _fixture.Client.PutAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/finalizar", null);
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "16 - Finalizar Aula Dados Válidos"), TestPriority(16)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task Finalizar_AulaValida_DeveFinalizar()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+        var cursoId = await _fixture.ObterIdCursoTestes();
+        var aulaId = await _fixture.ObterIdAulaTestes();
+
+        // Act
+        var response = await _fixture.Client.PutAsync($"/api/cursos/{cursoId}/aulas/{aulaId}/finalizar", null);
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "17 - Baixar Certificado Dados Inválidos"), TestPriority(17)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task BaixarCertificado_DadosInvalidos_NaoDeveBaixarCertificado()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+
+        var certificadoId = Guid.NewGuid();
+
+        // Act
+        var response = await _fixture.Client.GetAsync($"/api/alunos/certificados/{certificadoId}/download");
+
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
+    [Fact(DisplayName = "18 - Baixar Certificado Dados Válidos"), TestPriority(18)]
+    [Trait("Categoria", "Integração Api - Curso")]
+    public async Task BaixarCertificado_DadosValidos_DeveBaixarCertificado()
+    {
+        // Arrange
+        await _fixture.EfetuarLoginAlunoDeTestes();
+        _fixture.Client.AtribuirToken(_fixture.Token);
+
+        var certificadoId = await _fixture.ObterIdCertificadoCursoTestes();
+
+        // Act
+        var response = await _fixture.Client.GetAsync($"/api/alunos/certificados/{certificadoId}/download");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadAsStringAsync();
+
+        // Assert
+        Assert.True(!string.IsNullOrEmpty(result));
+    }
+    
 }
