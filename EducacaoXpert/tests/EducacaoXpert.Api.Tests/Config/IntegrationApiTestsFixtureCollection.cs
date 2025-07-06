@@ -117,7 +117,7 @@ public class IntegrationTestsFixture : IDisposable
         return Guid.NewGuid();
     }
 
-    public async Task<Guid> ObterIdAulaTestes()
+    public async Task<Guid> ObterIdAula(string nomeAula)
     {
         var idCursoTestes = await ObterIdCursoTestes();
         var response = await Client.GetAsync($"/api/cursos/{idCursoTestes}/aulas");
@@ -127,7 +127,7 @@ public class IntegrationTestsFixture : IDisposable
         if (retorno == null) return Guid.NewGuid();
         foreach (JsonElement registro in retorno.data)
         {
-            if (registro.GetProperty("nome").GetString() == CursoTests.NOME_AULA) return registro.GetProperty("id").GetGuid();
+            if (registro.GetProperty("nome").GetString() == nomeAula) return registro.GetProperty("id").GetGuid();
         }
         return Guid.NewGuid();
     }

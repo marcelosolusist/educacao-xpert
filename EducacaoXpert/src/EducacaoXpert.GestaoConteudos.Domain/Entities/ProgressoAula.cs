@@ -22,7 +22,11 @@ public class ProgressoAula : Entity
         Status = StatusProgressoAula.Iniciada;
         Validar();
     }
-    internal void FinalizarAula() => Status = StatusProgressoAula.Finalizada;
+    internal void FinalizarAula()
+    {
+        DesmarcarAssistindo();
+        Status = StatusProgressoAula.Finalizada;
+    }
     internal void MarcarAssistindo() => Assistindo = true;
     internal void DesmarcarAssistindo() => Assistindo = false;
     internal void AssociarProgressoCurso(Guid progressoCursoId)
