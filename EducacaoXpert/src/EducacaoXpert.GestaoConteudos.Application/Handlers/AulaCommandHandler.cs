@@ -56,10 +56,19 @@ public class AulaCommandHandler(IMediator mediator,
 
         aula.EditarNome(command.Nome);
         aula.EditarConteudo(command.Conteudo);
-        if (command is { NomeMaterial: not null, TipoMaterial: not null })
-            aula.IncluirMaterial(new Material(command.NomeMaterial, command.TipoMaterial));
 
-        cursoRepository.IncluirAula(aula);
+        if (command is { NomeMaterial: not null, TipoMaterial: not null })
+        {
+            var material = aula.Materiais.FirstOrDefault();
+            if (material != null)
+            {
+                material.EditarNome(command.NomeMaterial);
+                material.EditarTipo(command.TipoMaterial);
+                aula.EditarMaterial(material);
+            }
+        }
+
+        cursoRepository.EditarAula(aula);
         return await cursoRepository.UnitOfWork.Commit();
     }
     public async Task<bool> Handle(ExcluirAulaCommand command, CancellationToken cancellationToken)
@@ -71,12 +80,6 @@ public class AulaCommandHandler(IMediator mediator,
         if (aula is null)
         {
             await IncluirNotificacao(command.MessageType, "Aula não encontrada.", cancellationToken);
-            return false;
-        }
-
-        if (aula.Materiais.Any())
-        {
-            await IncluirNotificacao(command.MessageType, "Aula não pode ser excluída pois possui materiais associados.", cancellationToken);
             return false;
         }
 

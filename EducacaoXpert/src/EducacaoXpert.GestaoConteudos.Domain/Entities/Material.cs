@@ -25,6 +25,18 @@ public class Material : Entity
         AulaId = aulaId;
     }
 
+    public void EditarNome(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome inválido.");
+        Nome = nome;
+    }
+
+    public void EditarTipo(string tipo)
+    {
+        if (string.IsNullOrWhiteSpace(tipo)) throw new DomainException("Tipo inválido.");
+        Tipo = tipo;
+    }
+
     public void Validar()
     {
         if (string.IsNullOrWhiteSpace(Nome))

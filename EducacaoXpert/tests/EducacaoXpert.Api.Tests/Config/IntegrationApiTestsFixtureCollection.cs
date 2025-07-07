@@ -61,12 +61,12 @@ public class IntegrationTestsFixture : IDisposable
         AlunoId = Guid.Parse(response.Data.UserToken.Id);
     }
 
-    public async Task EfetuarLoginAlunoDeTestes(string? email = null, string? senha = null)
+    public async Task EfetuarLoginAlunoDeTestes()
     {
         var userData = new LoginUserViewModel()
         {
-            Email = email ?? CursoTests.EMAIL_ALUNO_TESTES,
-            Senha = senha ?? CursoTests.SENHA_ALUNO_TESTES
+            Email = CursoTests.EMAIL_ALUNO_TESTES,
+            Senha = CursoTests.SENHA_ALUNO_TESTES
         };
 
         var response = await Client.PostAsJsonAsync("/api/conta/login", userData);
@@ -75,12 +75,12 @@ public class IntegrationTestsFixture : IDisposable
         SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task EfetuarLoginAluno(string? email = null, string? senha = null)
+    public async Task EfetuarLoginAdminDeTestes()
     {
         var userData = new LoginUserViewModel()
         {
-            Email = email ?? "usuario@aluno.com",
-            Senha = senha ?? "Teste@123"
+            Email = CursoTests.EMAIL_ADMIN_TESTES,
+            Senha = CursoTests.SENHA_ADMIN_TESTES
         };
 
         var response = await Client.PostAsJsonAsync("/api/conta/login", userData);
@@ -89,21 +89,7 @@ public class IntegrationTestsFixture : IDisposable
         SalvarUserToken(await response.Content.ReadAsStringAsync());
     }
 
-    public async Task EfetuarLoginAdmin(string? email = null, string? senha = null)
-    {
-        var userData = new LoginUserViewModel()
-        {
-            Email = email ?? "usuario@admin.com",
-            Senha = senha ?? "Teste@123"
-        };
-
-        var response = await Client.PostAsJsonAsync("/api/conta/login", userData);
-        response.EnsureSuccessStatusCode();
-
-        SalvarUserToken(await response.Content.ReadAsStringAsync());
-    }
-
-    public async Task<Guid> ObterIdCursoTestes()
+    public async Task<Guid> ObterIdCurso(string nomeCurso)
     {
         var response = await Client.GetAsync("/api/cursos");
         response.EnsureSuccessStatusCode();
@@ -112,14 +98,14 @@ public class IntegrationTestsFixture : IDisposable
         if (retorno == null) return Guid.NewGuid();
         foreach (JsonElement registro in retorno.data)
         {
-            if (registro.GetProperty("nome").GetString() == CursoTests.NOME_CURSO) return registro.GetProperty("id").GetGuid();
+            if (registro.GetProperty("nome").GetString() == nomeCurso) return registro.GetProperty("id").GetGuid();
         }
         return Guid.NewGuid();
     }
 
     public async Task<Guid> ObterIdAula(string nomeAula)
     {
-        var idCursoTestes = await ObterIdCursoTestes();
+        var idCursoTestes = await ObterIdCurso(CursoTests.NOME_CURSO);
         var response = await Client.GetAsync($"/api/cursos/{idCursoTestes}/aulas");
         response.EnsureSuccessStatusCode();
         var data = await response.Content.ReadAsStringAsync();
