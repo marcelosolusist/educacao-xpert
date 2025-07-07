@@ -131,7 +131,7 @@ public class CursosController(INotificationHandler<DomainNotification> notificac
             NotificarErro("Aula", "O ID da aula não pode ser diferente do ID informado na URL.");
             return RespostaPadrao();
         }
-        var command = new EditarAulaCommand((Guid)aula.Id, aula.Nome, aula.Conteudo, id, aula.NomeMaterial, aula.TipoMaterial);
+        var command = new EditarAulaCommand(idAula, aula.Nome, aula.Conteudo, id, aula.NomeMaterial, aula.TipoMaterial);
         await _mediator.Send(command);
         return RespostaPadrao(HttpStatusCode.NoContent);
     }

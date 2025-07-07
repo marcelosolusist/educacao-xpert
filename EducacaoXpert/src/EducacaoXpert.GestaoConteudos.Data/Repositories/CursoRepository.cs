@@ -27,7 +27,8 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
     }
     public async Task<Aula?> ObterAulaPorId(Guid aulaId)
     {
-        return await dbContext.Set<Aula>().AsNoTracking()
+        return await dbContext.Set<Aula>()
+            .Include(a => a.Materiais)
             .FirstOrDefaultAsync(a => a.Id == aulaId);
     }
     public async Task<ProgressoCurso?> ObterProgressoCurso(Guid cursoId, Guid alunoId)
@@ -61,12 +62,11 @@ public class CursoRepository(GestaoConteudosContext dbContext) : ICursoRepositor
     }
     public void RemoverAula(Aula aula)
     {
+        dbContext.Set<Material>().RemoveRange(aula.Materiais);
         dbContext.Set<Aula>().Remove(aula);
     }
     public void Dispose()
     {
         dbContext.Dispose();
     }
-
-    
 }

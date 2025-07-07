@@ -7,3 +7,5 @@ add-migration Api_Inicial -context ApiContext
 "DefaultConnection": "Data Source=localhost;Integrated Security=True;Encrypt=False;Database=EducacaoXpert;"
 
 "DefaultConnection": "Data Source=dbEX.db"
+
+Cobertura de testes: opencover
