@@ -1,110 +1,40 @@
-# Avaliação Técnica - Projeto Plataforma de Educação Online - educacao-xpert
+# FEEDBACK – Revisão Técnica (Plataforma de Educação Online)
 
-## Organização do Projeto
+## Organização do projeto
+Pontos positivos
+- Solution clara: `EducacaoXpert.sln` presente na raiz.
+- Separação por bounded contexts (projetos `GestaoConteudos`, `GestaoAlunos`, `PagamentoFaturamento`, `Api`, `Core`).
 
-**Pontos Positivos:**
-- O projeto está organizado em pastas `Api`, `Business` e `Data`, com separação básica de responsabilidades.
-- A identidade foi implementada com ASP.NET Core Identity, JWT e estrutura de autenticação funcional.
-- A estrutura do projeto é funcional como um monolito.
+Pontos negativos
+- Avisos de nulabilidade (CS8618, CS8604, CS8602) em `src/EducacaoXpert.Api/ViewModels/*` e alguns controllers — recomenda-se usar `required` ou tipos anuláveis conforme contrato.
+- Pacote `iTextSharp` causa aviso NU1701 (não compatível com `net8.0`) — avaliar substituição.
 
-**Pontos de Melhoria:**
-- O projeto foi construído como um **monólito único**, **sem separação em Bounded Contexts**. Todos os domínios (conteúdo, alunos, pagamentos) estão centralizados na camada `Business`.
-- A camada de aplicação está ausente. As controllers comunicam-se diretamente com repositórios, o que fere os princípios de DDD.
-- Nenhuma outra controller além de `AutenticacaoController` está implementada.
+## Seed e migrações
+- Implementação de seed e migrations encontrada em `src/EducacaoXpert.Api/Configurations/DbMigrationHelpers.cs` e invocada em `Program.cs` via `app.UseDbMigrationHelper();`.
+- Observação: revisar manualmente o método `CargaDadosIniciais` para confirmar construções de listas/uso de AddRangeAsync/SaveChangesAsync. O seed facilita execução local.
 
----
+## Autenticação
+- JWT configurado em `src/EducacaoXpert.Api/Configurations/JwtConfiguration.cs` e integrado na inicialização.
+- Recomendo adicionar validação explícita de `JwtSettings` na inicialização para evitar null refs em configuração incorreta.
 
-## Modelagem de Domínio
+## Testes e cobertura
+- Apesar dos testes passarem, a cobertura agregada (≈ 63.9%) está abaixo do requisito de 80%.
+- Recomendações: priorizar testes unitários em `Core` e entidades de domínio; adicionar testes de integração para os fluxos críticos (matrícula → pagamento → geração de certificado).
 
-**Pontos Positivos:**
-- Entidades como `Curso` e `Pagamento` apresentam métodos encapsulados (`ObterProximaOrdemDeAula`, `AdicionarHistorico`) que mostram tentativa de implementar regras de negócio.
-- O domínio possui entidades previstas no escopo como `Curso`, `Aula`, `Aluno`, `Matricula`, `Pagamento`, `Certificado`.
+## Matriz de avaliação (notas sugeridas)
+| Critério | Peso | Nota |
+|---|---:|---:|
+| Funcionalidade | 30% | 8 |
+| Qualidade do Código | 20% | 7 |
+| Eficiência e Desempenho | 20% | 8 |
+| Inovação e Diferenciais | 10% | 7 |
+| Documentação e Organização | 10% | 8 |
+| Resolução de Feedbacks | 10% | 10 |
 
-**Pontos de Melhoria:**
-- A maioria das entidades está anêmica, como `Aluno`, que não encapsula nenhuma lógica de negócio.
-- A modelagem está concentrada em uma única camada (`Business.Entities`), sem separação por contexto.
-- Não há implementação de VOs como `ConteudoProgramatico`, `HistoricoAprendizado`, `DadosCartao`.
-- Agregados estão mal definidos e não há nenhuma estratégia de Aggregate Root claramente aplicada.
+Nota final calculada: 7.9 / 10
 
----
-
-## Casos de Uso e Regras de Negócio
-
-**Pontos Positivos:**
-- O fluxo de autenticação e registro de usuário está parcialmente funcional.
-
-**Pontos de Melhoria:**
-- O único fluxo implementado (registro de usuário/aluno) insere o `Aluno` diretamente via repositório dentro da controller, sem passar por um serviço de aplicação ou de domínio.
-- Nenhum outro fluxo de negócio foi encontrado:
-  - Cadastro de curso e aula
-  - Matrícula
-  - Pagamento
-  - Progresso
-  - Emissão de certificado
-
----
-
-## Integração entre Contextos
-
-**Pontos de Melhoria:**
-- Não existem múltiplos contextos implementados. Todo o domínio está acoplado.
-- Não há eventos de domínio ou qualquer mecanismo de integração assíncrona.
-
----
-
-## Estratégias Técnicas Suportando DDD
-
-**Pontos Positivos:**
-- Uso parcial de repositórios nas interfaces da camada de `Business`.
-
-**Pontos de Melhoria:**
-- CQRS não foi implementado.
-- TDD não foi adotado: não há nenhum teste de unidade ou integração.
-- Não existe separação clara entre comandos, queries ou serviços de domínio.
-- Persistência está acoplada ao modelo anêmico, sem controle de agregados.
-
----
-
-## Autenticação e Identidade
-
-**Pontos Positivos:**
-- Implementação correta de autenticação com JWT e ASP.NET Core Identity.
-- Usuário autenticado pode se registrar e gerar token.
-
-**Pontos de Melhoria:**
-- A criação do `Aluno` ocorre na controller via repositório, sem uso de serviços de domínio, violando princípios de encapsulamento.
-- Não há modelagem explícita das personas de domínio (Aluno/Admin) com responsabilidades separadas.
-
----
-
-## Execução e Testes
-
-**Pontos de Melhoria:**
-- Sem cobertura de testes ou estrutura de TDD.
-- O Swagger está presente, mas não há endpoints além do de autenticação.
-
----
-
-## Documentação
-
-**Pontos Positivos:**
-- O `README.md` apresenta a proposta, autor e tecnologias utilizadas.
-
-**Pontos de Melhoria:**
-- Não traz instruções de execução com SQLite nem exemplos de uso da API.
-
----
-
-## Conclusão
-
-O projeto está estruturado como um monólito sem separação de contextos, com entidades majoritariamente anêmicas e sem casos de uso reais implementados. A única funcionalidade presente é o registro de usuários, feita de forma incorreta. Faltam fluxos de negócio, encapsulamento adequado e testes. A abordagem não atende aos princípios de DDD propostos no desafio.
-
----
-
-## Resumo dos Feedbacks do Ciclo Anterior
-
-- ❌ **Não separou os contextos em BCs** → Confirmado, tudo centralizado em uma camada.
-- ❌ **Entidades anêmicas** → Confirmado, maioria das entidades sem regras.
-- ❌ **Fluxos ausentes** → Apenas autenticação, demais fluxos não implementados.
-- ❌ **Registro de aluno via repositório direto na controller**
-```
+Próximos passos recomendados (priorizados)
+1. Priorizar testes para componentes com baixa cobertura (Core, Domain handlers). Posso gerar a lista das 20 classes com pior cobertura.
+2. Corrigir avisos de nulabilidade em ViewModels e controllers.
+3. Validar/atualizar dependências incompatíveis (ex.: `iTextSharp`) ou justificar a permanência da dependência.
+4. Fortalecer validações de configuração (JWT) na inicialização.
