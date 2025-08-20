@@ -54,7 +54,6 @@ Pontos positivos:
 
 Pontos negativos:
 - Cobertura global < 80% (76.1%). Alguns módulos com baixa cobertura comprometem o requisito de 80%.
-- Não vi evidência automatizada de pipelines de CI que validem cobertura (fora do escopo local). Se o curso exige isso, adicionar um workflow GitHub Actions que rode testes e falhe se coverage < 80%.
 
 ## Autenticação e Identidade
 Pontos positivos:
@@ -88,8 +87,6 @@ Pontos negativos:
 - Arquivo `FEEDBACK.md` anterior não encontrado → servidor assume nota máxima para esse critério (conforme plano). Assim, pontuação para o critério "Resolução de Feedbacks" será 10 (ver matriz).
 
 ## Matriz de Avaliação (Notas)
-Notas atribuídas entre 5 e 10 (inteiro) por item, depois peso aplicado para nota final.
-Avaliação e justificativa resumida:
 
 1) Funcionalidade (30%): 9
 - Implementa os casos de uso principais (cadastro de curso/aula, matrícula, pagamento simulado, progresso, certificado). Seed e migrations suportam execução local.
